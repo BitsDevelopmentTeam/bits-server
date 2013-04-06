@@ -1,5 +1,5 @@
-from ..pages import PageHandler
+import tornado.web
 
-class HomePageHandler(PageHandler):
+class HomePageHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write(self.LOADER.load('homepage.html').generate())
+        self.render('homepage.html')

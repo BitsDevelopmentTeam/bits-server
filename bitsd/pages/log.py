@@ -1,5 +1,5 @@
-from ..pages import PageHandler
+import tornado.web
 
-class LogPageHandler(PageHandler):
+class LogPageHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write(self.LOADER.load('log.html').generate())
+        self.render('log.html')

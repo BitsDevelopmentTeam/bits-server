@@ -12,9 +12,11 @@ def main():
     tornado.options.parse_config_file('bitsd/bitsd.conf')
 
     webserver = tornado.web.Application([
-        (r'/', HomePageHandler),
-        (r'/storico', LogPageHandler),
-    ])
+            (r'/', HomePageHandler),
+            (r'/storico', LogPageHandler),
+        ],
+        template_path='bitsd/templates',
+    )
 
     statuserver = tornado.web.Application([
         (r'/', StatusHandler)
@@ -24,6 +26,7 @@ def main():
         tornado.options.options.web_port)
     )
     webserver.listen(tornado.options.options.web_port)
+
     LOG.debug('Starting websocket status server on port {}'.format(
         tornado.options.options.web_port)
     )
