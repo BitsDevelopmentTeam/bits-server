@@ -12,6 +12,5 @@ def startserver():
             (r'/', HomePageHandler),
             (r'/storico', LogPageHandler),
         ],
-        template_path=options.template_path,
     )
     server.listen(options.web_port)
