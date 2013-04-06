@@ -15,7 +15,7 @@ def main():
             (r'/', HomePageHandler),
             (r'/storico', LogPageHandler),
         ],
-        template_path='bitsd/templates',
+        template_path=tornado.options.options.template_path,
     )
 
     statuserver = tornado.web.Application([
