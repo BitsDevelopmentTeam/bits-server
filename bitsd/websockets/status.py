@@ -1,6 +1,8 @@
 import tornado.websocket
 
-from bitsd.websockets import MessageNotifier
+from bitsd.websockets.notifier import MessageNotifier
+
+from bitsd.common import LOG
 
 class StatusHandler(tornado.websocket.WebSocketHandler):
     """Handler for POuL status via websocket"""
@@ -13,7 +15,7 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         """Disconnect clients sending data (they should not)."""
-        LOG.warning('Client {} sent a message so it has been disconnected.'.format(self))
+        LOG.warning('Client sent a message so it has been disconnected.')
 
     def on_close(self):
         """Unregister this handler when the connection is closed."""
