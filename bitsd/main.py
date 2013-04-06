@@ -9,7 +9,7 @@
 # MUST be the first import
 import bitsd.properties
 
-import bitsd.pages as pages
+import bitsd.http as http
 import bitsd.websockets as websockets
 import bitsd.remote as remote
 
@@ -19,7 +19,7 @@ import tornado.ioloop
 def main():
     parse_command_line()
 
-    pages.startserver()
+    http.startserver()
     websockets.startserver()
     remote.startserver()
 
