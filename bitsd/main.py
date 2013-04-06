@@ -1,36 +1,22 @@
-import tornado.options
-import tornado.web
-
-from bitsd.pages.homepage import HomePageHandler
-from bitsd.pages.log import LogPageHandler
-from bitsd.websockets.status import StatusHandler
-from bitsd.common import LOG
-
+# MUST be the first import
 import bitsd.properties
 
+import tornado.web
+from tornado.options import options, parse_config_file
+
+from bitsd.common import LOG
+
+import bitsd.pages as pages
+import bitsd.websockets as websockets
+
 def main():
-    tornado.options.parse_config_file('bitsd/bitsd.conf')
+    parse_config_file('bitsd/bitsd.conf')
 
-    webserver = tornado.web.Application([
-            (r'/', HomePageHandler),
-            (r'/storico', LogPageHandler),
-        ],
-        template_path=tornado.options.options.template_path,
-    )
+    LOG.debug('Starting web server on port {}'.format(options.web_port))
+    pages.SERVER.listen(options.web_port)
 
-    statuserver = tornado.web.Application([
-        (r'/', StatusHandler)
-    ])
-
-    LOG.debug('Starting web server on port {}'.format(
-        tornado.options.options.web_port)
-    )
-    webserver.listen(tornado.options.options.web_port)
-
-    LOG.debug('Starting websocket status server on port {}'.format(
-        tornado.options.options.web_port)
-    )
-    statuserver.listen(tornado.options.options.ws_port)
+    LOG.debug('Starting websocket server on port {}'.format(options.web_port))
+    websockets.SERVER.listen(options.ws_port)
 
     tornado.ioloop.IOLoop.instance().start()
 
