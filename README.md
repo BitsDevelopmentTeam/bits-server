@@ -18,9 +18,9 @@ How the project is structured
 
 With the exception of `./templates`, each directory contains a specific server:
 
-*pages* web pages server (homepage, logs, admin etc.).
-*websocket* websockets (push) server. Currently, used to push Sede status.
-*remote* remote control servers: send and receive commands from Fonera or Web.
+1. **pages**: web pages server (homepage, logs, admin etc.).
+2. **websocket**: websockets (push) server. Currently, used to push Sede status.
+3. **remote**: remote control servers: send and receive commands from Fonera or Web.
 
 Each submodule contains a specific handler (the name _should be_ meaningful).
 
