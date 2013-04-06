@@ -12,7 +12,13 @@ import bitsd.websockets as websockets
 import sys
 
 def main():
-    parse_config_file(sys.argv[1])
+    # Load config if it is passed on the command line
+    try:
+        conf = sys.argv[1]
+    except IndexError:
+        print('No config file passed, loading defaults.', file=sys.stderr)
+    else:
+        parse_config_file(conf)
 
     LOG.debug('Starting web server on port {}'.format(options.web_port))
     pages.SERVER.listen(options.web_port)
