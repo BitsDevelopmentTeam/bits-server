@@ -24,4 +24,4 @@ With the exception of `./templates`, each directory contains a specific server:
 
 Each submodule contains a specific handler (the name _should be_ meaningful).
 
-A server is started by calling <module name>.startserver() command (see main())
+A server is started by calling `<module name>.startserver()` command (see `main.py`)
