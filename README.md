@@ -1,3 +1,15 @@
+How the project is structured
+=============================
+
+With the exception of `./templates`, each directory contains a specific server:
+
+*pages* web pages server (homepage, logs, admin etc.).
+*websocket* websockets (push) server. Currently, used to push Sede status.
+*remote* remote control servers: send and receive commands from Fonera or Web.
+
+A server is started by calling <module name>.startserver() command (see main())
+
+
 Getting started
 ===============
 
