@@ -1,3 +1,11 @@
+#
+# Copyright (C) 2013 Stefano Sanfilippo
+# Copyright (C) 2013 BITS development team
+#
+# This file is part of bitsd, which is released under the terms of
+# GNU GPLv3. See COPYING at top level for more information.
+#
+
 #import tornado.tcpserver TODO Tornado 3.0
 import tornado.netutil
 
@@ -10,10 +18,10 @@ class RemoteServer(tornado.netutil.TCPServer):
 
     # TODO
     ACTIONS = {
-        'temperature': lambda sensorno, value: pass,
-        'status': lambda status: pass,
-        'enter': lambda id: pass,
-        'leave': lambda id: pass,
+        'temperature': lambda sensorno, value: True,
+        'status': lambda status: True,
+        'enter': lambda id: True,
+        'leave': lambda id: True,
     }
 
     def handle_stream(self, stream, address):
