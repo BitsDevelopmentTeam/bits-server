@@ -9,8 +9,10 @@ from bitsd.common import LOG
 import bitsd.pages as pages
 import bitsd.websockets as websockets
 
+import sys
+
 def main():
-    parse_config_file('bitsd/bitsd.conf')
+    parse_config_file(sys.argv[1])
 
     LOG.debug('Starting web server on port {}'.format(options.web_port))
     pages.SERVER.listen(options.web_port)
