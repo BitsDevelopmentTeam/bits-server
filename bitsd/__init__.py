@@ -31,7 +31,7 @@ class MessageNotifier(object):
         LOG.debug('Removing client {} from {}'.format(client, self.name))
         self.clients.remove(client)
 
-    def notify(self, message):
+    def broadcast(self, message):
         """Notify all clients."""
         for client in self.clients:
             client.write_message(message)
@@ -47,17 +47,17 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         StatusHandler.QUEUE.register(self)
 
     def on_message(self, message):
-        """Dummy, just log incoming message."""
-        LOG.info('Client says: {}'.format(message))
+        """Disconnect clients sending data (they should not)."""
+        LOG.info('Client {} sent a message so it has disconnected.'.format(self))
 
     def on_close(self):
         """Unregister this handler when the connection is closed."""
         StatusHandler.QUEUE.unregister(self)
 
     @staticmethod
-    def notify(message):
+    def broadcast(message):
         """Send a message to all connected clients."""
-        StatusHandler.QUEUE.notify(message)
+        StatusHandler.QUEUE.broadcast(message)
 
 
 class PageHandler(tornado.web.RequestHandler):
