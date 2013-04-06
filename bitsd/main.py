@@ -8,6 +8,7 @@ from bitsd.common import LOG
 
 import bitsd.pages as pages
 import bitsd.websockets as websockets
+import bitsd.remote as remote
 
 import sys
 
@@ -20,11 +21,9 @@ def main():
     else:
         parse_config_file(conf)
 
-    LOG.debug('Starting web server on port {}'.format(options.web_port))
-    pages.SERVER.listen(options.web_port)
-
-    LOG.debug('Starting websocket server on port {}'.format(options.web_port))
-    websockets.SERVER.listen(options.ws_port)
+    pages.startserver()
+    websockets.startserver()
+    remote.startserver()
 
     tornado.ioloop.IOLoop.instance().start()
 
