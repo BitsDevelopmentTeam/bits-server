@@ -18,7 +18,7 @@ class RemoteServer(tornado.netutil.TCPServer):
 
     # TODO
     ACTIONS = {
-        'temperature': lambda sensorno, value: True,
+        'temperature': lambda sensorid, value: True,
         'status': lambda status: True,
         'enter': lambda id: True,
         'leave': lambda id: True,
