@@ -1,4 +1,4 @@
-from ..common import LOG
+from bitsd.common import LOG
 
 class MessageNotifier(object):
     """Keeps a list of WebSocket handlers to notify with a message."""

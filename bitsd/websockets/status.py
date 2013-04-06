@@ -1,3 +1,7 @@
+import tornado.websocket
+
+from bitsd.websockets import MessageNotifier
+
 class StatusHandler(tornado.websocket.WebSocketHandler):
     """Handler for POuL status via websocket"""
 
