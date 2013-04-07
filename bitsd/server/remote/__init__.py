@@ -8,10 +8,10 @@
 
 from tornado.options import options
 
-from .server import RemoteServer
+from .handler import RemoteHandler
 
 def startserver():
-    fonera = RemoteServer()
+    fonera = RemoteHandler()
     # FIXME single threaded?
     #fonera.bind(options.fonera_port, options.fonera_address)
     #fonera.start(0)  # Forks multiple sub-processes
