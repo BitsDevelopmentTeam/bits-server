@@ -27,7 +27,7 @@ class RemoteServer(tornado.netutil.TCPServer):
     def handle_stream(self, stream, address):
         """Handles inbound TCP connections asynchronously."""
         if address[0] != options.fonera_address:
-            LOG.error("Receiving commands from {}, expected from '{}'. Ignoring.".format(
+            LOG.error("Receiving commands from `{}`, expected from `{}`. Ignoring.".format(
             address, options.fonera_address))
             return
         stream.read_until_close(self.handle_commands)
@@ -39,5 +39,10 @@ class RemoteServer(tornado.netutil.TCPServer):
             if command:
                 LOG.info('Received command `{}` from Fonera, executing.'.format(command))
                 args = command.split(b' ')
-                # Execute handler (index 0) with args (index 1->end)
-                ACTIONS[args[0]](*args[1:])
+                try:
+                    handler = ACTIONS[args[0]]
+                except KeyError:
+                    LOG.warning('Received unknown command {}'.format(args))
+                else:
+                    # Execute handler (index 0) with args (index 1->end)
+                    handler(*args[1:])
