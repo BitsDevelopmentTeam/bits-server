@@ -19,3 +19,7 @@ def startserver():
         (r'/', StatusHandler)
     ])
     server.listen(options.ws_port)
+
+def broadcast(message):
+    """Send a message to all connected clients."""
+    StatusHandler.QUEUE.broadcast(message)

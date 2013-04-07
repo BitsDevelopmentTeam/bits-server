@@ -28,8 +28,3 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         """Unregister this handler when the connection is closed."""
         StatusHandler.QUEUE.unregister(self)
-
-
-def broadcast(message):
-    """Send a message to all connected clients."""
-    StatusHandler.QUEUE.broadcast(message)
