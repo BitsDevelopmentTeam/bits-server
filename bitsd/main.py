@@ -9,9 +9,9 @@
 # MUST be the first import
 import bitsd.properties
 
-import bitsd.http as http
-import bitsd.websockets as websockets
-import bitsd.remote as remote
+import bitsd.server.http as http
+import bitsd.server.websockets as websockets
+import bitsd.server.remote as remote
 
 from tornado.options import parse_command_line
 import tornado.ioloop

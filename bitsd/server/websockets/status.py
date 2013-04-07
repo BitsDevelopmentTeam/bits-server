@@ -8,7 +8,7 @@
 
 import tornado.websocket
 
-from bitsd.websockets.notifier import MessageNotifier
+from .notifier import MessageNotifier
 
 from bitsd.common import LOG
 
