@@ -8,36 +8,52 @@
 
 #import tornado.tcpserver TODO Tornado 3.0
 import tornado.netutil
-
 from tornado.options import options
 
-from bitsd.common import LOG
+from bitsd.common import LOG, unbase64
 
 
-def handle_temperature_command(self, sensorid, value):
-    LOG.info('Received temperature: sensorid = {}, value = {}'.format(sensorid, value))
+def handle_temperature_command(sensorid, value):
+    sensorid = int(sensorid)
+    value = float(value)
+    LOG.info('Received temperature: sensorid={}, value={}'.format(sensorid, value))
 
 
-def handle_status_command(self, status):
+def handle_status_command(status):
+    status = int(status)
     LOG.info('Received status: {}'.format(status))
 
 
-def handle_enter_command(self, id):
-    LOG.info('Received enter command: id = {}'.format(id))
+def handle_enter_command(id):
+    id = int(id)
+    LOG.info('Received enter command: id={}'.format(id))
 
 
-def handle_leave_command(self, id):
-    LOG.info('Received leave command: id = {}'.format(id))
+def handle_leave_command(id):
+    id = int(id)
+    LOG.info('Received leave command: id={}'.format(id))
+
+
+def handle_message_command(message):
+    message = unbase64(message)
+    LOG.info('Received message command: message={!r}'.format(message))
+
+
+def handle_sound_command(id):
+    id = int(id)
+    LOG.info('Received sound command: id={}'.format(id))
 
 
 class RemoteHandler(tornado.netutil.TCPServer):
     """Handle incoming commands via BITS mini protocol."""
 
     ACTIONS = {
-        'temperature': handle_temperature_command,
-        'status': handle_status_command,
-        'enter': handle_enter_command,
-        'leave': handle_leave_command,
+        b'temperature': handle_temperature_command,
+        b'status': handle_status_command,
+        b'enter': handle_enter_command,
+        b'leave': handle_leave_command,
+        b'message': handle_message_command,
+        b'sound': handle_sound_command,
     }
 
     def handle_stream(self, stream, address):
@@ -55,7 +71,7 @@ class RemoteHandler(tornado.netutil.TCPServer):
             if command:
                 args = command.split(b' ')
                 try:
-                    handler = ACTIONS[args[0]]
+                    handler = RemoteHandler.ACTIONS[args[0]]
                 except KeyError:
                     LOG.warning('Remote received unknown command {}'.format(args))
                 else:
