@@ -10,38 +10,8 @@
 import tornado.netutil
 from tornado.options import options
 
-from bitsd.common import LOG, unbase64
-
-
-def handle_temperature_command(sensorid, value):
-    sensorid = int(sensorid)
-    value = float(value)
-    LOG.info('Received temperature: sensorid={}, value={}'.format(sensorid, value))
-
-
-def handle_status_command(status):
-    status = int(status)
-    LOG.info('Received status: {}'.format(status))
-
-
-def handle_enter_command(id):
-    id = int(id)
-    LOG.info('Received enter command: id={}'.format(id))
-
-
-def handle_leave_command(id):
-    id = int(id)
-    LOG.info('Received leave command: id={}'.format(id))
-
-
-def handle_message_command(message):
-    message = unbase64(message)
-    LOG.info('Received message command: message={!r}'.format(message))
-
-
-def handle_sound_command(id):
-    id = int(id)
-    LOG.info('Received sound command: id={}'.format(id))
+from bitsd.common import LOG
+from bitsd.server.remote.hooks import *
 
 
 class RemoteHandler(tornado.netutil.TCPServer):
