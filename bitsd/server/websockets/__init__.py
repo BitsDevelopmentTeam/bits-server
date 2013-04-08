@@ -22,4 +22,4 @@ def startserver():
 
 def broadcast(message):
     """Send a message to all connected clients."""
-    StatusHandler.QUEUE.broadcast(message)
+    StatusHandler.broadcast(message)

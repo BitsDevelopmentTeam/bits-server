@@ -15,7 +15,7 @@ from bitsd.common import LOG
 class StatusHandler(tornado.websocket.WebSocketHandler):
     """Handler for POuL status via websocket"""
 
-    QUEUE = MessageNotifier('Status handler queue')
+    CLIENTS = MessageNotifier('Status handler queue')
 
     def open(self):
         """Register new handler with MessageNotifier."""
@@ -27,4 +27,8 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         """Unregister this handler when the connection is closed."""
-        StatusHandler.QUEUE.unregister(self)
+        StatusHandler.CLIENTS.unregister(self)
+
+    @staticmethod
+    def broadcast(message):
+        StatusHandler.CLIENTS.broadcast(message)
