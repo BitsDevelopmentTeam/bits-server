@@ -43,4 +43,4 @@ class Status(Base):
         self.modified_by = modified_by
 
     def __str__(self):
-        return 'Status {.status}'.format(self)
+        return 'Status {.value}'.format(self)
