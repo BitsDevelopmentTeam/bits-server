@@ -18,4 +18,5 @@ def unbase64(message):
     except TypeError:
         LOG.error('Received message is not valid base64: {!r}'.format(message))
     else:
+        #FIXME catch decoding exception! (WHICH?)
         return decodedmex.decode('utf8')
