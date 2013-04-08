@@ -33,3 +33,6 @@ define("db_uri",
 define("config",
     default='', help="Configuration file to read", group='Config'
 )
+
+define("jsonver",
+    default=3, help="JSON data protocol version", group='Internal')

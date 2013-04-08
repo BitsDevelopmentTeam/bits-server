@@ -20,7 +20,7 @@ def startserver():
     server = tornado.web.Application([
             (r'/', HomePageHandler),
             (r'/storico', LogPageHandler),
-            (r'/dati', DataPageHandler),
+            (r'/data.json', DataPageHandler),
         ],
     )
     server.listen(options.web_port)
