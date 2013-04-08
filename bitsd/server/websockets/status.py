@@ -29,6 +29,6 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         """Unregister this handler when the connection is closed."""
         StatusHandler.CLIENTS.unregister(self)
 
-    @staticmethod
-    def broadcast(message):
-        StatusHandler.CLIENTS.broadcast(message)
+
+def broadcast(message):
+    StatusHandler.CLIENTS.broadcast(message)
