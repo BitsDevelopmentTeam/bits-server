@@ -30,5 +30,5 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         StatusHandler.CLIENTS.unregister(self)
 
 
-def broadcast(message):
+def broadcast_status(message):
     StatusHandler.CLIENTS.broadcast(message)

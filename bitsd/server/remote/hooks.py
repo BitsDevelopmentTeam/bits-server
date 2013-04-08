@@ -10,6 +10,8 @@
 
 from bitsd.common import LOG, unbase64
 from bitsd.logger import log_temperature, log_status
+from bitsd.websockets.status import broadcast_status
+
 
 def handle_temperature_command(sensorid, value):
     sensorid = int(sensorid)
@@ -22,6 +24,7 @@ def handle_status_command(status):
     status = int(status)
     LOG.info('Received status: {}'.format(status))
     log_status('open' if status == 1 else 'close', 'BITS')
+    broadcast_status(status)
 
 
 def handle_enter_command(id):
