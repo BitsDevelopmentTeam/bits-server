@@ -11,6 +11,7 @@ from tornado.options import options
 
 from .homepage import HomePageHandler
 from .log import LogPageHandler
+from .data import DataPageHandler
 
 from bitsd.common import LOG
 
@@ -19,6 +20,7 @@ def startserver():
     server = tornado.web.Application([
             (r'/', HomePageHandler),
             (r'/storico', LogPageHandler),
+            (r'/dati', DataPageHandler),
         ],
     )
     server.listen(options.web_port)
