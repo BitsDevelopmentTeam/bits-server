@@ -6,10 +6,8 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-from .db import persist
+from .db import persist, startdb, query_by_timestamp
 from .model import TemperatureSample, Status
-
-from .db import startdb
 
 
 def log_temperature(value, sensor, modified_by):
@@ -19,3 +17,13 @@ def log_temperature(value, sensor, modified_by):
 def log_status(status, modified_by):
     """Persist status to the DB."""
     persist(Status(status, modified_by))
+
+def get_current_status():
+    return query_by_timestamp(Status, limit=1)
+
+def get_current_temperature():
+    return query_by_timestamp(TemperatureSample, limit=1)
+
+def get_latest_temperature_samples():
+    """Query 100 TemperatureSample by timestamp."""
+    return query_by_timestamp(TemperatureSample, limit=100)
