@@ -27,3 +27,4 @@ class DataPageHandler(tornado.web.RequestHandler):
             #"msg": TODO,
             "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
         })
+        self.flush()
