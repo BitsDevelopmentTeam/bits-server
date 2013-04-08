@@ -23,3 +23,13 @@ define("remote_port",
 define("fonera_address",
     default="127.0.0.1", help="Fonera IP address.", group='Networking'
 )
+
+define("db_uri",
+    default="sqlite3:///test.db",
+    help="DB URI, in the form `dialect:///username:password@host`",
+    group='Config'
+)
+
+define("config",
+    default='', help="Configuration file to read", group='Config'
+)
