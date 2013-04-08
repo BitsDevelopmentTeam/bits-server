@@ -43,11 +43,11 @@ def persist(data):
     session.commit()
 
 
-def query_by_timestamp(model, limit=1):
+def query_by_timestamp(model, limit=1, offset=0):
     """Query at most `limit` samples by timestamp.
     Default to `limit=1` (latest value)."""
     session = Session()
     if limit != 1:
-        return session.query(model).order_by(desc(model.timestamp))[0:limit]
+        return session.query(model).order_by(desc(model.timestamp))[offset:limit]
     else:
-        return session.query(model).order_by(desc(model.timestamp))[0]
+        return session.query(model).order_by(desc(model.timestamp))[offset]
