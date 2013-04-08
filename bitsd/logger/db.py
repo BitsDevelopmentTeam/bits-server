@@ -6,17 +6,29 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-from .model import TemperatureSample, Status
+from .model import TemperatureSample, Status, Base
+from bitsd.common import LOG
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from tornado.options import options
 
-ENGINE = create_engine(dburi, echo=True)
-Session = sessionmaker(bind=DBAdapter.ENGINE)
+
+LOG.info('Connecting to DB.')
+ENGINE = create_engine(options.db_uri, echo=True)
+Session = sessionmaker(bind=ENGINE)
+
+# Create tables if they don't exist.
+LOG.info('Checking tables in the DB.')
+Base.metadata.create_all(ENGINE, checkfirst=True)
+
 
 def persist(data):
-    """Persist data to configured DB."""
-    session = self.Session()
+    """Persist data to configured DB.
+    WARNING will log what's being persisted, so don't put clear text password
+    into `__str__()`."""
+    LOG.debug('Persisting data {}'.format(data))
+    session = Session()
     session.add(data)
     session.commit()

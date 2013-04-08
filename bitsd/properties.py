@@ -25,7 +25,7 @@ define("fonera_address",
 )
 
 define("db_uri",
-    default="sqlite3:///test.db",
+    default="sqlite:///test.db",
     help="DB URI, in the form `dialect:///username:password@host`",
     group='Config'
 )
