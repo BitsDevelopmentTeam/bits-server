@@ -22,8 +22,6 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
-        elif isinstance(obj, Enum):
-            return repr(obj)
         elif isinstance(obj, Status):
             return {
                 "timestamp": obj.timestamp,
@@ -34,6 +32,8 @@ class JSONEncoder(json.JSONEncoder):
             return {
                 "timestamp": obj.timestamp,
                 "value": obj.value,
+                "modifiedby": obj.modified_by,
+                "sensor": obj.sensor
             }
 
 
