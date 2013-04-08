@@ -12,6 +12,7 @@ import bitsd.properties
 import bitsd.server.http as http
 import bitsd.server.websockets as websockets
 import bitsd.server.remote as remote
+import bitsd.logger as logger
 
 from tornado.options import parse_command_line
 import tornado.ioloop
@@ -19,6 +20,7 @@ import tornado.ioloop
 def main():
     parse_command_line()
 
+    logger.startdb()
     http.startserver()
     websockets.startserver()
     remote.startserver()

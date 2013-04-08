@@ -15,13 +15,22 @@ from sqlalchemy.orm import sessionmaker
 from tornado.options import options
 
 
-LOG.info('Connecting to DB.')
-ENGINE = create_engine(options.db_uri, echo=True)
-Session = sessionmaker(bind=ENGINE)
+# Call startdb() to initialize
+ENGINE = None
+Session = None
 
-# Create tables if they don't exist.
-LOG.info('Checking tables in the DB.')
-Base.metadata.create_all(ENGINE, checkfirst=True)
+
+def startdb():
+    """Will setup connection and ensure that all tables exist."""
+    global ENGINE, Session
+
+    LOG.info('Connecting to DB.')
+    ENGINE = create_engine(options.db_uri, echo=True)
+    Session = sessionmaker(bind=ENGINE)
+
+    # Create tables if they don't exist.
+    LOG.info('Checking tables in the DB.')
+    Base.metadata.create_all(ENGINE, checkfirst=True)
 
 
 def persist(data):

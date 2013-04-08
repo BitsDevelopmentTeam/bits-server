@@ -9,6 +9,8 @@
 from .db import persist
 from .model import TemperatureSample, Status
 
+from .db import startdb
+
 
 def log_temperature(value, sensor, modified_by):
     """Add a temperature sample to the DB."""
