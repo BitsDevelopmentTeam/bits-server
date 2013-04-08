@@ -9,7 +9,7 @@
 from .model import TemperatureSample, Status, Base
 from bitsd.common import LOG
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 
 from tornado.options import options
@@ -48,6 +48,6 @@ def query_by_timestamp(model, limit=1):
     Default to `limit=1` (latest value)."""
     session = Session()
     if limit != 1:
-        return session.query(model).order_by(model.timestamp)[0:limit]
+        return session.query(model).order_by(desc(model.timestamp))[0:limit]
     else:
-        return session.query(model).order_by(model.timestamp)[0]
+        return session.query(model).order_by(desc(model.timestamp))[0]
