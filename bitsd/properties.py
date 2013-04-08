@@ -36,3 +36,6 @@ define("config",
 
 define("jsonver",
     default=3, help="JSON data protocol version", group='Internal')
+
+define("log_queries",
+    default=False, help="Log DB queries.", group='Debug')

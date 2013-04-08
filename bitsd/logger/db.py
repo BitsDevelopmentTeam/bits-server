@@ -25,7 +25,7 @@ def startdb():
     global ENGINE, Session
 
     LOG.info('Connecting to DB.')
-    ENGINE = create_engine(options.db_uri, echo=True)
+    ENGINE = create_engine(options.db_uri, echo=options.log_queries)
     Session = sessionmaker(bind=ENGINE)
 
     # Create tables if they don't exist.
