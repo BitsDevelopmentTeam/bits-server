@@ -19,8 +19,8 @@ class TemperatureSample(Base):
 
     timestamp = Column(DateTime, primary_key=True, default=datetime.datetime.utcnow)
     value = Column(Float, primary_key=True)
-    sensor = Column(Integer)
-    modified_by = Enum('BITS', 'web')
+    sensor = Column(Integer, nullable=False)
+    modified_by = Column(Enum('BITS', 'web'), nullable=False)
 
     def __init__(self, value, sensor, modified_by):
         self.value = value
@@ -35,8 +35,8 @@ class Status(Base):
     __tablename__ = 'Status'
 
     timestamp = Column(DateTime, primary_key=True, default=datetime.datetime.utcnow)
-    value = Enum('open', 'closed')
-    modified_by = Enum('BITS', 'web')
+    value = Column(Enum('open', 'closed'), nullable=False)
+    modified_by = Column(Enum('BITS', 'web'), nullable=False)
 
     def __init__(self, value, modified_by):
         self.value = value
