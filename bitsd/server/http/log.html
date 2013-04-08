@@ -11,5 +11,12 @@
 {% block title %}A bolder title{% end %}
 
 {% block body %}
-  <h1>Log test!</h1>
+<ul class="status">
+    {% for status in latest_statuses %}
+        <li class='{{ status.value }}'>{{ status.timestamp }}</li>
+    {% end %}
+</ul>
+<nav id="prec_next"><ul>
+    <!--TODO--->
+</ul></nav>
 {% end %}
