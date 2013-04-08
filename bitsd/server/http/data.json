@@ -1,3 +1,0 @@
-{% from bitsd.logger.json import dump_latest %}
-
-{{ dump_latest() }}

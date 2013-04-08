@@ -15,3 +15,4 @@ class StatusPageHandler(tornado.web.RequestHandler):
     def get(self):
         status = get_current_status()
         self.write('1' if status.value == 'open' else '0')
+        self.flush()
