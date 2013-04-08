@@ -27,6 +27,9 @@ class TemperatureSample(Base):
         self.sensor = sensor
         self.modified_by = modified_by
 
+    def __str__(self):
+        return 'Temperature {.value}°C'.format(self)
+
 
 class Status(Base):
     __tablename__ = 'Status'
@@ -38,3 +41,6 @@ class Status(Base):
     def __init__(self, status, modified_by):
         self.status = status
         self.modified_by = modified_by
+
+    def __str__(self):
+        return 'Status {.status}'.format(self)
