@@ -13,6 +13,7 @@ import base64
 LOG = logging.getLogger('tornado.general')
 
 def unbase64(message):
+    """Safe b64 decoding (handle exceptions)"""
     try:
         decodedmex = base64.b64decode(message)
     except TypeError:
