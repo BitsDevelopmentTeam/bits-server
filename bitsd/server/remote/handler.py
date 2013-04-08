@@ -32,20 +32,27 @@ class RemoteHandler(tornado.netutil.TCPServer):
             LOG.error("Remote received commands from `{}`, expected from `{}`. Ignoring.".format(
             address, options.fonera_address))
             return
-        stream.read_until_close(self.handle_commands)
+        self.stream = stream
+        self.stream.read_until(b'\n', self.handle_command)
 
-    def handle_commands(self, message):
+    def handle_command(self, command):
         """Reacts to received commands (callback).
-        Will split single commands, separate args and call appropriate handlers."""
-        for command in message.split(b'\n'):
-            if command:
-                args = command.split(b' ')
-                try:
-                    handler = RemoteHandler.ACTIONS[args[0]]
-                except KeyError:
-                    LOG.warning('Remote received unknown command {}'.format(args))
-                else:
-                    # Execute handler (index 0) with args (index 1->end)
-                    handler(*args[1:])
+        Will separate args and call appropriate handlers."""
+
+        # Meanwhile, go on with commands...
+        self.stream.read_until(b'\n', self.handle_command)
+
+        if command:
+            args = command.split(b' ')
+            try:
+                handler = RemoteHandler.ACTIONS[args[0]]
+            except KeyError:
+                LOG.warning('Remote received unknown command {}'.format(args))
             else:
-                LOG.warning('Remote received empty command.')
+                # Execute handler (index 0) with args (index 1->end)
+                try:
+                    handler(*args[1:])
+                except TypeError:
+                    LOG.error('Command {} called with wrong number of args')
+        else:
+            LOG.warning('Remote received empty command.')
