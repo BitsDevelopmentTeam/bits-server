@@ -7,7 +7,8 @@
 #
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.types import Column, Integer, Float, DateTime, Enum
+from sqlalchemy import Column
+from sqlalchemy.types import Integer, Float, DateTime, Enum
 
 import datetime
 
