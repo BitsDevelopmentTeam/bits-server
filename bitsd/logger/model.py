@@ -39,7 +39,7 @@ class Status(Base):
     modified_by = Enum('BITS', 'web')
 
     def __init__(self, value, modified_by):
-        self.status = value
+        self.value = value
         self.modified_by = modified_by
 
     def __str__(self):
