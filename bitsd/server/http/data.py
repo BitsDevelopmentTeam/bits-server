@@ -9,5 +9,6 @@
 import tornado.web
 
 class DataPageHandler(tornado.web.RequestHandler):
+    """Get BITS data in JSON, machine parseable."""
     def get(self):
         self.render('data.json')

@@ -11,6 +11,7 @@ import tornado.web
 from bitsd.logger import get_latest_statuses
 
 class LogPageHandler(tornado.web.RequestHandler):
+    """Display and paginate log."""
     def get(self):
         self.render('log.html',
             latest_statuses=get_latest_statuses()

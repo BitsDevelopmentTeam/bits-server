@@ -9,5 +9,6 @@
 import tornado.web
 
 class HomePageHandler(tornado.web.RequestHandler):
+    """Display homepage."""
     def get(self):
         self.render('homepage.html')
