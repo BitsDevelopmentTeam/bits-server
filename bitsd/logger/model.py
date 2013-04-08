@@ -35,11 +35,11 @@ class Status(Base):
     __tablename__ = 'Status'
 
     timestamp = Column(DateTime, primary_key=True, default=datetime.datetime.utcnow)
-    status = Enum('open', 'closed')
+    value = Enum('open', 'closed')
     modified_by = Enum('BITS', 'web')
 
-    def __init__(self, status, modified_by):
-        self.status = status
+    def __init__(self, value, modified_by):
+        self.status = value
         self.modified_by = modified_by
 
     def __str__(self):
