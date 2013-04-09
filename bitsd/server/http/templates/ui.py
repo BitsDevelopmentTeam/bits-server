@@ -21,8 +21,8 @@ class BasePage(tornado.web.UIModule):
 
     def html_head(self):
         return  """
-            <meta charset="utf-8"/>
-            <link rel="icon" href="/img/open.ico" id="favicon"/>
+<meta charset="utf-8"/>
+<link rel="icon" href="/img/open.ico" id="favicon"/>
         """
 
     def render(self):
