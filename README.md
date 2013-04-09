@@ -4,8 +4,9 @@ Getting started
 Requirements
 ------------
 
-You will need Python 3 (developed on 3.2, 3.3 is fine) installed,
-Tornado 2.4 and SQLAlchemy 0.7 somewhere in the Python path.
+You will need **Python 3** (developed on 3.2, 3.3 is fine) installed,
+**Tornado 2.4** and **SQLAlchemy 0.7** (but 0.8 should be fine)
+somewhere in the Python path.
 
 You should use virtualenv to setup a clean environment for BITS.
 
