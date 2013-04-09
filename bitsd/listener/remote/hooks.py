@@ -12,10 +12,10 @@ Hooks called by bitsd.listener.remote.RemoteListener to handle commands.
 
 # NOTE: don't forget to register your handler in RemoteListener.ACTIONS!
 
-from bitsd.common import LOG, unbase64
+from bitsd.common import LOG
 from bitsd.logger import log_temperature, log_status
 from bitsd.server.websockets.status import broadcast_status
-from bitsd.fonera import Fonera
+from bitsd.client.fonera import Fonera
 
 from tornado.options import options
 
@@ -71,8 +71,14 @@ def handle_leave_command(id):
 
 
 def handle_message_command(message):
-    message = unbase64(message)
     LOG.info('Received message command: message={!r}'.format(message))
+    try:
+        decodedmex = base64.b64decode(message)
+    except TypeError:
+        LOG.error('Received message is not valid base64: {!r}'.format(message))
+    else:
+        message = decodedmex.decode('utf8')
+
     FONERA.message(message)
 
 

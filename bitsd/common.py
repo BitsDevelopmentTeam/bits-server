@@ -11,13 +11,3 @@ import base64
 
 # Get logger
 LOG = logging.getLogger('tornado.general')
-
-def unbase64(message):
-    """Safe b64 decoding (handle exceptions)"""
-    try:
-        decodedmex = base64.b64decode(message)
-    except TypeError:
-        LOG.error('Received message is not valid base64: {!r}'.format(message))
-    else:
-        #FIXME catch decoding exception! (WHICH?)
-        return decodedmex.decode('utf8')

@@ -8,7 +8,7 @@
 
 """
 Listen for remote commands on BITS-miniprotocol and dispatches to Fonera
-via bitsd.fonera.Fonera proxy.
+via bitsd.client.fonera.Fonera proxy.
 """
 
 from tornado.options import options
