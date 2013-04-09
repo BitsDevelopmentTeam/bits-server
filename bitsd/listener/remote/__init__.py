@@ -15,4 +15,4 @@ def start():
     # FIXME single threaded?
     #fonera.bind(options.fonera_port, options.fonera_address)
     #fonera.start(0)  # Forks multiple sub-processes
-    fonera.listen(options.remote_port, options.fonera_address)
+    fonera.listen(options.remote_port, options.fonera_host)

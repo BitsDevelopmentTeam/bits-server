@@ -52,7 +52,7 @@ def main():
     LOG.info('Starting Websocket server on port {}'.format(options.ws_port))
     websockets.start()
     LOG.info('Starting remote control on port {}'.format(options.remote_port))
-    LOG.info('Remote control IP is {}'.format(options.fonera_address))
+    LOG.info('Remote control IP is {}'.format(options.fonera_host))
     remote.start()
 
     # Add signal handlers...

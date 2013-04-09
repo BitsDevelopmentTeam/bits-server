@@ -20,7 +20,7 @@ define("remote_port",
     default=8888, help="Port for fonera server.", group='Networking'
 )
 
-define("fonera_address",
+define("fonera_host",
     default="127.0.0.1", help="Fonera IP address.", group='Networking'
 )
 
