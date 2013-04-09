@@ -13,18 +13,9 @@
   <title>B.I.T.S. | {% block title%}Test title!{% end %}</title>
   <link rel="stylesheet" type="text/css" href="./css/default.css" />
   <link rel="icon" href="img/open.ico" id="favicon" />
-  <script type="text/javascript" src="js/raphael-min.js"></script>
-  <script type="text/javascript" src="js/g.raphael-min.js"></script>
-  <script type="text/javascript" src="js/g.line-min.js"></script>
-  <script type="text/javascript" src="js/json2.js"></script>
-  <script type="text/javascript" src="js/module.js"></script>
-  <script type="text/javascript" src="js/debug.js"></script>
-  <script type="text/javascript" src="js/html5.js"></script>
-  <script type="text/javascript" src="js/peppy.js" charset="utf-8"></script>
-  <script type="text/javascript" src="js/browser_handler.js"></script>
-  <script type="text/javascript" src="js/handler.js"></script>
-  <script type="text/javascript" src="js/websocket.js"></script>
-  <script type="text/javascript" src="js/index_main.js"></script>
+  {% for script in javascripts %}
+  <script type="text/javascript" src="{{ script }}" charset="utf-8"></script>
+  {% end %}
 </head>
 <body>
   <header class="logo" onclick="location.href = 'http://bits.poul.org'">
