@@ -27,3 +27,8 @@ Docs
 **NOTE**: We use Sphinx autodiscovery to generate docs. If you don't have bitsd
 in `PYTHONPATH` env variable, please use `./makedocs.sh` instead of
 `doc/Makefile` to set it up.
+
+Bugs and patches
+================
+This project is hosted on [GitHub](https://github.com/esseks/bitsd), you
+are welcome to use the bug tracker, wishlist and make pull requests.
