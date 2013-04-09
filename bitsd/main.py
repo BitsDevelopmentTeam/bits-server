@@ -55,7 +55,3 @@ def main():
     signal.signal(signal.SIGINT, sig_handler)
 
     tornado.ioloop.IOLoop.instance().start()
-
-
-if __name__ == '__main__':
-    main()
