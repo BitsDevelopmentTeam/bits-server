@@ -23,9 +23,10 @@ def handle_temperature_command(sensorid, value):
 def handle_status_command(status):
     # TODO catch value error
     status = int(status)
+    textstatus = 'open' if status == 1 else 'closed'
     LOG.info('Received status: {}'.format(status))
-    log_status('open' if status == 1 else 'closed', 'BITS')
-    broadcast_status(status)
+    log_status(textstatus, 'BITS')
+    broadcast_status(textstatus)
 
 
 def handle_enter_command(id):
