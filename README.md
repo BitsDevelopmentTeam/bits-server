@@ -12,13 +12,13 @@ You should use virtualenv to setup a clean environment for BITS.
 Start a local instance for testing
 ----------------------------------
 
-Simply execute `./bitsd.sh` from this directory. Web server will be listening on
+Simply execute `./bitsd.py` from this directory. Web server will be listening on
 port 8008, websocket server on 3389, remote control on 8888.
 
 Configuration
 -------------
 
-Most options can be configured via command line. Issue `bitsd.sh --help`
+Most options can be configured via command line. Issue `bitsd.py --help`
 for a full list.
 
 Exploring
