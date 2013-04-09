@@ -15,7 +15,7 @@ from bitsd.common import LOG
 from .hooks import *
 
 
-class RemoteHandler(tornado.netutil.TCPServer):
+class RemoteListener(tornado.netutil.TCPServer):
     """Handle incoming commands via BITS mini protocol."""
 
     ACTIONS = {
@@ -46,7 +46,7 @@ class RemoteHandler(tornado.netutil.TCPServer):
         if command:
             args = command.split(b' ')
             try:
-                handler = RemoteHandler.ACTIONS[args[0]]
+                handler = RemoteListener.ACTIONS[args[0]]
             except KeyError:
                 LOG.warning('Remote received unknown command {}'.format(args))
             else:
