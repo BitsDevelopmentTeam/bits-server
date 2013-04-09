@@ -17,12 +17,12 @@ class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
     #TODO daltonic?
     def css_files(self):
-        return ('/css/default.css',)
+        return ('/static/default.css',)
 
     def html_head(self):
         return  """
 <meta charset="utf-8"/>
-<link rel="icon" href="/img/open.ico" id="favicon"/>
+<link rel="icon" href="/static/open.ico" id="favicon"/>
         """
 
     def render(self):
@@ -33,18 +33,18 @@ class DynamicPage(tornado.web.UIModule):
     """Module providing JS for dynamic pages."""
     def javascript_files(self):
         return (
-            '/js/raphael-min.js',
-            '/js/g.raphael-min.js',
-            '/js/g.line-min.js',
-            '/js/json2.js',
-            '/js/module.js',
-            '/js/debug.js',
-            '/js/html5.js',
-            '/js/peppy.js',
-            '/js/browser_handler.js',
-            '/js/handler.js',
-            '/js/websocket.js',
-            '/js/index_main.js',
+            '/static/raphael-min.js',
+            '/static/g.raphael-min.js',
+            '/static/g.line-min.js',
+            '/static/json2.js',
+            '/static/module.js',
+            '/static/debug.js',
+            '/static/html5.js',
+            '/static/peppy.js',
+            '/static/browser_handler.js',
+            '/static/handler.js',
+            '/static/websocket.js',
+            '/static/index_main.js',
         )
 
     def render(self):
