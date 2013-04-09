@@ -13,7 +13,7 @@ Hooks called by bitsd.listener.remote.RemoteListener to handle commands.
 # NOTE: don't forget to register your handler in RemoteListener.ACTIONS!
 
 from bitsd.common import LOG
-from bitsd.logger import log_temperature, log_status
+from bitsd.logger import log_temperature, log_status, get_latest_data
 from bitsd.server.websockets.status import broadcast_status
 from bitsd.client.fonera import Fonera
 
@@ -45,7 +45,7 @@ def handle_status_command(status):
 
     textstatus = 'open' if status == 1 else 'closed'
     log_status(textstatus, 'BITS')
-    broadcast_status(textstatus)
+    broadcast_status(get_latest_data())
 
 
 def handle_enter_command(id):
