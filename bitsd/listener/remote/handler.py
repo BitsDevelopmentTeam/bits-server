@@ -65,9 +65,9 @@ class RemoteListener(tornado.netutil.TCPServer):
 
     def handle_stream(self, stream, address):
         """Handles inbound TCP connections asynchronously."""
-        if address[0] != options.fonera_address:
+        if address[0] != options.fonera_host:
             LOG.error("Remote received commands from `{}`, expected from `{}`. Ignoring.".format(
-            address, options.fonera_address))
+            address, options.fonera_host))
             return
         self.stream = stream
         self.stream.read_until(b'\n', self.handle_command)
@@ -90,6 +90,6 @@ class RemoteListener(tornado.netutil.TCPServer):
                 try:
                     handler(*args[1:])
                 except TypeError:
-                    LOG.error('Command {} called with wrong number of args')
+                    LOG.error('Command {} called with wrong number of args'.format(args[0]))
         else:
             LOG.warning('Remote received empty command.')
