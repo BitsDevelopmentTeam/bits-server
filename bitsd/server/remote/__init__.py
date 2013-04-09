@@ -10,7 +10,7 @@ from tornado.options import options
 
 from .handler import RemoteHandler
 
-def startserver():
+def start():
     fonera = RemoteHandler()
     # FIXME single threaded?
     #fonera.bind(options.fonera_port, options.fonera_address)

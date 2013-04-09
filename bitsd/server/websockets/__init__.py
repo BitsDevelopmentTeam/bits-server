@@ -13,7 +13,7 @@ from .status import StatusHandler
 
 from bitsd.common import LOG
 
-def startserver():
+def start():
     LOG.debug('Starting websocket server on port {}'.format(options.web_port))
     server = tornado.web.Application([
         (r'/', StatusHandler)

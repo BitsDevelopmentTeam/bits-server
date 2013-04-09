@@ -6,7 +6,7 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-from .db import persist, startdb, query_by_timestamp
+from .db import persist, start, query_by_timestamp
 from .model import TemperatureSample, Status
 
 

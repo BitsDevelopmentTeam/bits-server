@@ -45,10 +45,10 @@ def main():
     """Entry point for bitsd."""
     parse_command_line()
 
-    logger.startdb()
-    http.startserver()
-    websockets.startserver()
-    remote.startserver()
+    logger.start()
+    http.start()
+    websockets.start()
+    remote.start()
 
     # Add signal handlers...
     signal.signal(signal.SIGTERM, sig_handler)

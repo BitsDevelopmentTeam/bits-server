@@ -16,7 +16,7 @@ from .status import StatusPageHandler
 
 from bitsd.common import LOG
 
-def startserver():
+def start():
     LOG.debug('Starting web server on port {}'.format(options.web_port))
     server = tornado.web.Application([
             (r'/', HomePageHandler),

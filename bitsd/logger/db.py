@@ -20,7 +20,7 @@ ENGINE = None
 Session = None
 
 
-def startdb():
+def start():
     """Will setup connection and ensure that all tables exist."""
     global ENGINE, Session
 
