@@ -24,30 +24,49 @@ FONERA = Fonera(options.fonera_host, options.remote_port)
 
 
 def handle_temperature_command(sensorid, value):
-    sensorid = int(sensorid)
-    value = float(value)
     LOG.info('Received temperature: sensorid={}, value={}'.format(sensorid, value))
+    try:
+        sensorid = int(sensorid)
+        value = float(value)
+    except ValueError:
+        LOG.error('Wrong type for parameters in temperature command!')
+        return
+
     log_temperature(sensorid, value, 'BITS')
 
 
 def handle_status_command(status):
-    # TODO catch value error
-    status = int(status)
-    textstatus = 'open' if status == 1 else 'closed'
     LOG.info('Received status: {}'.format(status))
+    try:
+        status = int(status)
+    except ValueError:
+        LOG.error('Wrong type for parameters in temperature command!')
+        return
+
+    textstatus = 'open' if status == 1 else 'closed'
     log_status(textstatus, 'BITS')
     broadcast_status(textstatus)
 
 
 def handle_enter_command(id):
-    id = int(id)
     LOG.info('Received enter command: id={}'.format(id))
+    try:
+        id = int(id)
+    except ValueError:
+        LOG.error('Wrong type for parameters in temperature command!')
+        return
+
     LOG.error('handle_enter_command not implemented.')
 
 
 def handle_leave_command(id):
-    id = int(id)
     LOG.info('Received leave command: id={}'.format(id))
+    try:
+        id = int(id)
+    except ValueError:
+        LOG.error('Wrong type for parameters in temperature command!')
+        return
+
     LOG.error('handle_leave_command not implemented.')
 
 
@@ -58,6 +77,11 @@ def handle_message_command(message):
 
 
 def handle_sound_command(id):
-    id = int(id)
     LOG.info('Received sound command: id={}'.format(id))
+    try:
+        id = int(id)
+    except ValueError:
+        LOG.error('Wrong type for parameters in temperature command!')
+        return
+
     FONERA.sound(id)
