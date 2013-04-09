@@ -28,6 +28,9 @@ def start():
             (r'/log', LogPageHandler),
             (r'/status', StatusPageHandler),
             (r'/data', DataPageHandler),
+            # TODO js minifier XXX img legacy
+            (r'/(?:static|img)/(.*)', tornado.web.StaticFileHandler,
+                {'path': options.assets_path}),
         ],
         ui_modules=ui,
         gzip=True,

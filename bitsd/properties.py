@@ -35,7 +35,14 @@ define("config",
 )
 
 define("jsonver",
-    default=3, help="JSON data protocol version", group='Internal')
+    default=3, help="JSON data protocol version", group='Internal'
+)
+
+define("assets_path",
+    default='bitsd/server/http/assets',
+    help='Path to assets (for integrated server).',
+    group='Internal'
+)
 
 define("log_queries",
     default=False, help="Log DB queries.", group='Debug')
