@@ -11,7 +11,7 @@ import bitsd.properties
 
 import bitsd.server.http as http
 import bitsd.server.websockets as websockets
-import bitsd.server.remote as remote
+import bitsd.listener.remote as remote
 import bitsd.logger as logger
 
 from bitsd.common import LOG

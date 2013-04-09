@@ -11,7 +11,8 @@ import tornado.netutil
 from tornado.options import options
 
 from bitsd.common import LOG
-from bitsd.server.remote.hooks import *
+
+from .hooks import *
 
 
 class RemoteHandler(tornado.netutil.TCPServer):
