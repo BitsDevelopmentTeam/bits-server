@@ -39,3 +39,9 @@ define("jsonver",
 
 define("log_queries",
     default=False, help="Log DB queries.", group='Debug')
+
+define("developer_mode",
+    default=False,
+    help="Auto reload modules on change. DO NOT enable in production.",
+    group="Development"
+)

@@ -31,5 +31,6 @@ def start():
         ],
         ui_modules=ui,
         gzip=True,
+        debug=options.developer_mode
     )
     server.listen(options.web_port)
