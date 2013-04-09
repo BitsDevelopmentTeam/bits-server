@@ -16,7 +16,7 @@ import bitsd.logger as logger
 
 from bitsd.common import LOG
 
-from tornado.options import parse_command_line
+from tornado.options import parse_command_line, options
 import tornado.ioloop
 
 import signal
@@ -45,9 +45,14 @@ def main():
     """Entry point for bitsd."""
     parse_command_line()
 
+    LOG.info('Starting Logger')
     logger.start()
+    LOG.info('Starting HTTP server on port {}'.format(options.web_port))
     http.start()
+    LOG.info('Starting Websocket server on port {}'.format(options.ws_port))
     websockets.start()
+    LOG.info('Starting remote control on port {}'.format(options.remote_port))
+    LOG.info('Remote control IP is {}'.format(options.fonera_address))
     remote.start()
 
     # Add signal handlers...
