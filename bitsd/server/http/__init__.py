@@ -30,5 +30,6 @@ def start():
             (r'/data', DataPageHandler),
         ],
         ui_modules=ui,
+        gzip=True,
     )
     server.listen(options.web_port)
