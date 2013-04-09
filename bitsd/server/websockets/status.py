@@ -19,11 +19,11 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
 
     def open(self):
         """Register new handler with MessageNotifier."""
-        StatusHandler.QUEUE.register(self)
+        StatusHandler.CLIENTS.register(self)
 
     def on_message(self, message):
         """Disconnect clients sending data (they should not)."""
-        LOG.warning('Client dared to send a message: disconnected.')
+        LOG.warning('Client sent a message: disconnected.')
 
     def on_close(self):
         """Unregister this handler when the connection is closed."""
