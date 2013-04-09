@@ -17,6 +17,7 @@ from .homepage import HomePageHandler
 from .log import LogPageHandler
 from .data import DataPageHandler
 from .status import StatusPageHandler
+from .templates import ui
 
 from bitsd.common import LOG
 
@@ -28,5 +29,6 @@ def start():
             (r'/status', StatusPageHandler),
             (r'/data', DataPageHandler),
         ],
+        ui_modules=ui,
     )
     server.listen(options.web_port)

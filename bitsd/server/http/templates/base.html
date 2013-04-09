@@ -6,16 +6,15 @@
  # GNU GPLv3. See COPYING at top level for more information.
  #}
 
+{% module BasePage() %}
+
+{% block preamble %}
+{% end %}
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-  <meta charset="UTF-8">
   <title>B.I.T.S. | {% block title%}Test title!{% end %}</title>
-  <link rel="stylesheet" type="text/css" href="./css/default.css" />
-  <link rel="icon" href="img/open.ico" id="favicon" />
-  {% for script in javascripts %}
-  <script type="text/javascript" src="{{ script }}" charset="utf-8"></script>
-  {% end %}
 </head>
 <body>
   <header class="logo" onclick="location.href = 'http://bits.poul.org'">

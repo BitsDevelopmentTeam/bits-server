@@ -12,9 +12,7 @@ from bitsd.logger import get_latest_statuses
 
 class LogPageHandler(tornado.web.RequestHandler):
     """Display and paginate log."""
-    JS = []
     def get(self):
         self.render('log.html',
             latest_statuses=get_latest_statuses(),
-            javascripts=self.JS,
         )

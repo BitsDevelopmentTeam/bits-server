@@ -6,9 +6,6 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-import tornado.web
-
-class HomePageHandler(tornado.web.RequestHandler):
-    """Display homepage."""
-    def get(self):
-        self.render('homepage.html')
+"""
+Common templates, widgets and assets for response rendering.
+"""
