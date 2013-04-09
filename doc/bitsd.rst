@@ -17,6 +17,14 @@ bitsd Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`fonera` Module
+--------------------
+
+.. automodule:: bitsd.fonera
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`main` Module
 ------------------
 
@@ -38,6 +46,7 @@ Subpackages
 
 .. toctree::
 
+    bitsd.listener
     bitsd.logger
     bitsd.server
 

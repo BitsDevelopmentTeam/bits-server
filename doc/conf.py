@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # bitsd documentation build configuration file, created by
-# sphinx-quickstart on Mon Apr  8 18:21:32 2013.
+# sphinx-quickstart on Tue Apr  9 14:35:19 2013.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -42,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'bitsd'
-copyright = '''Copyright (C) 2013 Stefano Sanfilippo, BITS development team'''
+copyright = '2013, Author'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

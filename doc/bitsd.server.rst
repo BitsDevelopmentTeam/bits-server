@@ -15,6 +15,5 @@ Subpackages
 .. toctree::
 
     bitsd.server.http
-    bitsd.server.remote
     bitsd.server.websockets
 
