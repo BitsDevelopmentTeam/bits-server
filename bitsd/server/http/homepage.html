@@ -11,5 +11,24 @@
 {% block title %}Homepage{% end %}
 
 {% block body %}
-  <h1>Homepage test!</h1>
+<ul>
+    <li id="sede">
+    <div class="value"></div>
+    <div class="timestamp"></div>
+    <div class="modified_by"></div>
+    </li>
+    <li id="temp" class="">
+    <div class="value"></div>
+    <div class="trend"></div>
+    </li>
+    <li id="last" class="msg ">
+    <div class="user"></div>
+    <div class="timestamp"></div>
+    <div class="value"></div>
+    </li>
+    <li id="graphs">
+    <img src="bits_presence.png" alt="Grafico delle presenze" id="presence_graph"/>
+    <div id="temperature_graph" />
+    </li>
+</ul>
 {% end %}

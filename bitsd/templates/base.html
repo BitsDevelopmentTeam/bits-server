@@ -7,13 +7,44 @@
  #}
 
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-    <title>B.I.T.S. | {% block title%}Test title!{% end %}</title>
+  <meta charset="UTF-8">
+  <title>B.I.T.S. | {% block title%}Test title!{% end %}</title>
+  <link rel="stylesheet" type="text/css" href="./css/default.css" />
+  <link rel="icon" href="img/open.ico" id="favicon" />
+  <script type="text/javascript" src="js/raphael-min.js"></script>
+  <script type="text/javascript" src="js/g.raphael-min.js"></script>
+  <script type="text/javascript" src="js/g.line-min.js"></script>
+  <script type="text/javascript" src="js/json2.js"></script>
+  <script type="text/javascript" src="js/module.js"></script>
+  <script type="text/javascript" src="js/debug.js"></script>
+  <script type="text/javascript" src="js/html5.js"></script>
+  <script type="text/javascript" src="js/peppy.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/browser_handler.js"></script>
+  <script type="text/javascript" src="js/handler.js"></script>
+  <script type="text/javascript" src="js/websocket.js"></script>
+  <script type="text/javascript" src="js/index_main.js"></script>
 </head>
 <body>
+  <header class="logo" onclick="location.href = 'http://bits.poul.org'">
+    <h1>B.I.T.S.</h1>
+    <h2>System&nbsp;&nbsp;2.1</h2>
+  </header>
+  <aside>
+    <nav>
+      <ul class="link">
+        <li><a href="http://www.poul.org">Cos'è il POuL</a></li>
+        <li><a href="bits_info.html">Cos'è BITS</a></li>
+        <li><a href="storico.php">Leggi i log degli accessi</a></li>
+        <li><a href="index-alt.html">Color-blind version</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <article class="status">
     {% block body %}
-    <h1>Test page!</h1>
+      <h1>Test page!</h1>
     {% end %}
+  </article>
 </body>
 </html>
