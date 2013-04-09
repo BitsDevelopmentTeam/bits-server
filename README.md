@@ -12,8 +12,7 @@ You should use virtualenv to setup a clean environment for BITS.
 Start a local instance for testing
 ----------------------------------
 
-Simply execute `./bitsd.py` from this directory. Web server will be listening on
-port 8008, websocket server on 3389, remote control on 8888.
+Simply execute `./bitsd.py` from this directory and watch the log closely ;)
 
 Configuration
 -------------
@@ -21,11 +20,9 @@ Configuration
 Most options can be configured via command line. Issue `bitsd.py --help`
 for a full list.
 
-Exploring
-=========
+Docs
+====
 
-The homepage is still being setup. In the meantime, you can visit:
-
-1. **/log** Logging the latest 10 BITS operations.
-2. **/status** A single digit, 0 meaning "closed", 1 meaning "open"
-3. **/data** Latest data in a machine parseable format (no more scraping ;) ).
+**NOTE**: We use Sphinx autodiscovery to generate docs. If you don't have bitsd
+in `PYTHONPATH` env variable, please use `./makedocs.sh` instead of
+`doc/Makefile` to set it up.
