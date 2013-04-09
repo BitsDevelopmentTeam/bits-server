@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+HTTP content server
+"""
+
 import tornado.web
 from tornado.options import options
 

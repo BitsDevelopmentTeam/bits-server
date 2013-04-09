@@ -6,6 +6,11 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Listen for remote commands on BITS-miniprotocol and dispatches to Fonera
+via bitsd.fonera.Fonera proxy.
+"""
+
 from tornado.options import options
 
 from .handler import RemoteListener

@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Model for sensor persistence data.
+"""
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column
 from sqlalchemy.types import Integer, Float, DateTime, Enum
@@ -61,4 +65,3 @@ class Status(Base):
             "modifiedby": self.modified_by,
             "value": self.value
         }
-

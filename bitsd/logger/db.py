@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Actual DBMS proxy.
+"""
+
 from .model import TemperatureSample, Status, Base
 from bitsd.common import LOG
 
@@ -13,7 +17,6 @@ from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 
 from tornado.options import options
-
 
 # Call startdb() to initialize
 ENGINE = None

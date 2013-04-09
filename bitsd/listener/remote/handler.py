@@ -21,32 +21,37 @@ class RemoteListener(tornado.netutil.TCPServer):
 
     Trying to do something KISS.
     Commands are rpc-like: function name and eventual args, separated by spaces.
-    One command per line, "\n" as line separator.
+    One command per line, "\\n" as line separator.
     Numeric argument are printed as-is, string arguments are encoded in base64.
 
     status <int>
         Parameter 0 is "closed", 1 is "open".
-            Example "status 1\n"
+
+        >>> "status 1\\n"
 
     enter <int>
         One person is added to the list of persone in sede.
         The first parameter is the number inserted on the numeric keypad.
-            Example "enter 5\n"
+
+        >>> "enter 5\\n"
 
     leave <int>
         One person is removed from the list of persone in sede.
         The first parameter is the number inserted on the numeric keypad.
-            Example "leave 5\n"
+
+        >>> "leave 5\\n"
 
     message <string>
         A message is added to the list of messages shown on the display.
-            Example "message bG9sCg==\n"
+
+        >>> "message bG9sCg==\\n"
 
     sound <int>
         Play a sound on the fonera.
         The parameter is an index into a list of predefined
         sounds. Sad trombone anyone?
-            Example "sound 0\n"
+
+        >>> "sound 0\\n"
     """
 
     ACTIONS = {

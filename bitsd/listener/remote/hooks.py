@@ -6,7 +6,11 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-# NOTE: don't forget to register your handler in RemoteHandler.ACTIONS!
+"""
+Hooks called by bitsd.listener.remote.RemoteListener to handle commands.
+"""
+
+# NOTE: don't forget to register your handler in RemoteListener.ACTIONS!
 
 from bitsd.common import LOG, unbase64
 from bitsd.logger import log_temperature, log_status
