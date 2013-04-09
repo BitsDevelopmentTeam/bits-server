@@ -10,19 +10,22 @@ import tornado.web
 
 class HomePageHandler(tornado.web.RequestHandler):
     """Display homepage."""
+    JS = [
+        'js/raphael-min.js',
+        'js/g.raphael-min.js',
+        'js/g.line-min.js',
+        'js/json2.js',
+        'js/module.js',
+        'js/debug.js',
+        'js/html5.js',
+        'js/peppy.js',
+        'js/browser_handler.js',
+        'js/handler.js',
+        'js/websocket.js',
+        'js/index_main.js',
+    ]
+
     def get(self):
         self.render('homepage.html',
-            javascripts = [
-                'js/raphael-min.js',
-                'js/g.raphael-min.js',
-                'js/g.line-min.js',
-                'js/json2.js',
-                'js/module.js',
-                'js/debug.js',
-                'js/html5.js',
-                'js/peppy.js',
-                'js/browser_handler.js',
-                'js/handler.js',
-                'js/websocket.js',
-                'js/index_main.js',
-        ])
+            javascripts=self.JS
+        )
