@@ -36,8 +36,8 @@ def get_latest_temperature_samples():
     return query_by_timestamp(TemperatureSample, limit=100)
 
 def get_latest_statuses():
-    """Query last 10 Status by timestamp.""" #TODO
-    return query_by_timestamp(Status, limit=10)
+    """Query last 20 Status by timestamp.""" #TODO
+    return query_by_timestamp(Status, limit=20)
 
 
 def get_latest_data():
