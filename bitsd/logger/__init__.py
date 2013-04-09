@@ -11,6 +11,8 @@ Persists data from sensors to DB and offers an abstraction level over
 DBMS internals.
 """
 
+from tornado.options import options
+
 from .db import persist, start, query_by_timestamp
 from .model import TemperatureSample, Status
 
@@ -36,3 +38,17 @@ def get_latest_temperature_samples():
 def get_latest_statuses():
     """Query last 10 Status by timestamp.""" #TODO
     return query_by_timestamp(Status, limit=10)
+
+
+def get_latest_data():
+    """Get recent data."""
+    status = get_current_status()
+    temp = get_current_temperature()
+    latest_temp_samples = get_latest_temperature_samples()
+    return {
+        "status": status.jsondict(),
+        "tempint": temp.jsondict(),
+        "version": options.jsonver,
+        #"msg": TODO,
+        "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
+    }

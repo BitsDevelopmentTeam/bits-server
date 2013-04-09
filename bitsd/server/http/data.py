@@ -7,24 +7,12 @@
 #
 
 import tornado.web
-from tornado.options import options
 
-from bitsd.logger import get_current_status, get_current_temperature
-from bitsd.logger import get_latest_temperature_samples
+from bitsd.logger import get_latest_data
 
 
 class DataPageHandler(tornado.web.RequestHandler):
     """Get BITS data in JSON, machine parseable."""
     def get(self):
-        status = get_current_status()
-        temp = get_current_temperature()
-        latest_temp_samples = get_latest_temperature_samples()
-
-        self.write({
-            "status": status.jsondict(),
-            "tempint": temp.jsondict(),
-            "version": options.jsonver,
-            #"msg": TODO,
-            "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
-        })
+        self.write(get_latest_data())
         self.flush()
