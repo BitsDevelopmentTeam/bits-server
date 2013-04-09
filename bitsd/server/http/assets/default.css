@@ -1,0 +1,213 @@
+html {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: #000000;
+  color: #FFFFFF;
+  text-align: center;
+  font-family: sans;
+}
+
+a {
+  color: #00FF00;
+}
+
+a:visited {
+  color: #00AA00;
+}
+
+a:hover {
+  color: #FFFFFF;
+}
+
+body {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+
+header.logo {
+  display: block;
+  position: relative;
+  background: url("bits_bg.png");
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  padding-left: 1%;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+header.logo h1 {
+  font: 65pt/65pt sans;
+  font-style: italic;
+  display: inline;
+}
+
+header.logo h2 {
+  font: 30pt sans;
+  font-style: italic;
+  display: inline;
+}
+
+ul.link {
+  list-style: none;
+}
+
+ul.link li:first-child {
+  border-left: none;
+}
+
+ul.link li {
+  display: inline;
+  padding-left:1em;
+  margin-left:1em;
+  border-left:1px solid #ccc;
+}
+
+.status ul {
+  list-style: none;
+}
+
+.status #sede {
+  font: 1.2em sans;
+  font-weight: bold;
+}
+
+.storico .status .open:before {
+  content: "Sede aperta ";
+  color: #00FF00;
+}
+
+.storico .status .closed:before {
+  content: "Sede chiusa ";
+  color: #FF0000;
+}
+
+.status > ul > li {
+  display: none;
+}
+
+.status > ul > li#graphs {
+  display: block;
+}
+
+.status #temp:before {
+  content: "Temperatura: ";
+  padding-right: .5em;
+  font-weight: bold;
+}
+
+.status #temp > div {
+  display: inline;
+}
+
+.status #temp.high {
+  color: #FF6600;
+}
+
+.status #temp.low {
+  color: #CCFFFF;
+}
+
+ul.status {
+  list-style: none;
+}
+
+nav#prec_next ul {
+  list-style: none;
+}
+
+
+nav#prec_next ul li:first-child {
+  border-left: none;
+}
+
+nav#prec_next ul li {
+  display: inline;
+  padding-left:1em;
+  margin-left:1em;
+  border-left:1px solid #ccc;
+}
+
+#last.msg div:first-child:before {
+  content: "Ultimo messaggio: ";
+  font-weight: bold;
+  padding-right: .5em;
+}
+
+#last.msg div:first-child {
+  border-left: none;
+}
+
+#last.msg div {
+  visibility: hidden;
+  display: inline;
+  padding-left:1em;
+  margin-left:1em;
+  border-left:1px solid #ccc;
+}
+
+#sede div {
+  display: inline;
+}
+
+#sede .value:before {
+  content: "La sede del POuL è stata ";
+}
+
+#sede .open:after {
+  content: "aperta";
+  color: #00FF00;
+}
+
+#sede .close:after {
+  content: "chiusa";
+  color: #FF0000;
+}
+
+#sede .timestamp:before {
+  content: "il ";
+}
+
+#sede .modified_by:before {
+  content: "da ";
+}
+
+#bitsdesc {
+  margin: 5%;
+  text-align: left;
+}
+
+#bitsdesc #images {
+  text-align: center;
+}
+
+#bitsdesc img[src="bits_presence.png"] {
+  display: block;
+  margin: 0 auto;
+}
+
+#bitsdesc dt {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+#bitsdesc #languages {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: inline;
+}
+
+#bitsdesc #languages li {
+  display: inline;
+}
+
+#bitsdesc #languages li:after {
+  content: ",";
+}
+
+#bitsdesc #languages li.last:after {
+  content: "";
+}
