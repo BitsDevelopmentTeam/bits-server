@@ -26,6 +26,6 @@ Exploring
 
 The homepage is still being setup. In the meantime, you can visit:
 
-1. **/storico** Logging the latest 10 BITS operations.
-2. **/status** A single digit, 0 means "closed", 1 means "open"
-3. **/data.json** Latest data in a machine parseable flavour (no scraping ;) ).
+1. **/log** Logging the latest 10 BITS operations.
+2. **/status** A single digit, 0 meaning "closed", 1 meaning "open"
+3. **/data** Latest data in a machine parseable format (no more scraping ;) ).

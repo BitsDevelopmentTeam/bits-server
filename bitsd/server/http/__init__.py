@@ -20,9 +20,9 @@ def startserver():
     LOG.debug('Starting web server on port {}'.format(options.web_port))
     server = tornado.web.Application([
             (r'/', HomePageHandler),
-            (r'/storico', LogPageHandler),
+            (r'/log', LogPageHandler),
             (r'/status', StatusPageHandler),
-            (r'/data.json', DataPageHandler),
+            (r'/data', DataPageHandler),
         ],
     )
     server.listen(options.web_port)
