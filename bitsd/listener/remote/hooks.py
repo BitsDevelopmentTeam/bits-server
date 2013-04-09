@@ -11,6 +11,12 @@
 from bitsd.common import LOG, unbase64
 from bitsd.logger import log_temperature, log_status
 from bitsd.server.websockets.status import broadcast_status
+from bitsd.fonera import Fonera
+
+from tornado.options import options
+
+
+FONERA = Fonera(options.fonera_host, options.remote_port)
 
 
 def handle_temperature_command(sensorid, value):
@@ -32,21 +38,22 @@ def handle_status_command(status):
 def handle_enter_command(id):
     id = int(id)
     LOG.info('Received enter command: id={}'.format(id))
-    LOG.warning('handle_enter_command not implemented.')
+    LOG.error('handle_enter_command not implemented.')
 
 
 def handle_leave_command(id):
     id = int(id)
     LOG.info('Received leave command: id={}'.format(id))
-    LOG.warning('handle_leave_command not implemented.')
+    LOG.error('handle_leave_command not implemented.')
 
 
 def handle_message_command(message):
     message = unbase64(message)
     LOG.info('Received message command: message={!r}'.format(message))
-    LOG.warning('handle_message_command not implemented.')
+    FONERA.message(message)
+
 
 def handle_sound_command(id):
     id = int(id)
     LOG.info('Received sound command: id={}'.format(id))
-    LOG.warning('handle_sound_command not implemented.')
+    FONERA.sound(id)
