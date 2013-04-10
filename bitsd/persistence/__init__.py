@@ -39,7 +39,8 @@ def start():
 
 def persist(data):
     """Persist data to configured DB.
-    WARNING will log what's being persisted, so don't put clear text password
+
+    **Note:** will log what's being persisted, so don't put clear text password
     into `__str__()`."""
     LOG.debug('Persisting data {}'.format(data))
     session = Session()
