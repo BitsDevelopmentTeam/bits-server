@@ -12,7 +12,7 @@ module("websocket", function (require, exports) {
 
     // Implements a WS fallback via XHR
     FakeWebSocket = function () {
-        var fakeUrl = "http://bits.poul.org/data",
+        var fakeUrl = "http://" + window.location.hostname + "/data",
             xhr = new XHR(),
             i = 0,
             self = this;
