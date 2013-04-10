@@ -13,7 +13,7 @@ DBMS internals.
 
 from tornado.options import options
 
-from . import persist, query_by_timestamp
+from .. import persist, query_by_timestamp
 from .model import TemperatureSample, Status
 
 

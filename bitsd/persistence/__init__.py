@@ -10,7 +10,7 @@
 Actual DBMS proxy.
 """
 
-from .model import TemperatureSample, Status, Base
+from sqlalchemy.ext.declarative import declarative_base
 from bitsd.common import LOG
 
 from sqlalchemy import create_engine, desc
@@ -21,12 +21,12 @@ from tornado.options import options
 # Call startdb() to initialize
 ENGINE = None
 Session = None
-
+Base = declarative_base()
 
 def start():
     """Will setup connection and ensure that all tables exist.
     MUST be called prior to any operation."""
-    global ENGINE, Session
+    global ENGINE, Session, Base
 
     LOG.info('Connecting to DB.')
     ENGINE = create_engine(options.db_uri, echo=options.log_queries)

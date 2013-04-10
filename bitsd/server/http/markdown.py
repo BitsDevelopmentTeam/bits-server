@@ -9,7 +9,7 @@
 import tornado.web
 import markdown
 
-from bitsd.pages import get_page
+from bitsd.persistence.pages import get_page
 
 class MarkdownPageHandler(tornado.web.RequestHandler):
     """Renders page from markdown source."""

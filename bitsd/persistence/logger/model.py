@@ -10,13 +10,13 @@
 Model for sensor persistence data.
 """
 
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column
 from sqlalchemy.types import Integer, Float, DateTime, Enum
 
 import datetime
 
-Base = declarative_base()
+from .. import Base
+
 
 class TemperatureSample(Base):
     __tablename__ = 'Temperature'
