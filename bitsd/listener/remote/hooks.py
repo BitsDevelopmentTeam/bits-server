@@ -33,6 +33,7 @@ def handle_temperature_command(sensorid, value):
         return
 
     log_temperature(value, sensorid, 'BITS')
+    broadcast_status(get_latest_data())
 
 
 def handle_status_command(status):
