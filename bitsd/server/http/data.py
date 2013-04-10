@@ -16,3 +16,4 @@ class DataPageHandler(tornado.web.RequestHandler):
     def get(self):
         self.write(get_latest_data())
         self.flush()
+        self.finish()
