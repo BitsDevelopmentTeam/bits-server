@@ -37,7 +37,7 @@ class TemperatureSample(Base):
     def jsondict(self):
         """Returns a JSON-parseable dictionary representing the object."""
         return {
-            "timestamp": self.timestamp.isoformat(),
+            "timestamp": self.timestamp.isoformat(' '),
             "value": self.value,
             "modifiedby": self.modified_by,
             "sensor": self.sensor
@@ -61,7 +61,7 @@ class Status(Base):
     def jsondict(self):
         """Returns a JSON-parseable dictionary representing the object."""
         return {
-            "timestamp": self.timestamp.isoformat(),
+            "timestamp": self.timestamp.isoformat(' '),
             "modifiedby": self.modified_by,
             "value": self.value
         }
