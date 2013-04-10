@@ -31,12 +31,10 @@ def start():
             (r'/status', StatusPageHandler),
             (r'/data', DataPageHandler),
             (r'/(info)', MarkdownPageHandler),
-            # TODO js minifier XXX img legacy
-            (r'/(?:static|img)/(.*)', tornado.web.StaticFileHandler,
-                {'path': options.assets_path}),
         ],
         ui_modules=ui,
         gzip=True,
-        debug=options.developer_mode
+        debug=options.developer_mode,
+        static_path=options.assets_path
     )
     server.listen(options.web_port)
