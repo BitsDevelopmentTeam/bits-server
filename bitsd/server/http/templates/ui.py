@@ -12,6 +12,8 @@ Assorted Tornado UI widgets and mixins.
 
 import tornado.web
 
+from bitsd.persistence.logger import get_latest_statuses
+
 
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
@@ -21,7 +23,6 @@ class BasePage(tornado.web.UIModule):
         if 'blind' in self.request.path:
             css.append('/static/dalton.css')
         return css
-
 
     def html_head(self):
         return  """
@@ -53,3 +54,15 @@ class DynamicPage(tornado.web.UIModule):
 
     def render(self):
         return ''
+
+
+class PresenceWidget(tornado.web.UIModule):
+    """Render a table showing the probability to find the BITS open,
+    visualized as shades of colour, from green to red."""
+    def css_files(self):
+        return ()
+
+    def render(self):
+        samples = get_latest_statuses(5000)
+        #TODO + TODO gray
+        return '<img src="bits_presence.png" alt="Grafico delle presenze" id="presence_graph"/>'
