@@ -15,9 +15,13 @@ import tornado.web
 
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
-    #TODO daltonic?
     def css_files(self):
-        return ('/static/default.css',)
+        css = ['/static/default.css',]
+        # FIXME daltonism workaround, should be implemented client-side
+        if 'blind' in self.request.path:
+            css.append('/static/dalton.css')
+        return css
+
 
     def html_head(self):
         return  """

@@ -24,7 +24,8 @@ from bitsd.common import LOG
 def start():
     LOG.debug('Starting web server on port {}'.format(options.web_port))
     server = tornado.web.Application([
-            (r'/', HomePageHandler),
+            # FIXME daltonism workaround, should be implemented client-side
+            (r'/(?:|blind)', HomePageHandler),
             (r'/log', LogPageHandler),
             (r'/status', StatusPageHandler),
             (r'/data', DataPageHandler),
