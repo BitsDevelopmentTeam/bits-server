@@ -7,6 +7,8 @@
 #
 
 import tornado.web
+from tornado.options import options
+
 import markdown
 
 from bitsd.persistence.pages import get_page
@@ -19,7 +21,7 @@ class MarkdownPageHandler(tornado.web.RequestHandler):
         self.render('markdown.html',
             body=markdown.markdown(
                 page.body,
-                safe_mode='escape',
+                safe_mode='escape' if options.mdescape else False,
             ),
             title=page.title,
         )

@@ -42,6 +42,11 @@ define("jsonver",
     default=3, help="JSON data protocol version", group='Internal'
 )
 
+define("mdescape",
+    default=True,
+    help="Escape literal HTML in Markdown source.", group='Internal'
+)
+
 define("assets_path",
     default='bitsd/server/http/assets',
     help='Path to assets (for integrated server).',
