@@ -12,7 +12,7 @@ import bitsd.properties
 import bitsd.server.http as http
 import bitsd.server.websockets as websockets
 import bitsd.listener.remote as remote
-import bitsd.logger as logger
+import bitsd.persistence as persistence
 
 from bitsd.common import LOG
 
@@ -45,8 +45,8 @@ def main():
     """Entry point for bitsd."""
     parse_command_line()
 
-    LOG.info('Starting Logger')
-    logger.start()
+    LOG.info('Starting persistence service')
+    persistence.start()
     LOG.info('Starting HTTP server on port {}'.format(options.web_port))
     http.start()
     LOG.info('Starting Websocket server on port {}'.format(options.ws_port))

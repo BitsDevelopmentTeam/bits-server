@@ -8,7 +8,7 @@
 
 import tornado.web
 
-from bitsd.logger import get_current_status
+from bitsd.persistence.logger import get_current_status
 
 class StatusPageHandler(tornado.web.RequestHandler):
     """Get a single digit, indicating BITS status (open/closed)"""

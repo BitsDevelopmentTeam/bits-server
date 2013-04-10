@@ -24,7 +24,8 @@ Session = None
 
 
 def start():
-    """Will setup connection and ensure that all tables exist."""
+    """Will setup connection and ensure that all tables exist.
+    MUST be called prior to any operation."""
     global ENGINE, Session
 
     LOG.info('Connecting to DB.')

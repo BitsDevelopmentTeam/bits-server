@@ -8,7 +8,7 @@
 
 import tornado.web
 
-from bitsd.logger import get_latest_data
+from bitsd.persistence.logger import get_latest_data
 
 
 class DataPageHandler(tornado.web.RequestHandler):

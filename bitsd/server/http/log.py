@@ -8,7 +8,7 @@
 
 import tornado.web
 
-from bitsd.logger import get_latest_statuses
+from bitsd.persistence.logger import get_latest_statuses
 
 class LogPageHandler(tornado.web.RequestHandler):
     """Display and paginate log."""
