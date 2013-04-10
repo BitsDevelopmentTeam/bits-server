@@ -41,7 +41,10 @@ def handle_status_command(status):
     try:
         status = int(status)
     except ValueError:
-        LOG.error('Wrong type for parameters in temperature command!')
+        LOG.error('Wrong type for parameters in temperature command')
+        return
+    if status not in (0,1):
+        LOG.error('Non existent status {}, ignoring.'.format(status))
         return
 
     textstatus = 'open' if status == 1 else 'closed'
