@@ -17,6 +17,7 @@ from .homepage import HomePageHandler
 from .log import LogPageHandler
 from .data import DataPageHandler
 from .status import StatusPageHandler
+from .markdown import MarkdownPageHandler
 from .templates import ui
 
 from bitsd.common import LOG
@@ -29,6 +30,7 @@ def start():
             (r'/log', LogPageHandler),
             (r'/status', StatusPageHandler),
             (r'/data', DataPageHandler),
+            (r'/(info)', MarkdownPageHandler),
             # TODO js minifier XXX img legacy
             (r'/(?:static|img)/(.*)', tornado.web.StaticFileHandler,
                 {'path': options.assets_path}),
