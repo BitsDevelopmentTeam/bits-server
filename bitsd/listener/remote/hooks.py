@@ -32,7 +32,7 @@ def handle_temperature_command(sensorid, value):
         LOG.error('Wrong type for parameters in temperature command!')
         return
 
-    log_temperature(sensorid, value, 'BITS')
+    log_temperature(value, sensorid, 'BITS')
 
 
 def handle_status_command(status):
