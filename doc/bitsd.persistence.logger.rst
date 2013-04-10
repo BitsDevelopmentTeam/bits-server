@@ -4,15 +4,7 @@ logger Package
 :mod:`logger` Package
 ---------------------
 
-.. automodule:: bitsd.logger
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`db` Module
-----------------
-
-.. automodule:: bitsd.logger.db
+.. automodule:: bitsd.persistence.logger
     :members:
     :undoc-members:
     :show-inheritance:
@@ -20,7 +12,7 @@ logger Package
 :mod:`model` Module
 -------------------
 
-.. automodule:: bitsd.logger.model
+.. automodule:: bitsd.persistence.logger.model
     :members:
     :undoc-members:
     :show-inheritance:

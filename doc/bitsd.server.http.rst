@@ -33,6 +33,14 @@ http Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`markdown` Module
+----------------------
+
+.. automodule:: bitsd.server.http.markdown
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`status` Module
 --------------------
 
@@ -40,4 +48,11 @@ http Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    bitsd.server.http.templates
 
