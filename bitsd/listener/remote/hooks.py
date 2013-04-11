@@ -32,8 +32,8 @@ def handle_temperature_command(sensorid, value):
         LOG.error('Wrong type for parameters in temperature command!')
         return
 
-    log_temperature(value, sensorid, 'BITS')
-    broadcast_status(get_latest_data())
+    temp = log_temperature(value, sensorid, 'BITS')
+    broadcast_status({'tempint': temp.jsondict()})
 
 
 def handle_status_command(status):
@@ -48,8 +48,8 @@ def handle_status_command(status):
         return
 
     textstatus = 'open' if status == 1 else 'closed'
-    log_status(textstatus, 'BITS')
-    broadcast_status(get_latest_data())
+    status = log_status(textstatus, 'BITS')
+    broadcast_status({'status': status.jsondict()})
 
 
 def handle_enter_command(id):
