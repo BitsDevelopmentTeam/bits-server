@@ -11,6 +11,8 @@ import tornado.websocket
 from .notifier import MessageNotifier
 
 from bitsd.common import LOG
+from bitsd.persistence.logger import get_latest_data
+
 
 class StatusHandler(tornado.websocket.WebSocketHandler):
     """Handler for POuL status via websocket"""
@@ -20,6 +22,7 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         """Register new handler with MessageNotifier."""
         StatusHandler.CLIENTS.register(self)
+        self.write_message(get_latest_data())
 
     def on_message(self, message):
         """Disconnect clients sending data (they should not)."""
