@@ -16,9 +16,9 @@ from bitsd.common import LOG
 from bitsd.persistence.logger import log_temperature, log_status, get_latest_data
 from bitsd.server.websockets.status import broadcast_status
 from bitsd.client.fonera import Fonera
-
 # Fixing Sphinx complaints
 import bitsd.properties
+
 from tornado.options import options
 
 

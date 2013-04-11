@@ -12,6 +12,7 @@ import base64
 import socket
 
 
+# TODO handle disconnect/reconnect
 class Fonera(tornado.iostream.IOStream):
     """Proxy object for controlling Fonera via BITS-miniprotocol."""
 
