@@ -33,7 +33,9 @@ def handle_temperature_command(sensorid, value):
         return
 
     temp = log_temperature(value, sensorid, 'BITS')
-    broadcast_status({'tempint': temp.jsondict()})
+    # Return wrapped in dict
+    broadcast_status(temp.jsondict(wrap=True))
+
 
 
 def handle_status_command(status):
@@ -49,7 +51,8 @@ def handle_status_command(status):
 
     textstatus = 'open' if status == 1 else 'closed'
     status = log_status(textstatus, 'BITS')
-    broadcast_status({'status': status.jsondict()})
+    # Return wrapped in dict
+    broadcast_status(status.jsondict(wrap=True))
 
 
 def handle_enter_command(id):

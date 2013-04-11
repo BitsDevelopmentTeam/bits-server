@@ -34,14 +34,18 @@ class TemperatureSample(Base):
     def __str__(self):
         return 'Temperature {.value}°C'.format(self)
 
-    def jsondict(self):
+    def jsondict(self, wrap=False):
         """Returns a JSON-parseable dictionary representing the object."""
-        return {
+        data = {
             "timestamp": self.timestamp.isoformat(' '),
             "value": self.value,
             "modifiedby": self.modified_by,
             "sensor": self.sensor
         }
+        if wrap:
+            return {"tempint": data}
+        else:
+            return data
 
 
 class Status(Base):
@@ -58,10 +62,14 @@ class Status(Base):
     def __str__(self):
         return 'Status {.value}'.format(self)
 
-    def jsondict(self):
+    def jsondict(self, wrap=False):
         """Returns a JSON-parseable dictionary representing the object."""
-        return {
+        data = {
             "timestamp": self.timestamp.isoformat(' '),
             "modifiedby": self.modified_by,
             "value": self.value
         }
+        if wrap:
+            return {'status': data}
+        else:
+            return data
