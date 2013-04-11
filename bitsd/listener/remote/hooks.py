@@ -21,7 +21,7 @@ import bitsd.properties
 
 from tornado.options import options
 
-
+#: Proxy for BITS Fonera
 FONERA = Fonera(options.fonera_host, options.remote_port)
 
 
