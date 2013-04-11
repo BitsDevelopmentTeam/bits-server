@@ -19,11 +19,17 @@ from .model import TemperatureSample, Status
 
 def log_temperature(value, sensor, modified_by):
     """Add a temperature sample to the DB."""
-    persist(TemperatureSample(value, sensor, modified_by))
+    sample = TemperatureSample(value, sensor, modified_by)
+    persist(sample)
+    return sample
+
 
 def log_status(status, modified_by):
     """Persist status to the DB."""
-    persist(Status(status, modified_by))
+    sample = Status(status, modified_by)
+    persist(sample)
+    return sample
+
 
 def get_current_status():
     return query_by_timestamp(Status, limit=1)
