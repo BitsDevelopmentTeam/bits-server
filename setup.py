@@ -31,5 +31,14 @@ setup(
     ],
     scripts=[
         'bitsd.py'
-    ]
+    ],
+    package_data={
+        'bitsd.server.http': [
+            '*.html',
+            'assets/*',
+        ],
+        'bitsd.server.http.templates': [
+            '*.html'
+        ]
+    }
 )
