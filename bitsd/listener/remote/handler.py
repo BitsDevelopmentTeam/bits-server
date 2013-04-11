@@ -24,29 +24,29 @@ class RemoteListener(tornado.netutil.TCPServer):
     One command per line, "\\n" as line separator.
     Numeric argument are printed as-is, string arguments are encoded in base64.
 
-    status <int>
+    **status** <int>
         Parameter 0 is "closed", 1 is "open".
 
         >>> "status 1\\n"
 
-    enter <int>
+    **enter** <int>
         One person is added to the list of persone in sede.
         The first parameter is the number inserted on the numeric keypad.
 
         >>> "enter 5\\n"
 
-    leave <int>
+    **leave** <int>
         One person is removed from the list of persone in sede.
         The first parameter is the number inserted on the numeric keypad.
 
         >>> "leave 5\\n"
 
-    message <string>
+    **message** <string>
         A message is added to the list of messages shown on the display.
 
         >>> "message bG9sCg==\\n"
 
-    sound <int>
+    **sound** <int>
         Play a sound on the fonera.
         The parameter is an index into a list of predefined
         sounds. Sad trombone anyone?
