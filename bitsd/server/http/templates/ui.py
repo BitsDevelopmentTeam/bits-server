@@ -18,10 +18,10 @@ from bitsd.persistence.logger import get_latest_statuses
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
     def css_files(self):
-        css = ['/static/default.css',]
+        css = ['/static/default.css?v=1',]
         # FIXME daltonism workaround, should be implemented client-side
         if 'blind' in self.request.path:
-            css.append('/static/dalton.css')
+            css.append('/static/dalton.css?v=1')
         return css
 
     def html_head(self):
@@ -38,18 +38,18 @@ class DynamicPage(tornado.web.UIModule):
     """Module providing JS for dynamic pages."""
     def javascript_files(self):
         return (
-            '/static/raphael-min.js',
-            '/static/g.raphael-min.js',
-            '/static/g.line-min.js',
-            '/static/json2.js',
-            '/static/module.js',
-            '/static/debug.js',
-            '/static/html5.js',
-            '/static/peppy.js',
-            '/static/browser_handler.js',
-            '/static/handler.js',
-            '/static/websocket.js',
-            '/static/index_main.js',
+            '/static/raphael-min.js?v=1',
+            '/static/g.raphael-min.js?v=1',
+            '/static/g.line-min.js?v=1',
+            '/static/json2.js?v=1',
+            '/static/module.js?v=1',
+            '/static/debug.js?v=1',
+            '/static/html5.js?v=1',
+            '/static/peppy.js?v=1',
+            '/static/browser_handler.js?v=1',
+            '/static/handler.js?v=1',
+            '/static/websocket.js?v=1',
+            '/static/index_main.js?v=1',
         )
 
     def render(self):
