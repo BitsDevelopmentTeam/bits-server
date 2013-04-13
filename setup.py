@@ -12,6 +12,7 @@ from distutils.core import setup
 setup(
     name='bitsd',
     version='2.1',
+    license='GPLv3',
     description='Presence server, logger and remote listener.',
     author='Stefano Sanfilippo et al.',
     author_email='a.little.coder@gmail.com',
