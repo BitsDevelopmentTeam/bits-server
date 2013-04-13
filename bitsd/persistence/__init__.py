@@ -53,6 +53,6 @@ def query_by_timestamp(model, limit=1, offset=0):
     Default to `limit=1` (latest value)."""
     session = Session()
     if limit != 1:
-        return session.query(model).order_by(desc(model.timestamp))[offset:limit]
+        return session.query(model).order_by(desc(model.timestamp))[offset:offset+limit]
     else:
         return session.query(model).order_by(desc(model.timestamp))[offset]
