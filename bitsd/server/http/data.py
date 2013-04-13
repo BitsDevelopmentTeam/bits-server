@@ -15,5 +15,4 @@ class DataPageHandler(tornado.web.RequestHandler):
     """Get BITS data in JSON, machine parseable."""
     def get(self):
         self.write(get_latest_data())
-        self.flush()
         self.finish()
