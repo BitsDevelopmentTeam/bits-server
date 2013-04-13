@@ -56,3 +56,9 @@ def query_by_timestamp(model, limit=1, offset=0):
         return session.query(model).order_by(desc(model.timestamp))[offset:offset+limit]
     else:
         return session.query(model).order_by(desc(model.timestamp))[offset]
+
+
+def count(model):
+    """Returns count of `model` instances in DB."""
+    session = Session()
+    return session.query(model).count()
