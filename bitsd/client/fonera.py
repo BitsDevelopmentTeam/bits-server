@@ -18,7 +18,7 @@ class Fonera(tornado.iostream.IOStream):
 
     def __init__(self, host, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-        super().__init__(s)
+        super(Fonera, self).__init__(s)
         self.initialized = False
         self.host = host
         self.port = port

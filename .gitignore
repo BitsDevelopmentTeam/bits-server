@@ -4,3 +4,4 @@ doc/_build
 dist
 build
 MANIFEST
+*.pyc

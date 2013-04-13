@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 #
 # Copyright (C) 2013 Stefano Sanfilippo
 # Copyright (C) 2013 BITS development team
