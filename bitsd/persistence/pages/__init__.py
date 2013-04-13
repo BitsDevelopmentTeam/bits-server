@@ -7,7 +7,7 @@
 #
 
 from .model import Page
-
+from .. import query_by_attribute
 
 def get_page(slug):
-    return Page()
+    return query_by_attribute(Page, 'slug', slug)
