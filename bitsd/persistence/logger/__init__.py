@@ -13,7 +13,7 @@ DBMS internals.
 
 from tornado.options import options
 
-from .. import persist, query_by_timestamp
+from .. import persist, query_by_timestamp, count
 from .model import TemperatureSample, Status
 
 
@@ -44,6 +44,10 @@ def get_latest_temperature_samples():
 def get_latest_statuses(limit=20, offset=0):
     """Query last 20 Status by timestamp."""
     return query_by_timestamp(Status, limit=limit, offset=offset)
+
+def get_number_of_statuses():
+    """Get total number of logged statuses."""
+    return count(Status)
 
 
 def get_latest_data():
