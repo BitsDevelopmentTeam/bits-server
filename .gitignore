@@ -1,4 +1,6 @@
 __pycache__
 test.db
 doc/_build
+dist
+build
 MANIFEST
