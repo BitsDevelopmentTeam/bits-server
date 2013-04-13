@@ -58,6 +58,15 @@ def query_by_timestamp(model, limit=1, offset=0):
         return session.query(model).order_by(desc(model.timestamp))[offset]
 
 
+def query_by_attribute(model, attribute, value, first=True):
+    """Query all instances of `model` having `attribute == value`.
+    If first is True, only first result will be returned (useful
+    if attribute is a primary/candidate key)."""
+    session = Session()
+    query = session.query(model).filter_by(**{attribute: value})
+    return query.first() if first else query
+
+
 def count(model):
     """Returns count of `model` instances in DB."""
     session = Session()
