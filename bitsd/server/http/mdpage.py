@@ -18,7 +18,7 @@ class MarkdownPageHandler(tornado.web.RequestHandler):
     def get(self, slug):
         page = get_page(slug)
 
-        self.render('markdown.html',
+        self.render('mdpage.html',
             body=markdown.markdown(
                 page.body,
                 safe_mode='escape' if options.mdescape else False,

@@ -17,7 +17,7 @@ from .homepage import HomePageHandler
 from .log import LogPageHandler
 from .data import DataPageHandler
 from .status import StatusPageHandler
-from .markdown import MarkdownPageHandler
+from .mdpage import MarkdownPageHandler
 from .templates import ui
 
 from bitsd.common import LOG
