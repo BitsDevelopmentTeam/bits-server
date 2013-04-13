@@ -12,7 +12,11 @@ from bitsd.persistence.logger import get_latest_statuses
 
 class LogPageHandler(tornado.web.RequestHandler):
     """Display and paginate log."""
-    def get(self):
+    @tornado.web.removeslash
+    def get(self, offset):
+        # We can safely cast to int() because of the path regex \d+
+        offset = int(offset) if offset is not None else 0
+
         self.render('log.html',
-            latest_statuses=get_latest_statuses(),
+            latest_statuses=get_latest_statuses(offset=offset),
         )
