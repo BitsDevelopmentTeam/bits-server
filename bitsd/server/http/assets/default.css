@@ -114,16 +114,16 @@ ul.status {
   list-style: none;
 }
 
-nav#prec_next ul {
+nav#paginator ul {
   list-style: none;
 }
 
 
-nav#prec_next ul li:first-child {
+nav#paginator ul li:first-child {
   border-left: none;
 }
 
-nav#prec_next ul li {
+nav#paginator ul li {
   display: inline;
   padding-left:1em;
   margin-left:1em;
