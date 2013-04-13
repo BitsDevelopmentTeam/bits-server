@@ -18,12 +18,7 @@
         <li class='{{ status.value }}'>{{ status.timestamp }}</li>
     {% end %}
 </ul>
-<nav id="prec_next"><ul>
-    {% if offset >= limit %}
-    <li><a href='/log/{{ offset - limit }}'>←</a></li>
-    {% end %}
-    {% if offset + limit <= elementscount %}
-    <li><a href='/log/{{ offset + limit }}'>→</a></li>
-    {% end %}
-</ul></nav>
+
+{% module PaginatorWidget('/log', offset, limit, count) %}
+
 {% end %}

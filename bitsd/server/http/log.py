@@ -28,5 +28,5 @@ class LogPageHandler(tornado.web.RequestHandler):
             # Used by the paginator
             offset=offset,
             limit=self.LINES_PER_PAGE,
-            elementscount=get_number_of_statuses(),
+            count=get_number_of_statuses(),
         )

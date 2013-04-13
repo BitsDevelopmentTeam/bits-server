@@ -66,3 +66,13 @@ class PresenceWidget(tornado.web.UIModule):
         samples = get_latest_statuses(5000)
         #TODO + TODO gray
         return '<img src="bits_presence.png" alt="Grafico delle presenze" id="presence_graph"/>'
+
+
+class PaginatorWidget(tornado.web.UIModule):
+    def render(self, baseurl, offset, limit, count):
+        return self.render_string('paginator.html',
+            baseurl=baseurl,
+            offset=offset,
+            limit=limit,
+            count=count
+        )
