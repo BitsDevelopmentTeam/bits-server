@@ -18,3 +18,9 @@ clean:
 pyclean:
 	find bitsd -name __pycache__ -print0 | xargs -0 rm -rf
 	find bitsd -regex ".*\.pyc" -delete
+
+source:
+	python setup.py sdist
+
+rpm:
+	python setup.py bdist_rpm
