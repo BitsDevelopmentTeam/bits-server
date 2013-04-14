@@ -22,8 +22,8 @@ from .status import StatusPageHandler
 from .mdpage import MarkdownPageHandler
 from .templates import ui
 
-from bitsd.common import LOG
-from bitsd.server import bind
+from bitsd.common import LOG, bind
+
 
 def start():
     application = tornado.web.Application([

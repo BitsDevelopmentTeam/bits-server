@@ -17,8 +17,7 @@ from tornado.options import options
 
 from .status import StatusHandler
 
-from bitsd.common import LOG
-from bitsd.server import bind
+from bitsd.common import LOG, bind
 
 
 def start():
