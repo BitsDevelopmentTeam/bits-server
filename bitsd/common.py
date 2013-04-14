@@ -17,10 +17,16 @@ import logging
 LOG = logging.getLogger('tornado.general')
 
 
-def bind(server, port, usocket):
+def bind(server, port, usocket, address=None):
     """Make server listen on port (inet socket).
     If given, prefer `usocket`, path to a unix socket.
-    The latter is useful for reverse proxying"""
+    The latter is useful for reverse proxying.
+
+    If listening on a inet socket, `address` might be
+    given. `address` may be either an IP address or hostname.
+    If it’s a hostname, the server will listen on all IP addresses
+    associated with the name. If not given (and not listening on a unix
+    socket) will listen on all available interfaces."""
 
     # If we have a unix socket path
     if usocket:
@@ -34,6 +40,6 @@ def bind(server, port, usocket):
             LOG.info('Started')
     else:
         LOG.info('Starting on port {}'.format(port))
-        sockets = bind_sockets(port)
+        sockets = bind_sockets(port, address=address)
         server.add_sockets(sockets)
         LOG.info('Started')
