@@ -17,6 +17,8 @@ import bitsd.persistence as persistence
 from bitsd.common import LOG
 
 from tornado.options import parse_command_line, options
+from tornado.options import parse_config_file, enable_pretty_logging
+
 import tornado.ioloop
 
 import signal
@@ -43,6 +45,13 @@ def shutdown():
 
 def main():
     """Entry point for bitsd."""
+    enable_pretty_logging()
+
+    try:
+        parse_config_file('/etc/bitsd.conf')
+    except IOError:
+        LOG.warning('Config file not found, sticking with defaults/command line.')
+
     parse_command_line()
 
     persistence.start()

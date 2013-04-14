@@ -41,5 +41,10 @@ setup(
         'bitsd.server.http.templates': [
             '*.html'
         ]
-    }
+    },
+    data_files=[
+        ('/etc', [
+            'bitsd.conf'
+        ])
+    ]
 )
