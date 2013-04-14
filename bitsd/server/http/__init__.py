@@ -11,6 +11,8 @@ HTTP content server
 """
 
 import tornado.web
+import tornado.httpserver
+
 from tornado.options import options
 
 from .homepage import HomePageHandler
@@ -21,10 +23,10 @@ from .mdpage import MarkdownPageHandler
 from .templates import ui
 
 from bitsd.common import LOG
+from bitsd.server import bind
 
 def start():
-    LOG.debug('Starting web server on port {}'.format(options.web_port))
-    server = tornado.web.Application([
+    application = tornado.web.Application([
             # FIXME daltonism workaround, should be implemented client-side
             (r'/(?:|blind)', HomePageHandler),
             (r'/log(?:/?|/(\d+))', LogPageHandler),
@@ -37,4 +39,7 @@ def start():
         debug=options.developer_mode,
         static_path=options.assets_path
     )
-    server.listen(options.web_port)
+
+    server = tornado.httpserver.HTTPServer(application) #TODO other options
+    LOG.info('Starting HTTP server...')
+    bind(server, options.web_port, options.web_usocket)

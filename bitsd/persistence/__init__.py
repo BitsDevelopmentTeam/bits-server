@@ -28,13 +28,15 @@ def start():
     MUST be called prior to any operation."""
     global ENGINE, Session, Base
 
-    LOG.info('Connecting to DB.')
+    LOG.info('Connecting to DB...')
     ENGINE = create_engine(options.db_uri, echo=options.log_queries)
     Session = sessionmaker(bind=ENGINE)
 
     # Create tables if they don't exist.
-    LOG.info('Checking tables in the DB.')
+    LOG.info('Checking tables in the DB...')
     Base.metadata.create_all(ENGINE, checkfirst=True)
+
+    LOG.info('Done')
 
 
 def persist(data):

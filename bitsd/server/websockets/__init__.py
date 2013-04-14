@@ -11,15 +11,21 @@ Websockets server.
 """
 
 import tornado.web
+import tornado.httpserver
+
 from tornado.options import options
 
 from .status import StatusHandler
 
 from bitsd.common import LOG
+from bitsd.server import bind
+
 
 def start():
-    LOG.debug('Starting websocket server on port {}'.format(options.web_port))
-    server = tornado.web.Application([
+    application = tornado.web.Application([
         (r'/', StatusHandler)
     ])
-    server.listen(options.ws_port)
+
+    server = tornado.httpserver.HTTPServer(application)
+    LOG.info('Starting websocket server...')
+    bind(server, options.ws_port, options.ws_usocket)

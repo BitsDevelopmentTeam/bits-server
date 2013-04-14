@@ -12,12 +12,26 @@ Define properties as shown in the `--help` page and in the config file.
 
 from tornado.options import define
 
+
 define("web_port",
-    default=8008, help="Web server port", group='Networking'
+    default=8008, help="Web server port. Only if web_usocket is not defined.",
+    group='Networking'
+)
+
+define("web_usocket",
+    default='', help="Unix socket the web server will be listening on.",
+    group="Networking"
 )
 
 define("ws_port",
-    default=3389, help="WebSocket server port", group='Networking'
+    default=3389,
+    help="WebSocket server port. Only if web_usocket is not defined.",
+    group='Networking'
+)
+
+define("ws_usocket",
+    default='', help="Unix socket the WebSocket server will be listening on.",
+    group="Networking"
 )
 
 define("remote_port",
