@@ -14,10 +14,11 @@ via bitsd.client.fonera.Fonera proxy.
 from tornado.options import options
 
 from .handler import RemoteListener
+from bitsd.common import bind, LOG
 
 def start():
     fonera = RemoteListener()
-    # FIXME single threaded?
-    #fonera.bind(options.fonera_port, options.fonera_address)
-    #fonera.start(0)  # Forks multiple sub-processes
-    fonera.listen(options.remote_port, options.fonera_host)
+    LOG.info('Starting remote control...')
+    LOG.info('Remote control IP is {}'.format(options.remote_address))
+    bind(fonera, options.remote_port, options.remote_usocket,
+        address=options.remote_address)

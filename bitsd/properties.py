@@ -25,7 +25,7 @@ define("web_usocket",
 
 define("ws_port",
     default=3389,
-    help="WebSocket server port. Only if web_usocket is not defined.",
+    help="WebSocket server port. Only if ws_usocket is not defined.",
     group='Networking'
 )
 
@@ -35,11 +35,26 @@ define("ws_usocket",
 )
 
 define("remote_port",
-    default=8888, help="Port for fonera server.", group='Networking'
+    default=8888,
+    help="Port for fonera server. Only if ws_usocket is not defined.",
+    group='Networking'
+)
+
+define("remote_usocket",
+    default='', help="Unix socket the remote control will be listening on.",
+    group="Networking"
+)
+
+define("remote_address",
+    default="127.0.0.1",
+    help="The address the remote control will be bound to.",
+    group='Networking'
 )
 
 define("fonera_host",
-    default="127.0.0.1", help="Fonera IP address.", group='Networking'
+    default="127.0.0.1",
+    help="The address of the remote control unit (Fonera).",
+    group="Networking"
 )
 
 define("db_uri",

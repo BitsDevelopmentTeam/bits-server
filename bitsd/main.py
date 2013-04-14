@@ -48,8 +48,6 @@ def main():
     persistence.start()
     http.start()
     websockets.start()
-    LOG.info('Starting remote control on port {}'.format(options.remote_port))
-    LOG.info('Remote control IP is {}'.format(options.fonera_host))
     remote.start()
 
     # Add signal handlers...
