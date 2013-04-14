@@ -33,10 +33,10 @@ http Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`markdown` Module
-----------------------
+:mod:`mdpage` Module
+--------------------
 
-.. automodule:: bitsd.server.http.markdown
+.. automodule:: bitsd.server.http.mdpage
     :members:
     :undoc-members:
     :show-inheritance:
