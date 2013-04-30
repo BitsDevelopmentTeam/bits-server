@@ -24,7 +24,7 @@ def bind(server, port, usocket, address=None):
 
     If listening on a inet socket, `address` might be
     given. `address` may be either an IP address or hostname.
-    If it’s a hostname, the server will listen on all IP addresses
+    If it's a hostname, the server will listen on all IP addresses
     associated with the name. If not given (and not listening on a unix
     socket) will listen on all available interfaces."""
 
