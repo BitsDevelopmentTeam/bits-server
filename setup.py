@@ -7,7 +7,7 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='bitsd',
@@ -17,9 +17,9 @@ setup(
     author='Stefano Sanfilippo et al.',
     author_email='a.little.coder@gmail.com',
     url='https://github.com/esseks/bitsd',
-    requires=[
-        'tornado (>= 2.3)',
-        'sqlalchemy (>= 0.7)'
+    install_requires=[
+        'tornado >= 2.3',
+        'sqlalchemy >= 0.7'
     ],
     packages=[
         'bitsd',
@@ -47,7 +47,7 @@ setup(
         ]
     },
     data_files=[
-        ('/etc', [
+        ('etc', [
             'bitsd.conf'
         ])
     ]
