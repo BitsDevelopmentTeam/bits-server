@@ -17,6 +17,10 @@ setup(
     author='Stefano Sanfilippo et al.',
     author_email='a.little.coder@gmail.com',
     url='https://github.com/esseks/bitsd',
+    requires=[
+        'tornado (>= 2.3)',
+        'sqlalchemy (>= 0.7)'
+    ],
     packages=[
         'bitsd',
         'bitsd.client',
