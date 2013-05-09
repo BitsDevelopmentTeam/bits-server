@@ -12,6 +12,8 @@ Hooks called by bitsd.listener.remote.RemoteListener to handle commands.
 
 # NOTE: don't forget to register your handler in RemoteListener.ACTIONS!
 
+import base64
+
 from bitsd.common import LOG
 from bitsd.persistence.logger import log_temperature, log_status
 from bitsd.persistence.logger import get_latest_data, get_current_status
