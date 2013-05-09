@@ -19,7 +19,8 @@ setup(
     url='https://github.com/esseks/bitsd',
     install_requires=[
         'tornado >= 2.3',
-        'sqlalchemy >= 0.7'
+        'sqlalchemy >= 0.7',
+        'markdown'
     ],
     packages=[
         'bitsd',

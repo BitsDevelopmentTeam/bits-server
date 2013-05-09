@@ -6,8 +6,7 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-#import tornado.tcpserver TODO Tornado 3.0
-import tornado.netutil
+import tornado.tcpserver
 from tornado.options import options
 
 from bitsd.common import LOG
@@ -15,7 +14,7 @@ from bitsd.common import LOG
 from .hooks import *
 
 
-class RemoteListener(tornado.netutil.TCPServer):
+class RemoteListener(tornado.tcpserver.TCPServer):
     """
     Handle incoming commands via BITS mini protocol.
 
