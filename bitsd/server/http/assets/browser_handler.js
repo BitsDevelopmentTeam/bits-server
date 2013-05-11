@@ -73,7 +73,7 @@ module("browser_handler", function (require, exports) {
 
     // the Trend object contains an old state off the value defined
     //  - newValue
-    //      add a new state to the _oldValue_  state and 
+    //      add a new state to the _oldValue_  state and
     //      assign the difference between the new state and the
     //      old value to the _diff_ state.
     //
@@ -201,7 +201,7 @@ module("browser_handler", function (require, exports) {
         temp.setAttribute("class", tempInt.value > 20 ? "high" : "low");
     }
 
-    
+
     function tempIntHistHandler(tempIntHist, first) {
         debug.log("browserHandler handling tempIntHist");
         var cordX = 0,

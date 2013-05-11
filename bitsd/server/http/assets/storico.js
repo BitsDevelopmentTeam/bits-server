@@ -3,11 +3,11 @@ module("storico", function (require, exports) {
 
     var XHR = require("XMLHttpRequest"),
         url = "storico.php?type=JSON&page=";
-    
+
     function setUrl(new_url) {
         url = new_url;
     }
-    
+
     exports.setUrl = setUrl;
 
     function page(num, callback) {
