@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Static homepage server
+"""
+
 import tornado.web
 
 class HomePageHandler(tornado.web.RequestHandler):

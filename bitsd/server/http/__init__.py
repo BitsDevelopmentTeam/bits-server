@@ -26,6 +26,7 @@ from bitsd.common import LOG, bind
 
 
 def start():
+    """Setup HTTP server. **MUST** be called prior to any operation."""
     application = tornado.web.Application([
             # FIXME daltonism workaround, should be implemented client-side
             (r'/(?:|blind)', HomePageHandler),

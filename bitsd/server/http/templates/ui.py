@@ -63,12 +63,26 @@ class PresenceWidget(tornado.web.UIModule):
         return ()
 
     def render(self):
-        samples = get_latest_statuses(5000)
+        #TODO samples = get_latest_statuses(5000)
         #TODO + TODO gray
         return '<img src="bits_presence.png" alt="Grafico delle presenze" id="presence_graph"/>'
 
 
 class PaginatorWidget(tornado.web.UIModule):
+    """Render a page browser, with Back/Forward links.
+    Navigation links are created by appending `/n` to the `baseurl`, where `n`
+    is a calculated the offset from the first element of the paginated list.
+
+    Parameters:
+        `baseurl`: the url used as a base to pagination links (see above).
+        `offset`: first element to show, counting from the first of
+                the paginated list
+        `limit`: number of elements to show in each page.
+        `count`: total number of elements to paginate.
+
+    Returns:
+        None
+    """
     def render(self, baseurl, offset, limit, count):
         return self.render_string('paginator.html',
             baseurl=baseurl,

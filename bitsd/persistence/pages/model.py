@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Models for stored pages and companions.
+"""
+
 from sqlalchemy import Column
 from sqlalchemy.types import Text, String
 
@@ -19,10 +23,11 @@ def slugify(title):
     non-letters are replaced by a dash."""
     # TODO test regex
     # Strip will remove trailing '-'
-    return re.sub('[^\w]+', '-', title).strip('-').lower()
+    return re.sub(r'[^\w]+', '-', title).strip('-').lower()
 
 
 class Page(Base):
+    """Representation of a wiki page."""
     __tablename__ = 'Pages'
 
     slug = Column(String(length=100), primary_key=True)
@@ -38,6 +43,7 @@ class Page(Base):
         return 'Page: {.title}'.format(self)
 
     def jsondict(self):
+        """Return a JSON-serializable dictionary representing the object"""
         return {
             "title": self.title,
             "body": self.body,

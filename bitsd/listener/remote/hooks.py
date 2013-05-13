@@ -10,13 +10,14 @@
 Hooks called by bitsd.listener.remote.RemoteListener to handle commands.
 """
 
-# NOTE: don't forget to register your handler in RemoteListener.ACTIONS!
+# NOTE: don't forget to register your handler in RemoteListener.ACTIONS
+#     : and in __all__ below!!
 
 import base64
 
 from bitsd.common import LOG
 from bitsd.persistence.logger import log_temperature, log_status
-from bitsd.persistence.logger import get_latest_data, get_current_status
+from bitsd.persistence.logger import get_current_status
 from bitsd.server.websockets.status import broadcast_status
 from bitsd.client.fonera import Fonera
 # Fixing Sphinx complaints
@@ -27,8 +28,17 @@ from tornado.options import options
 #: Proxy for BITS Fonera
 FONERA = Fonera(options.fonera_host, options.remote_port)
 
+__all__ = [
+    'handle_temperature_command',
+    'handle_status_command',
+    'handle_enter_command',
+    'handle_leave_command',
+    'handle_message_command',
+    'handle_sound_command'
+]
 
 def handle_temperature_command(sensorid, value):
+    """Receives and log data received from remote sensor."""
     LOG.info('Received temperature: sensorid={}, value={}'.format(sensorid, value))
     try:
         sensorid = int(sensorid)
@@ -43,13 +53,16 @@ def handle_temperature_command(sensorid, value):
 
 
 def handle_status_command(status):
+    """Update status.
+    Will reject two identical and consecutive updates
+    (prevents opening when already open and vice-versa)."""
     LOG.info('Received status: {}'.format(status))
     try:
         status = int(status)
     except ValueError:
         LOG.error('Wrong type for parameters in temperature command')
         return
-    if status not in (0,1):
+    if status not in (0, 1):
         LOG.error('Non existent status {}, ignoring.'.format(status))
         return
 
@@ -62,10 +75,11 @@ def handle_status_command(status):
         LOG.error('BITS already open/closed! Ignoring.')
 
 
-def handle_enter_command(id):
-    LOG.info('Received enter command: id={}'.format(id))
+def handle_enter_command(userid):
+    """Handles signal triggered when a new user enters."""
+    LOG.info('Received enter command: id={}'.format(userid))
     try:
-        id = int(id)
+        userid = int(userid)
     except ValueError:
         LOG.error('Wrong type for parameters in temperature command!')
         return
@@ -73,10 +87,11 @@ def handle_enter_command(id):
     LOG.error('handle_enter_command not implemented.')
 
 
-def handle_leave_command(id):
-    LOG.info('Received leave command: id={}'.format(id))
+def handle_leave_command(userid):
+    """Handles signal triggered when a known user leaves."""
+    LOG.info('Received leave command: id={}'.format(userid))
     try:
-        id = int(id)
+        userid = int(userid)
     except ValueError:
         LOG.error('Wrong type for parameters in temperature command!')
         return
@@ -85,6 +100,7 @@ def handle_leave_command(id):
 
 
 def handle_message_command(message):
+    """Handles message broadcast requests."""
     LOG.info('Received message command: message={!r}'.format(message))
     try:
         decodedmex = base64.b64decode(message)
@@ -92,16 +108,16 @@ def handle_message_command(message):
         LOG.error('Received message is not valid base64: {!r}'.format(message))
     else:
         message = decodedmex.decode('utf8')
+        FONERA.message(message)
 
-    FONERA.message(message)
 
-
-def handle_sound_command(id):
-    LOG.info('Received sound command: id={}'.format(id))
+def handle_sound_command(soundid):
+    """Handles requests to play a sound."""
+    LOG.info('Received sound command: id={}'.format(soundid))
     try:
-        id = int(id)
+        soundid = int(soundid)
     except ValueError:
         LOG.error('Wrong type for parameters in temperature command!')
         return
-
-    FONERA.sound(id)
+    else:
+        FONERA.sound(soundid)

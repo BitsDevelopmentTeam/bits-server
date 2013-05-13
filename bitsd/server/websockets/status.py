@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Status broadcaster and handlers.
+"""
+
 import tornado.websocket
 
 from .notifier import MessageNotifier
@@ -34,4 +38,7 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
 
 
 def broadcast_status(message):
+    """Broadcast given message to all clients. `message`
+    may be either a string, which is directly broadcasted, or a dictionay
+    that is JSON-serialized automagically before sending."""
     StatusHandler.CLIENTS.broadcast(message)

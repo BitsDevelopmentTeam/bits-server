@@ -5,3 +5,7 @@
 # This file is part of bitsd, which is released under the terms of
 # GNU GPLv3. See COPYING at top level for more information.
 #
+
+"""
+Client proxies. Submodules will handle
+"""

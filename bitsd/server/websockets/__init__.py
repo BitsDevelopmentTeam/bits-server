@@ -21,6 +21,7 @@ from bitsd.common import LOG, bind
 
 
 def start():
+    """Setup the WS server. **MUST** be called prior to any operation."""
     application = tornado.web.Application([
         (r'/', StatusHandler)
     ])

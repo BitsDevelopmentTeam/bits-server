@@ -17,6 +17,7 @@ from .handler import RemoteListener
 from bitsd.common import bind, LOG
 
 def start():
+    """Connect and bind listeners. **MUST** be called at startup."""
     fonera = RemoteListener()
     LOG.info('Starting remote control...')
     LOG.info('Remote control IP is {}'.format(options.remote_address))

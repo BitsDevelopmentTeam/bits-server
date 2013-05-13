@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Broadcast notifier via websocket push for BITSd events.
+"""
+
 from bitsd.common import LOG
 
 class MessageNotifier(object):

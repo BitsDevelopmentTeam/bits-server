@@ -6,6 +6,12 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+
+"""
+TCP server receiving raw messages and invoke correct handlers
+(from module `.hooks`)
+"""
+
 import tornado.tcpserver
 from tornado.options import options
 
@@ -62,10 +68,15 @@ class RemoteListener(tornado.tcpserver.TCPServer):
         b'sound': handle_sound_command,
     }
 
+    def __init__(self):
+        super(RemoteListener, self).__init__()
+        self.stream = None
+
     def handle_stream(self, stream, address):
         """Handles inbound TCP connections asynchronously."""
         if address[0] != options.fonera_host:
-            LOG.error("Remote received commands from `{}`, expected from `{}`. Ignoring.".format(
+            LOG.error(("Remote received commands from `{}`, "
+                "expected from `{}`. Ignoring.").format(
             address, options.fonera_host))
             return
         self.stream = stream
@@ -89,6 +100,8 @@ class RemoteListener(tornado.tcpserver.TCPServer):
                 try:
                     handler(*args[1:])
                 except TypeError:
-                    LOG.error('Command {} called with wrong number of args'.format(args[0]))
+                    LOG.error(
+                        'Command {} called with wrong number of args'.format(
+                            args[0]))
         else:
             LOG.warning('Remote received empty command.')

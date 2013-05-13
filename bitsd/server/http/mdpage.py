@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Markdown rendered pages.
+"""
+
 import tornado.web
 from tornado.options import options
 

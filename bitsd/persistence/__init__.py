@@ -54,10 +54,11 @@ def query_by_timestamp(model, limit=1, offset=0):
     """Query at most `limit` samples by timestamp.
     Default to `limit=1` (latest value)."""
     session = Session()
+    query = session.query(model).order_by(desc(model.timestamp))
     if limit != 1:
-        return session.query(model).order_by(desc(model.timestamp))[offset:offset+limit]
+        return query[offset:offset+limit]
     else:
-        return session.query(model).order_by(desc(model.timestamp))[offset]
+        return query[offset]
 
 
 def query_by_attribute(model, attribute, value, first=True):

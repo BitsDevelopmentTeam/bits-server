@@ -6,11 +6,16 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Historical data paginator and viewer handlers.
+"""
+
 import tornado.web
 
 from bitsd.persistence.logger import get_latest_statuses, get_number_of_statuses
 
 class LogPageHandler(tornado.web.RequestHandler):
+    """Handle historical data browser requests."""
     LINES_PER_PAGE = 20
 
     @tornado.web.removeslash

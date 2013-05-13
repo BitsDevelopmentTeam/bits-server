@@ -6,19 +6,24 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Classes and helpers needed to send commands to the Fonera remote.
+"""
+
 import tornado.iostream
 
 import base64
 import socket
 
+from bitsd.common import LOG
 
-# TODO handle disconnect/reconnect
+# TODO handle disconnect/reconnect with StreamClosedError
 class Fonera(tornado.iostream.IOStream):
     """Proxy object for controlling Fonera via BITS-miniprotocol."""
 
     def __init__(self, host, port):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-        super(Fonera, self).__init__(s)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+        super(Fonera, self).__init__(sock)
         self.initialized = False
         self.host = host
         self.port = port
@@ -45,7 +50,7 @@ class Fonera(tornado.iostream.IOStream):
 
         self.write("status {}\n".format(status))
 
-    def sound(self, id):
+    def sound(self, soundid):
         """
         Play a sound on the fonera.
         The parameter is an index into a list of predefined sounds.
@@ -53,7 +58,7 @@ class Fonera(tornado.iostream.IOStream):
 
         >>> "sound 0\\n"
         """
-        self.write("sound {}\n".format(status))
+        self.write("sound {}\n".format(soundid))
 
     def _handle_connection(self):
         """Connection callback: log and set initialized flag."""

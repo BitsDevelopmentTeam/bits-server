@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+BITSd entry point and unix signal handlers.
+"""
+
 # MUST be the first import
 import bitsd.properties
 
@@ -24,6 +28,7 @@ import tornado.ioloop
 
 import signal
 import time
+import sys
 
 # Signal code adapted from https://gist.github.com/kachayev/1387470
 
@@ -51,9 +56,13 @@ def main():
     try:
         parse_config_file('/etc/bitsd.conf')
     except IOError:
-        LOG.warning('Config file not found, sticking with defaults/command line.')
+        LOG.warning('Config file not found, using defaults and command line.')
 
-    parse_command_line()
+    try:
+        parse_command_line()
+    except tornado.options.Error as error:
+        sys.stderr.write('{}\n'.format(error))
+        sys.exit(0)
 
     persistence.start()
     http.start()

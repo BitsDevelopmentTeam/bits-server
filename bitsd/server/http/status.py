@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+Single-digit status request handlers.
+"""
+
 import tornado.web
 
 from bitsd.persistence.logger import get_current_status

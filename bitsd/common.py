@@ -33,8 +33,8 @@ def bind(server, port, usocket, address=None):
         LOG.info('Starting on unix socket `{}`'.format(usocket))
         try:
             socket = bind_unix_socket(usocket)
-        except OSError as e:
-            LOG.error('Cannot create unix socket: {}'.format(e))
+        except OSError as error:
+            LOG.error('Cannot create unix socket: {}'.format(error))
         else:
             server.add_socket(socket)
             LOG.info('Started')

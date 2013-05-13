@@ -32,9 +32,11 @@ def log_status(status, modified_by):
 
 
 def get_current_status():
+    """Return a Status object representing most recent change."""
     return query_by_timestamp(Status, limit=1)
 
 def get_current_temperature():
+    """Return the most recent temperature sample."""
     return query_by_timestamp(TemperatureSample, limit=1)
 
 def get_latest_temperature_samples():

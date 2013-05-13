@@ -14,15 +14,16 @@ Model for sensor persistence data.
 from sqlalchemy import Column
 from sqlalchemy.types import Integer, Float, DateTime, Enum
 
-import datetime
+from datetime import datetime
 
 from .. import Base
 
 
 class TemperatureSample(Base):
+    """Representation of a logged temperature sample."""
     __tablename__ = 'Temperature'
 
-    timestamp = Column(DateTime, primary_key=True, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, primary_key=True, default=datetime.utcnow)
     value = Column(Float, primary_key=True)
     sensor = Column(Integer, nullable=False)
     modified_by = Column(Enum('BITS', 'web'), nullable=False)
@@ -36,7 +37,7 @@ class TemperatureSample(Base):
         return 'Temperature {.value}°C'.format(self)
 
     def jsondict(self, wrap=False):
-        """Returns a JSON-parseable dictionary representing the object."""
+        """Return a JSON-serializable dictionary representing the object"""
         data = {
             "timestamp": self.timestamp.isoformat(' '),
             "value": self.value,
@@ -50,9 +51,10 @@ class TemperatureSample(Base):
 
 
 class Status(Base):
+    """Representation of a logged status change."""
     __tablename__ = 'Status'
 
-    timestamp = Column(DateTime, primary_key=True, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, primary_key=True, default=datetime.utcnow)
     value = Column(Enum('open', 'closed'), nullable=False)
     modified_by = Column(Enum('BITS', 'web'), nullable=False)
 
@@ -64,7 +66,7 @@ class Status(Base):
         return 'Status {.value}'.format(self)
 
     def jsondict(self, wrap=False):
-        """Returns a JSON-parseable dictionary representing the object."""
+        """Return a JSON-serializable dictionary representing the object"""
         data = {
             "timestamp": self.timestamp.isoformat(' '),
             "modifiedby": self.modified_by,

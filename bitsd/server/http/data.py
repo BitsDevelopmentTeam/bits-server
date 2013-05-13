@@ -6,6 +6,10 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
+"""
+JSON data page handlers.
+"""
+
 import tornado.web
 
 from bitsd.persistence.logger import get_latest_data
