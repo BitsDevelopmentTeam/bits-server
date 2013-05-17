@@ -104,7 +104,7 @@ define("usocket_gid",
 )
 
 define("usocket_mode",
-    default=770,
+    default=0o600,
     help="Permissions for chmod on the unix sockets",
     group="Networking"
 )
