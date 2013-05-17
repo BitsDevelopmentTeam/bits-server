@@ -92,13 +92,13 @@ define("developer_mode",
 )
 
 define("usocket_uid",
-    default=1000,
+    default=-1,
     help="UID to chown the unix sockets to.",
     group="Networking"
 )
 
 define("usocket_gid",
-    default=1000,
+    default=-1,
     help="GID to chown the unix sockets to.",
     group="Networking"
 )
