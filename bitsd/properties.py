@@ -90,3 +90,15 @@ define("developer_mode",
     help="Auto reload modules on change. DO NOT enable in production.",
     group="Development"
 )
+
+define("usocket_uid",
+    default=1000,
+    help="UID to chmod the unix sockets to.",
+    group="Networking"
+)
+
+define("usocket_gid",
+    default=1000,
+    help="GID to chmod the unix sockets to.",
+    group="Networking"
+)

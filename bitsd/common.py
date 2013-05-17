@@ -9,8 +9,10 @@
 """Common elements needed by all modules."""
 
 from tornado.netutil import bind_sockets, bind_unix_socket
+from tornado.options import options
 
 import logging
+import os
 
 
 #: Main logger
@@ -33,6 +35,7 @@ def bind(server, port, usocket, address=None):
         LOG.info('Starting on unix socket `{}`'.format(usocket))
         try:
             socket = bind_unix_socket(usocket)
+            os.chown(usocket, options.usocket_uid, options.usocket_gid)
         except OSError as error:
             LOG.error('Cannot create unix socket: {}'.format(error))
         else:
