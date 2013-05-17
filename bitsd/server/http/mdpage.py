@@ -22,6 +22,9 @@ class MarkdownPageHandler(tornado.web.RequestHandler):
     def get(self, slug):
         page = get_page(slug)
 
+        if page is None:
+            raise tornado.web.HTTPError(404)
+
         self.render('mdpage.html',
             body=markdown.markdown(
                 page.body,

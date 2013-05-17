@@ -68,7 +68,7 @@ def handle_status_command(status):
 
     textstatus = 'open' if status == 1 else 'closed'
     curstatus = get_current_status()
-    if curstatus.value != textstatus:
+    if curstatus is None or curstatus.value != textstatus:
         status = log_status(textstatus, 'BITS')
         broadcast_status(status.jsondict(wrap=True)) # wrapped in a dict
     else:

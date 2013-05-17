@@ -58,8 +58,8 @@ def get_latest_data():
     temp = get_current_temperature()
     latest_temp_samples = get_latest_temperature_samples()
     return {
-        "status": status.jsondict(),
-        "tempint": temp.jsondict(),
+        "status": status.jsondict() if status is not None else "",
+        "tempint": temp.jsondict() if temp is not None else "",
         "version": options.jsonver,
         #"msg": TODO,
         "tempinthist": [sample.jsondict() for sample in latest_temp_samples]

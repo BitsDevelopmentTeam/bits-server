@@ -58,7 +58,10 @@ def query_by_timestamp(model, limit=1, offset=0):
     if limit != 1:
         return query[offset:offset+limit]
     else:
-        return query[offset]
+        try:
+            return query[offset]
+        except IndexError:
+            return None
 
 
 def query_by_attribute(model, attribute, value, first=True):
