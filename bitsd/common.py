@@ -34,7 +34,7 @@ def bind(server, port, usocket, address=None):
     if usocket:
         LOG.info('Starting on unix socket `{}`'.format(usocket))
         try:
-            socket = bind_unix_socket(usocket)
+            socket = bind_unix_socket(usocket, mode=options.usocket_mode)
             os.chown(usocket, options.usocket_uid, options.usocket_gid)
         except OSError as error:
             LOG.error('Cannot create unix socket: {}'.format(error))

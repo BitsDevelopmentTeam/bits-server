@@ -93,12 +93,18 @@ define("developer_mode",
 
 define("usocket_uid",
     default=1000,
-    help="UID to chmod the unix sockets to.",
+    help="UID to chown the unix sockets to.",
     group="Networking"
 )
 
 define("usocket_gid",
     default=1000,
-    help="GID to chmod the unix sockets to.",
+    help="GID to chown the unix sockets to.",
+    group="Networking"
+)
+
+define("usocket_mode",
+    default=0o600,
+    help="Permissions for chmod on the unix sockets",
     group="Networking"
 )
