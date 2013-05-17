@@ -19,7 +19,7 @@ import os
 LOG = logging.getLogger('tornado.general')
 
 
-def bind(server, port, usocket, address=None, filemode=None):
+def bind(server, port, usocket, address=None):
     """Make server listen on port (inet socket).
     If given, prefer `usocket`, path to a unix socket.
     The latter is useful for reverse proxying.
@@ -34,7 +34,7 @@ def bind(server, port, usocket, address=None, filemode=None):
     if usocket:
         LOG.info('Starting on unix socket `{}`'.format(usocket))
         try:
-            socket = bind_unix_socket(usocket, mode=filemode)
+            socket = bind_unix_socket(usocket, mode=options.usocket_mode)
             os.chown(usocket, options.usocket_uid, options.usocket_gid)
         except OSError as error:
             LOG.error('Cannot create unix socket: {}'.format(error))
