@@ -18,5 +18,5 @@ class StatusPageHandler(tornado.web.RequestHandler):
     """Get a single digit, indicating BITS status (open/closed)"""
     def get(self):
         status = get_current_status()
-        self.write('1' if status.value == 'open' else '0')
+        self.write('1' if status is not None and status.value == 'open' else '0')
         self.finish()
