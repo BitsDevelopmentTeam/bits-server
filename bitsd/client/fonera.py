@@ -35,7 +35,11 @@ class Fonera(tornado.iostream.IOStream):
 
         >>> "message bG9sCg==\\n"
         """
-        self.write("message {}\n".format(base64.b64encode(message)))
+        try:
+            self.write("message {}\n".format(base64.b64encode(message)))
+        except tornado.iostream.StreamClosedError as error:
+            LOG.error('Could not push message to Fonera! {}'.format(error))
+            #TODO Handle reconnection
 
     def status(self, status):
         """
@@ -48,7 +52,11 @@ class Fonera(tornado.iostream.IOStream):
         except TypeError:
             status = 1 if status == 'open' else 0
 
-        self.write("status {}\n".format(status))
+        try:
+            self.write("status {}\n".format(status))
+        except tornado.iostream.StreamClosedError as error:
+            LOG.error('Could not push status to Fonera! {}'.format(error))
+            #TODO Handle reconnection
 
     def sound(self, soundid):
         """
@@ -58,7 +66,11 @@ class Fonera(tornado.iostream.IOStream):
 
         >>> "sound 0\\n"
         """
-        self.write("sound {}\n".format(soundid))
+        try:
+            self.write("sound {}\n".format(soundid))
+        except tornado.iostream.StreamClosedError as error:
+            LOG.error('Could not push sound to Fonera! {}'.format(error))
+            #TODO Handle reconnection
 
     def _handle_connection(self):
         """Connection callback: log and set initialized flag."""
