@@ -38,14 +38,14 @@ class DynamicPage(tornado.web.UIModule):
     """Module providing JS for dynamic pages."""
     def javascript_files(self):
         return (
+            '/static/module.js?v=1',
             '/static/lib/raphael-min.js?v=1',
             '/static/lib/g.raphael-min.js?v=1',
             '/static/lib/g.line-min.js?v=1',
             '/static/lib/json2.js?v=2',
-            '/static/module.js?v=1',
+            '/static/lib/peppy.js?v=2',
             '/static/debug.js?v=1',
             '/static/html5.js?v=1',
-            '/static/lib/peppy.js?v=2',
             '/static/browser_handler.js?v=1',
             '/static/handler.js?v=1',
             '/static/websocket.js?v=1',
