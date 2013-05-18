@@ -84,7 +84,7 @@ class PaginatorWidget(tornado.web.UIModule):
         None
     """
     def render(self, baseurl, offset, limit, count):
-        return self.render_string('paginator.html',
+        return self.render_string('templates/paginator.html',
             baseurl=baseurl,
             offset=offset,
             limit=limit,

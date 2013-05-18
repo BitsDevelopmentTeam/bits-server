@@ -29,7 +29,7 @@ class BaseHandler(tornado.web.RequestHandler):
 class HomePageHandler(BaseHandler):
     """Display homepage."""
     def get(self):
-        self.render('homepage.html')
+        self.render('templates/homepage.html')
 
 
 class DataPageHandler(BaseHandler):
@@ -50,7 +50,7 @@ class LogPageHandler(BaseHandler):
         # We can safely cast to int() because of the path regex \d+
         offset = int(offset) if offset is not None else 0
 
-        self.render('log.html',
+        self.render('templates/log.html',
             latest_statuses=get_latest_statuses(
                 offset=offset,
                 limit=self.LINES_PER_PAGE
@@ -78,7 +78,7 @@ class MarkdownPageHandler(BaseHandler):
         if page is None:
             raise tornado.web.HTTPError(404)
 
-        self.render('mdpage.html',
+        self.render('templates/mdpage.html',
             body=markdown.markdown(
                 page.body,
                 safe_mode='escape' if options.mdescape else False,
