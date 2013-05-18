@@ -65,7 +65,7 @@ module("browser_handler", function (require, exports) {
         debug.log("Changing favicon", status);
         var link = doc.createElement("link");
         head.removeChild(favicon);
-        link.href = "img/" + status + ".ico";
+        link.href = "static/" + status + ".ico";
         link.rel = "shortcut icon";
         head.appendChild(link);
         favicon = link;
