@@ -89,6 +89,8 @@ class RemoteListener(tornado.tcpserver.TCPServer):
         # Meanwhile, go on with commands...
         self.stream.read_until(b'\n', self.handle_command)
 
+        command = command.strip('\n')
+
         if command:
             args = command.split(b' ')
             try:
