@@ -15,5 +15,6 @@ Subpackages
 .. toctree::
 
     bitsd.persistence.logger
+    bitsd.persistence.message
     bitsd.persistence.pages
 

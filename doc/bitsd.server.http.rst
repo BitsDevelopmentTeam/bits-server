@@ -9,50 +9,19 @@ http Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`data` Module
-------------------
-
-.. automodule:: bitsd.server.http.data
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`homepage` Module
+:mod:`handlers` Module
 ----------------------
 
-.. automodule:: bitsd.server.http.homepage
+.. automodule:: bitsd.server.http.handlers
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`log` Module
------------------
+:mod:`uimodules` Module
+-----------------------
 
-.. automodule:: bitsd.server.http.log
+.. automodule:: bitsd.server.http.uimodules
     :members:
     :undoc-members:
     :show-inheritance:
-
-:mod:`mdpage` Module
---------------------
-
-.. automodule:: bitsd.server.http.mdpage
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`status` Module
---------------------
-
-.. automodule:: bitsd.server.http.status
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Subpackages
------------
-
-.. toctree::
-
-    bitsd.server.http.templates
 

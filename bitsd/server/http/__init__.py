@@ -15,12 +15,8 @@ import tornado.httpserver
 
 from tornado.options import options
 
-from .homepage import HomePageHandler
-from .log import LogPageHandler
-from .data import DataPageHandler
-from .status import StatusPageHandler
-from .mdpage import MarkdownPageHandler
-from .templates import ui
+from . import handlers
+from . import uimodules
 
 from bitsd.common import LOG, bind
 
@@ -29,13 +25,13 @@ def start():
     """Setup HTTP server. **MUST** be called prior to any operation."""
     application = tornado.web.Application([
             # FIXME daltonism workaround, should be implemented client-side
-            (r'/(?:|blind)', HomePageHandler),
-            (r'/log(?:/?|/(\d+))', LogPageHandler),
-            (r'/status', StatusPageHandler),
-            (r'/data', DataPageHandler),
-            (r'/(info)', MarkdownPageHandler),
+            (r'/(?:|blind)', handlers.HomePageHandler),
+            (r'/log(?:/?|/(\d+))', handlers.LogPageHandler),
+            (r'/status', handlers.StatusPageHandler),
+            (r'/data', handlers.DataPageHandler),
+            (r'/(info)', handlers.MarkdownPageHandler),
         ],
-        ui_modules=ui,
+        ui_modules=uimodules,
         gzip=True,
         debug=options.developer_mode,
         static_path=options.assets_path,
