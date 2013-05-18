@@ -45,7 +45,7 @@ class DynamicPage(tornado.web.UIModule):
             '/static/module.js?v=1',
             '/static/debug.js?v=1',
             '/static/html5.js?v=1',
-            '/static/lib/peppy.js?v=1',
+            '/static/lib/peppy.js?v=2',
             '/static/browser_handler.js?v=1',
             '/static/handler.js?v=1',
             '/static/websocket.js?v=1',
