@@ -18,6 +18,8 @@ from bitsd.persistence.pages.model import Page
 
 
 if __name__ == '__main__':
+    parse_config_file('/etc/bitsd.conf')
+
     start()
 
     with open('INFO.md', 'r') as info:
