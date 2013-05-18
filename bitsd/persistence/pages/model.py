@@ -11,7 +11,7 @@ Models for stored pages and companions.
 """
 
 from sqlalchemy import Column
-from sqlalchemy.types import Text, String
+from sqlalchemy.types import String, UnicodeText
 
 import re
 
@@ -32,7 +32,7 @@ class Page(Base):
 
     slug = Column(String(length=100), primary_key=True)
     title = Column(String(length=100), nullable=False)
-    body = Column(Text, nullable=False)
+    body = Column(UnicodeText, nullable=False)
 
     def __init__(self, title, body):
         self.title = title
