@@ -32,8 +32,8 @@ class Message(Base):
     def jsondict(self, wrap=False):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            'userid': self.userid,
-            'timestamp': self.timestamp,
-            'message': self.message,
+            'user': self.userid,
+            'timestamp': self.timestamp.isoformat(' '),
+            'value': self.message,
         }
         return {'message': data} if wrap else data

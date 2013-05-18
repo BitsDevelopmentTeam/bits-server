@@ -15,7 +15,7 @@ import tornado.websocket
 from .notifier import MessageNotifier
 
 from bitsd.common import LOG
-from bitsd.persistence.logger import get_latest_data
+from .. import get_latest_data
 
 
 class StatusHandler(tornado.websocket.WebSocketHandler):

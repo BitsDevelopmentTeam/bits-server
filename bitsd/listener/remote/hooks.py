@@ -18,6 +18,7 @@ import base64
 from bitsd.common import LOG
 from bitsd.persistence.logger import log_temperature, log_status
 from bitsd.persistence.logger import get_current_status
+from bitsd.persistence.message import log_message
 from bitsd.server.websockets.status import broadcast_status
 from bitsd.client.fonera import Fonera
 # Fixing Sphinx complaints
@@ -107,8 +108,11 @@ def handle_message_command(message):
     except TypeError:
         LOG.error('Received message is not valid base64: {!r}'.format(message))
     else:
-        message = decodedmex.decode('utf8')
-        FONERA.message(message)
+        text = decodedmex.decode('utf8')
+        #FIXME author ID
+        message = log_message(0, text)
+        broadcast_status(message.jsondict(wrap=True))
+        FONERA.message(text)
 
 
 def handle_sound_command(soundid):

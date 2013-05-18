@@ -12,7 +12,7 @@ JSON data page handlers.
 
 import tornado.web
 
-from bitsd.persistence.logger import get_latest_data
+from .. import get_latest_data
 
 
 class DataPageHandler(tornado.web.RequestHandler):

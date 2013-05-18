@@ -50,17 +50,3 @@ def get_latest_statuses(limit=20, offset=0):
 def get_number_of_statuses():
     """Get total number of logged statuses."""
     return count(Status)
-
-
-def get_latest_data():
-    """Get recent data."""
-    status = get_current_status()
-    temp = get_current_temperature()
-    latest_temp_samples = get_latest_temperature_samples()
-    return {
-        "status": status.jsondict() if status is not None else "",
-        "tempint": temp.jsondict() if temp is not None else "",
-        "version": options.jsonver,
-        #"msg": TODO,
-        "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
-    }

@@ -26,9 +26,9 @@ module("handler", function (require, exports) {
             this.diffHandler.status(json.status, this.firstHandle);
         }
 
-        if (json.msg !== undefined) {
-            debug.log("New Msg", json.msg);
-            this.diffHandler.msg(json.msg, this.firstHandle);
+        if (json.message !== undefined) {
+            debug.log("New Msg", json.message);
+            this.diffHandler.msg(json.message, this.firstHandle);
         }
 
         if (json.tempint !== undefined) {
