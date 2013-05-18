@@ -8,21 +8,11 @@ il proprio portatile o smartphone.
 
 L'architettura di BITS è composta da un Arduino, una Fonera, e un web server.
 
-![](img/bits1_small.jpg)
-![](img/bits2_small.jpg)
+![](/static/bits1_small.jpg)
+![](/static/bits2_small.jpg)
 
-Il codice sorgente è scritto nei seguenti linguaggi:
-
-* Bash
-* C++
-* CSS
-* HTML5
-* Javascript
-* PHP
-* Python
-* SQL
-
-ed è Free Software/Open Source, disponibile su [GitHub](https://github.com/esseks/bitsd).
+Il codice sorgente è scritto in Python e C++ ed è Free Software/Open Source,
+disponibile su [GitHub](https://github.com/esseks/bitsd).
 
 Stato della sede
 ================
