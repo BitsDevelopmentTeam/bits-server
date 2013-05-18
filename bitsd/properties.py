@@ -82,6 +82,12 @@ define("assets_path",
     group='Internal'
 )
 
+define("cookie_secret",
+    default='Very random value, not like this',
+    help='Secret used to generate securely hashed cookies',
+    group='Internal'
+)
+
 define("log_queries",
     default=False, help="Log DB queries.", group='Debug')
 
