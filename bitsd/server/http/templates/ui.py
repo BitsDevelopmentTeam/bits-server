@@ -41,7 +41,7 @@ class DynamicPage(tornado.web.UIModule):
             '/static/lib/raphael-min.js?v=1',
             '/static/lib/g.raphael-min.js?v=1',
             '/static/lib/g.line-min.js?v=1',
-            '/static/lib/json2.js?v=1',
+            '/static/lib/json2.js?v=2',
             '/static/module.js?v=1',
             '/static/debug.js?v=1',
             '/static/html5.js?v=1',
