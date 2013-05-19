@@ -11,6 +11,7 @@ HTTP requests handlers.
 """
 
 import markdown
+import datetime
 
 import tornado.web
 import tornado.websocket
@@ -24,6 +25,31 @@ import bitsd.persistence.query as query
 from bitsd.common import LOG
 
 
+def cache(seconds):
+    """
+    Caching decorator for handlers. Will set `Expires` and `Cache-Control`
+    headers appropriately.
+
+    Example: to cache resource for 10 days, use::
+
+        class FooHandler(BaseHandler):
+            @cache(3600 * 24 * 10)
+            def get(self):
+                return render_something_great()
+
+    Parameters:
+        `seconds`: TTL of the cached resource, in seconds.
+    """
+    def set_cacheable(get_function):
+        def wrapper(self, *args, **kwargs):
+            self.set_header("Expires", datetime.datetime.utcnow() +
+                datetime.timedelta(seconds=seconds))
+            self.set_header("Cache-Control", "max-age=" + str(seconds))
+            return get_function(self, *args, **kwargs)
+        return wrapper
+    return set_cacheable
+
+
 class BaseHandler(tornado.web.RequestHandler):
     """Base requests handler"""
     pass
@@ -31,6 +57,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class HomePageHandler(BaseHandler):
     """Display homepage."""
+    @cache(86400*10)
     def get(self):
         self.render('templates/homepage.html')
 
