@@ -7,25 +7,54 @@
 #
 
 """
-Serve content to clients via TCP. All HTTP, WS etc. servers belong to here.
+Serve content to clients via TCP. All HTTP, WS etc. handlers belong on here.
 """
+
+import tornado.web
+import tornado.httpserver
+
 from tornado.options import options
 
-import bitsd.persistence.logger as logger
-import bitsd.persistence.message as message
+from . import handlers
+from . import uimodules
 
-def get_latest_data():
-    """Get recent data."""
-    status = logger.get_current_status()
-    temp = logger.get_current_temperature()
-    latest_temp_samples = logger.get_latest_temperature_samples()
-    latest_message = message.get_current_message()
+from bitsd.common import LOG, bind
 
-    json_or_none = lambda data: data.jsondict() if data is not None else ""
-    return {
-        "status": json_or_none(status),
-        "tempint": json_or_none(temp),
-        "version": options.jsonver,
-        "msg": json_or_none(latest_message),
-        "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
-    }
+
+def start():
+    """Setup HTTP/WS server. **MUST** be called prior to any operation."""
+
+    # First, the HTTP server
+    webapplication = tornado.web.Application([
+            # FIXME daltonism workaround, should be implemented client-side
+            (r'/(?:|blind)', handlers.HomePageHandler),
+            (r'/log(?:/?|/(\d+))', handlers.LogPageHandler),
+            (r'/status', handlers.StatusPageHandler),
+            (r'/data', handlers.DataPageHandler),
+            (r'/(info)', handlers.MarkdownPageHandler),
+        ],
+        ui_modules=uimodules,
+        gzip=True,
+        debug=options.developer_mode,
+        static_path=options.assets_path,
+        xsrf_cookies=True,
+        cookie_secret=options.cookie_secret
+    )
+    server = tornado.httpserver.HTTPServer(webapplication) #TODO other options
+    LOG.info('Starting HTTP server...')
+    bind(server, options.web_port, options.web_usocket)
+
+    # Then, the WS server
+    wsapplication = tornado.web.Application([
+        (r'/', handlers.StatusHandler)
+    ])
+    server = tornado.httpserver.HTTPServer(wsapplication)
+    LOG.info('Starting websocket server...')
+    bind(server, options.ws_port, options.ws_usocket)
+
+
+def broadcast(message):
+    """Broadcast given message to all clients. `message`
+    may be either a string, which is directly broadcasted, or a dictionay
+    that is JSON-serialized automagically before sending."""
+    handlers.StatusHandler.CLIENTS.broadcast(message)

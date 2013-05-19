@@ -9,11 +9,27 @@ server Package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
+:mod:`handlers` Module
+----------------------
 
-.. toctree::
+.. automodule:: bitsd.server.handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-    bitsd.server.http
-    bitsd.server.websockets
+:mod:`notifier` Module
+----------------------
+
+.. automodule:: bitsd.server.notifier
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`uimodules` Module
+-----------------------
+
+.. automodule:: bitsd.server.uimodules
+    :members:
+    :undoc-members:
+    :show-inheritance:
 

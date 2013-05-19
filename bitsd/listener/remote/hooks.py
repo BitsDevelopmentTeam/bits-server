@@ -19,7 +19,7 @@ from bitsd.common import LOG
 from bitsd.persistence.logger import log_temperature, log_status
 from bitsd.persistence.logger import get_current_status
 from bitsd.persistence.message import log_message
-from bitsd.server.websockets.status import broadcast_status
+from bitsd.server import broadcast
 from bitsd.client.fonera import Fonera
 # Fixing Sphinx complaints
 import bitsd.properties
@@ -49,7 +49,7 @@ def handle_temperature_command(sensorid, value):
         return
 
     temp = log_temperature(value, sensorid, 'BITS')
-    broadcast_status(temp.jsondict(wrap=True)) # wrapped in a dict
+    broadcast(temp.jsondict(wrap=True)) # wrapped in a dict
 
 
 
@@ -71,7 +71,7 @@ def handle_status_command(status):
     curstatus = get_current_status()
     if curstatus is None or curstatus.value != textstatus:
         status = log_status(textstatus, 'BITS')
-        broadcast_status(status.jsondict(wrap=True)) # wrapped in a dict
+        broadcast(status.jsondict(wrap=True)) # wrapped in a dict
     else:
         LOG.error('BITS already open/closed! Ignoring.')
 
@@ -111,7 +111,7 @@ def handle_message_command(message):
         text = decodedmex.decode('utf8')
         #FIXME author ID
         message = log_message(0, text)
-        broadcast_status(message.jsondict(wrap=True))
+        broadcast(message.jsondict(wrap=True))
         FONERA.message(text)
 
 

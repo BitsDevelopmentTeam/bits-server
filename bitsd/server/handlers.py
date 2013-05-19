@@ -11,14 +11,22 @@ HTTP pages handlers
 """
 
 import markdown
+
 import tornado.web
+import tornado.websocket
+
 from tornado.options import options
 
-from .. import get_latest_data
+from .notifier import MessageNotifier
 
 from bitsd.persistence.logger import get_latest_statuses, get_number_of_statuses
 from bitsd.persistence.logger import get_current_status
 from bitsd.persistence.pages import get_page
+
+import bitsd.persistence.logger as logger
+import bitsd.persistence.message as message
+
+from bitsd.common import LOG
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -85,3 +93,41 @@ class MarkdownPageHandler(BaseHandler):
             ),
             title=page.title,
         )
+
+
+class StatusHandler(tornado.websocket.WebSocketHandler):
+    """Handler for POuL status via websocket"""
+
+    CLIENTS = MessageNotifier('Status handler queue')
+
+    def open(self):
+        """Register new handler with MessageNotifier."""
+        StatusHandler.CLIENTS.register(self)
+        self.write_message(get_latest_data())
+        LOG.debug('Registered client')
+
+    def on_message(self, message):
+        """Disconnect clients sending data (they should not)."""
+        LOG.warning('Client sent a message: disconnected.')
+
+    def on_close(self):
+        """Unregister this handler when the connection is closed."""
+        StatusHandler.CLIENTS.unregister(self)
+        LOG.debug('Unregistered client.')
+
+
+def get_latest_data():
+    """Get recent data."""
+    status = logger.get_current_status()
+    temp = logger.get_current_temperature()
+    latest_temp_samples = logger.get_latest_temperature_samples()
+    latest_message = message.get_current_message()
+
+    json_or_none = lambda data: data.jsondict() if data is not None else ""
+    return {
+        "status": json_or_none(status),
+        "tempint": json_or_none(temp),
+        "version": options.jsonver,
+        "msg": json_or_none(latest_message),
+        "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
+    }

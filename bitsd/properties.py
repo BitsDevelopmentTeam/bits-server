@@ -77,7 +77,7 @@ define("mdescape",
 )
 
 define("assets_path",
-    default='bitsd/server/http/assets',
+    default='bitsd/server/assets',
     help='Path to assets (for integrated server).',
     group='Internal'
 )

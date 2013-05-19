@@ -75,8 +75,7 @@ class PaginatorWidget(tornado.web.UIModule):
 
     Parameters:
         `baseurl`: the url used as a base to pagination links (see above).
-        `offset`: first element to show, counting from the first of
-                the paginated list
+        `offset`: first element to show, counting from the first of the paginated list
         `limit`: number of elements to show in each page.
         `count`: total number of elements to paginate.
 

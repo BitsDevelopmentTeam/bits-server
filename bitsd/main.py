@@ -13,8 +13,7 @@ BITSd entry point and unix signal handlers.
 # MUST be the first import
 import bitsd.properties
 
-import bitsd.server.http as http
-import bitsd.server.websockets as websockets
+import bitsd.server as server
 import bitsd.listener.remote as remote
 import bitsd.persistence as persistence
 
@@ -65,8 +64,7 @@ def main():
         sys.exit(0)
 
     persistence.start()
-    http.start()
-    websockets.start()
+    server.start()
     remote.start()
 
     # Add signal handlers...
