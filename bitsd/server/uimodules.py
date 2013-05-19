@@ -12,7 +12,7 @@ Assorted Tornado UI widgets and mixins.
 
 import tornado.web
 
-from bitsd.persistence.logger import get_latest_statuses
+from bitsd.persistence.query import get_latest_statuses
 
 
 class BasePage(tornado.web.UIModule):

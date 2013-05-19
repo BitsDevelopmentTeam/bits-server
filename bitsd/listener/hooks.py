@@ -15,12 +15,11 @@ Hooks called by `.handlers` to handle specific commands.
 
 import base64
 
+import bitsd.persistence.query as query
 from bitsd.common import LOG
-from bitsd.persistence.logger import log_temperature, log_status
-from bitsd.persistence.logger import get_current_status
-from bitsd.persistence.message import log_message
 from bitsd.server import broadcast
 from bitsd.client.fonera import Fonera
+
 # Fixing Sphinx complaints
 import bitsd.properties
 
@@ -48,7 +47,7 @@ def handle_temperature_command(sensorid, value):
         LOG.error('Wrong type for parameters in temperature command!')
         return
 
-    temp = log_temperature(value, sensorid, 'BITS')
+    temp = query.log_temperature(value, sensorid, 'BITS')
     broadcast(temp.jsondict(wrap=True)) # wrapped in a dict
 
 
@@ -68,9 +67,9 @@ def handle_status_command(status):
         return
 
     textstatus = 'open' if status == 1 else 'closed'
-    curstatus = get_current_status()
+    curstatus = query.get_current_status()
     if curstatus is None or curstatus.value != textstatus:
-        status = log_status(textstatus, 'BITS')
+        status = query.log_status(textstatus, 'BITS')
         broadcast(status.jsondict(wrap=True)) # wrapped in a dict
     else:
         LOG.error('BITS already open/closed! Ignoring.')
@@ -110,7 +109,7 @@ def handle_message_command(message):
     else:
         text = decodedmex.decode('utf8')
         #FIXME author ID
-        message = log_message(0, text)
+        message = query.log_message(0, text)
         broadcast(message.jsondict(wrap=True))
         FONERA.message(text)
 

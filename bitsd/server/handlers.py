@@ -7,7 +7,7 @@
 #
 
 """
-HTTP pages handlers
+HTTP requests handlers.
 """
 
 import markdown
@@ -19,9 +19,7 @@ from tornado.options import options
 
 from .notifier import MessageNotifier
 
-import bitsd.persistence.logger as logger
-import bitsd.persistence.message as message
-import bitsd.persistence.pages as pages
+import bitsd.persistence.query as query
 
 from bitsd.common import LOG
 
@@ -40,7 +38,7 @@ class HomePageHandler(BaseHandler):
 class DataPageHandler(BaseHandler):
     """Get BITS data in JSON, machine parseable."""
     def get(self):
-        self.write(get_latest_data())
+        self.write(query.get_latest_data())
         self.finish()
 
 
@@ -56,21 +54,21 @@ class LogPageHandler(BaseHandler):
         offset = int(offset) if offset is not None else 0
 
         self.render('templates/log.html',
-            latest_statuses=logger.get_latest_statuses(
+            latest_statuses=query.get_latest_statuses(
                 offset=offset,
                 limit=self.LINES_PER_PAGE
             ),
             # Used by the paginator
             offset=offset,
             limit=self.LINES_PER_PAGE,
-            count=logger.get_number_of_statuses(),
+            count=query.get_number_of_statuses(),
         )
 
 
 class StatusPageHandler(BaseHandler):
     """Get a single digit, indicating BITS status (open/closed)"""
     def get(self):
-        status = logger.get_current_status()
+        status = query.get_current_status()
         self.write('1' if status is not None and status.value == 'open' else '0')
         self.finish()
 
@@ -78,7 +76,7 @@ class StatusPageHandler(BaseHandler):
 class MarkdownPageHandler(BaseHandler):
     """Renders page from markdown source."""
     def get(self, slug):
-        page = pages.get_page(slug)
+        page = query.get_page(slug)
 
         if page is None:
             raise tornado.web.HTTPError(404)
@@ -100,7 +98,7 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         """Register new handler with MessageNotifier."""
         StatusHandler.CLIENTS.register(self)
-        self.write_message(get_latest_data())
+        self.write_message(query.get_latest_data())
         LOG.debug('Registered client')
 
     def on_message(self, message):
@@ -112,19 +110,3 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         StatusHandler.CLIENTS.unregister(self)
         LOG.debug('Unregistered client.')
 
-
-def get_latest_data():
-    """Get recent data."""
-    status = logger.get_current_status()
-    temp = logger.get_current_temperature()
-    latest_temp_samples = logger.get_latest_temperature_samples()
-    latest_message = message.get_current_message()
-
-    json_or_none = lambda data: data.jsondict() if data is not None else ""
-    return {
-        "status": json_or_none(status),
-        "tempint": json_or_none(temp),
-        "version": options.jsonver,
-        "msg": json_or_none(latest_message),
-        "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
-    }
