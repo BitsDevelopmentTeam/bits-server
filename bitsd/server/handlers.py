@@ -19,12 +19,9 @@ from tornado.options import options
 
 from .notifier import MessageNotifier
 
-from bitsd.persistence.logger import get_latest_statuses, get_number_of_statuses
-from bitsd.persistence.logger import get_current_status
-from bitsd.persistence.pages import get_page
-
 import bitsd.persistence.logger as logger
 import bitsd.persistence.message as message
+import bitsd.persistence.pages as pages
 
 from bitsd.common import LOG
 
@@ -59,21 +56,21 @@ class LogPageHandler(BaseHandler):
         offset = int(offset) if offset is not None else 0
 
         self.render('templates/log.html',
-            latest_statuses=get_latest_statuses(
+            latest_statuses=logger.get_latest_statuses(
                 offset=offset,
                 limit=self.LINES_PER_PAGE
             ),
             # Used by the paginator
             offset=offset,
             limit=self.LINES_PER_PAGE,
-            count=get_number_of_statuses(),
+            count=logger.get_number_of_statuses(),
         )
 
 
 class StatusPageHandler(BaseHandler):
     """Get a single digit, indicating BITS status (open/closed)"""
     def get(self):
-        status = get_current_status()
+        status = logger.get_current_status()
         self.write('1' if status is not None and status.value == 'open' else '0')
         self.finish()
 
@@ -81,7 +78,7 @@ class StatusPageHandler(BaseHandler):
 class MarkdownPageHandler(BaseHandler):
     """Renders page from markdown source."""
     def get(self, slug):
-        page = get_page(slug)
+        page = pages.get_page(slug)
 
         if page is None:
             raise tornado.web.HTTPError(404)
