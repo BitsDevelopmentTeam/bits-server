@@ -33,7 +33,7 @@ class TemperatureSample(Base):
     """Representation of a logged temperature sample."""
     __tablename__ = 'Temperature'
 
-    timestamp = Column(DateTime, primary_key=True, default=datetime.utcnow)
+    timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     value = Column(Float, primary_key=True)
     sensor = Column(Integer, nullable=False)
     modified_by = Column(Enum('BITS', 'web'), nullable=False)
@@ -64,7 +64,7 @@ class Status(Base):
     """Representation of a logged status change."""
     __tablename__ = 'Status'
 
-    timestamp = Column(DateTime, primary_key=True, default=datetime.utcnow)
+    timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     value = Column(Enum('open', 'closed'), nullable=False)
     modified_by = Column(Enum('BITS', 'web'), nullable=False)
 
@@ -93,7 +93,7 @@ class Message(Base):
     __tablename__ = 'Message'
 
     userid = Column(BigInteger, primary_key=True)
-    timestamp = Column(DateTime, primary_key=True, default=datetime.utcnow)
+    timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
     def __init__(self, userid, message):
