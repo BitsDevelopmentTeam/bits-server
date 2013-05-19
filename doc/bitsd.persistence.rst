@@ -9,12 +9,27 @@ persistence Package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
+:mod:`engine` Module
+--------------------
 
-.. toctree::
+.. automodule:: bitsd.persistence.engine
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-    bitsd.persistence.logger
-    bitsd.persistence.message
-    bitsd.persistence.pages
+:mod:`models` Module
+--------------------
+
+.. automodule:: bitsd.persistence.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`query` Module
+-------------------
+
+.. automodule:: bitsd.persistence.query
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
