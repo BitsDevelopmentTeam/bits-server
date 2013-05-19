@@ -7,7 +7,7 @@
 #
 
 """
-Hooks called by bitsd.listener.remote.RemoteListener to handle commands.
+Hooks called by `.handlers` to handle specific commands.
 """
 
 # NOTE: don't forget to register your handler in RemoteListener.ACTIONS

@@ -11,3 +11,17 @@ Listeners are server components waiting for commands on given
 ports/hosts/address or events (on the countrary, a server will actually
 *serve* content to the client).
 """
+
+
+from tornado.options import options
+
+from .handlers import RemoteListener
+from bitsd.common import bind, LOG
+
+def start():
+    """Connect and bind listeners. **MUST** be called at startup."""
+    fonera = RemoteListener()
+    LOG.info('Starting remote control...')
+    LOG.info('Remote control IP is {}'.format(options.remote_address))
+    bind(fonera, options.remote_port, options.remote_usocket,
+        address=options.remote_address)

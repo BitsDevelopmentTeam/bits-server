@@ -14,7 +14,7 @@ BITSd entry point and unix signal handlers.
 import bitsd.properties
 
 import bitsd.server as server
-import bitsd.listener.remote as remote
+import bitsd.listener as listener
 import bitsd.persistence as persistence
 
 from bitsd.common import LOG
@@ -65,7 +65,7 @@ def main():
 
     persistence.start()
     server.start()
-    remote.start()
+    listener.start()
 
     # Add signal handlers...
     signal.signal(signal.SIGTERM, sig_handler)

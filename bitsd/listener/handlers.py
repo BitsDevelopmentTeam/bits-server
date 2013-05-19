@@ -9,7 +9,8 @@
 
 """
 TCP server receiving raw messages and invoke correct handlers
-(from module `.hooks`)
+(from module `.hooks`). Listens for remote commands on BITS-miniprotocol
+and dispatches to Fonera via bitsd.client.fonera.Fonera proxy.
 """
 
 import tornado.tcpserver

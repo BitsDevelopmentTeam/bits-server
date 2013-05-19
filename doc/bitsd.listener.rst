@@ -9,10 +9,19 @@ listener Package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
+:mod:`handlers` Module
+----------------------
 
-.. toctree::
+.. automodule:: bitsd.listener.handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-    bitsd.listener.remote
+:mod:`hooks` Module
+-------------------
+
+.. automodule:: bitsd.listener.hooks
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
