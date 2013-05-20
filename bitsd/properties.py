@@ -23,17 +23,6 @@ define("web_usocket",
     group="Networking"
 )
 
-define("ws_port",
-    default=3389,
-    help="WebSocket server port. Only if ws_usocket is not defined.",
-    group='Networking'
-)
-
-define("ws_usocket",
-    default='', help="Unix socket the WebSocket server will be listening on.",
-    group="Networking"
-)
-
 define("remote_port",
     default=8888,
     help="Port for fonera server. Only if ws_usocket is not defined.",

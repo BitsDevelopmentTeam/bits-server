@@ -23,15 +23,14 @@ from bitsd.common import LOG, bind
 
 def start():
     """Setup HTTP/WS server. **MUST** be called prior to any operation."""
-
-    # First, the HTTP server
-    webapplication = tornado.web.Application([
+    application = tornado.web.Application([
             # FIXME daltonism workaround, should be implemented client-side
             (r'/(?:|blind)', handlers.HomePageHandler),
             (r'/log(?:/?|/(\d+))', handlers.LogPageHandler),
             (r'/status', handlers.StatusPageHandler),
             (r'/data', handlers.DataPageHandler),
             (r'/(info)', handlers.MarkdownPageHandler),
+            (r'/ws', handlers.StatusHandler)
         ],
         ui_modules=uimodules,
         gzip=True,
@@ -40,15 +39,6 @@ def start():
         xsrf_cookies=True,
         cookie_secret=options.cookie_secret
     )
-    server = tornado.httpserver.HTTPServer(webapplication) #TODO other options
-    LOG.info('Starting HTTP server...')
+    server = tornado.httpserver.HTTPServer(application) #TODO other options
+    LOG.info('Starting HTTP/WS server...')
     bind(server, options.web_port, options.web_usocket)
-
-    # Then, the WS server
-    wsapplication = tornado.web.Application([
-        (r'/', handlers.StatusHandler)
-    ])
-    server = tornado.httpserver.HTTPServer(wsapplication)
-    LOG.info('Starting websocket server...')
-    bind(server, options.ws_port, options.ws_usocket)
-

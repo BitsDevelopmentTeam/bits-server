@@ -6,7 +6,7 @@ main(function (require) {
         WebSocket = require("websocket").WebSocket,
         debug = require("debug"),
 
-        ws = new WebSocket("ws://" + window.location.hostname + ":3389"),
+        ws = new WebSocket("ws://" + window.location.hostname + ":8008/ws"),
         handler = new Handler(browserHandler);
 
     debug.setLevel(3);
