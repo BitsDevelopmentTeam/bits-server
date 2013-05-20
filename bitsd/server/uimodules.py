@@ -49,7 +49,7 @@ class DynamicPage(tornado.web.UIModule):
             '/static/browser_handler.js?v=1',
             '/static/handler.js?v=2',
             '/static/websocket.js?v=1',
-            '/static/index_main.js?v=2',
+            '/static/index_main.js?v=3',
         )
 
     def render(self):
