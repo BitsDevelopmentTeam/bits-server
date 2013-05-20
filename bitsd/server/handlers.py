@@ -50,6 +50,13 @@ def cache(seconds):
     return set_cacheable
 
 
+def broadcast(message):
+    """Broadcast given message to all clients. `message`
+    may be either a string, which is directly broadcasted, or a dictionay
+    that is JSON-serialized automagically before sending."""
+    StatusHandler.CLIENTS.broadcast(message)
+
+
 class BaseHandler(tornado.web.RequestHandler):
     """Base requests handler"""
     pass

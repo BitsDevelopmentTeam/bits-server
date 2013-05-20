@@ -17,6 +17,8 @@ from tornado.options import options
 
 from . import handlers
 from . import uimodules
+#FIXME refactor out when possible (20/5/13)
+from .handlers import broadcast
 
 from bitsd.common import LOG, bind
 
@@ -52,9 +54,3 @@ def start():
     LOG.info('Starting websocket server...')
     bind(server, options.ws_port, options.ws_usocket)
 
-
-def broadcast(message):
-    """Broadcast given message to all clients. `message`
-    may be either a string, which is directly broadcasted, or a dictionay
-    that is JSON-serialized automagically before sending."""
-    handlers.StatusHandler.CLIENTS.broadcast(message)
