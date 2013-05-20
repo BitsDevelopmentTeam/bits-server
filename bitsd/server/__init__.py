@@ -17,8 +17,6 @@ from tornado.options import options
 
 from . import handlers
 from . import uimodules
-#FIXME refactor out when possible (20/5/13)
-from .handlers import broadcast
 
 from bitsd.common import LOG, bind
 

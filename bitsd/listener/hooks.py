@@ -17,7 +17,7 @@ import base64
 
 import bitsd.persistence.query as query
 from bitsd.common import LOG
-from bitsd.server import broadcast
+from bitsd.server.handlers import broadcast
 from bitsd.client.fonera import Fonera
 
 # Fixing Sphinx complaints
