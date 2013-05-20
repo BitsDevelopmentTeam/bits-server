@@ -1,6 +1,8 @@
 main(function (require) {
     "use strict";
 
+    require("location");
+
     var Handler = require("handler").Handler,
         browserHandler = require("browser_handler"),
         WebSocket = require("websocket").WebSocket,
