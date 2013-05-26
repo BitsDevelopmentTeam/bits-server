@@ -15,6 +15,7 @@ import datetime
 
 import tornado.web
 import tornado.websocket
+import tornado.auth
 
 from tornado.options import options
 
@@ -143,4 +144,81 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         """Unregister this handler when the connection is closed."""
         StatusHandler.CLIENTS.unregister(self)
         LOG.debug('Unregistered client.')
+
+
+class LoginPageHandler(BaseHandler, tornado.auth.GoogleMixin):
+    """Handle login browser requests for reserved area."""
+
+    @tornado.web.asynchronous
+    @tornado.gen.coroutine
+    def get(self):
+        """Display the login page."""
+        if self.get_argument("openid.mode", None):
+            user = yield self.get_authenticated_user()
+            self.set_secure_cookie("usertoken", user['claimed_id'],
+                                   expires_days=1)
+            self.redirect(self.get_argument('next', default='/'))
+        else:
+            self.authenticate_redirect()
+
+
+class LogoutPageHandler(BaseHandler):
+    """Handle login browser requests for logout from reserved area."""
+
+    @tornado.web.asynchronous
+    @tornado.gen.coroutine
+    def get(self):
+        """Display the logout page."""
+        self.clear_cookie("usertoken")
+        self.write("Logged out.")
+
+
+class AdminPageHandler(BaseHandler):
+    """Handle browser requests for admin area."""
+
+    @tornado.web.asynchronous
+    @tornado.gen.coroutine
+    @tornado.web.authenticated
+    def get(self):
+        """Display the admin page."""
+        self.render('templates/admin.html',
+                    page_message='Very secret information here')
+
+    @tornado.web.asynchronous
+    @tornado.gen.coroutine
+    @tornado.web.authenticated
+    def post(self):
+        """Issue admin commands."""
+        status = self.get_argument('changestatus', default=None)
+        if status: self.submit_status(status)
+
+    def submit_status(self, status):
+        """Submit maually a new status to the BITS system"""
+
+        #To prevent from saving random stuff in the db
+        #coming form the status variable
+        textstatus = 'open' if (status == 'open') else 'closed'
+
+        curstatus = query.get_current_status()
+        if curstatus is None or curstatus.value != textstatus:
+            LOG.info('Change of BITS status to status={}'.format(textstatus) +
+                     ' from web interface.')
+            status = query.log_status(textstatus, 'BITS')
+            broadcast(status.jsondict(wrap=True)) # wrapped in a dict
+            message = "Modifica dello stato effettuata."
+        else:
+            message = "Stato gia' aperto/chiuso! Ignoro."
+            LOG.error('BITS already open/closed! Ignoring.')
+        
+        self.render('templates/admin.html', page_message = message)
+
+
+    def get_login_url(self):
+        """Returns the login URL if the client is not logged"""
+        return '/login'
+
+    def get_current_user(self):
+        """Returns the current user as seen from the signed cookie"""
+        return self.get_secure_cookie('usertoken')
+
 

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{#
+ # Copyright (C) 2013 Stefano Sanfilippo
+ # Copyright (C) 2013 BITS development team
+ #
+ # This file is part of bitsd, which is released under the terms of
+ # GNU GPLv3. See COPYING at top level for more information.
+ #}
+
+{% block title %}Amministrazione{% end %}
+{% block attrs %}class="admin"{% end %}
+{% block subtitle %}Amministrazione{% end %}
+
+{% block body %}
+<ul class="admin">
+{{ page_message }}
+<br>
+<form action="/admin" method="post">
+    <p>
+    <input type="hidden" name="changestatus" value="open">
+    {% module xsrf_form_html() %}
+    <input type="submit" value="Apri sede">
+    </p>
+</form>
+<form action="/admin" method="post">
+    <p>
+    <input type="hidden" name="changestatus" value="closed">
+    {% module xsrf_form_html() %}
+    <input type="submit" value="Chiudi sede">
+    </p>
+</form>
+</ul>
+
+{% end %}
+
