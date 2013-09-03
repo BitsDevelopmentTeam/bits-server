@@ -18,16 +18,9 @@
 <br>
 <form action="/admin" method="post">
     <p>
-    <input type="hidden" name="changestatus" value="open">
+    <input type="hidden" name="changestatus" value="change">
     {% module xsrf_form_html() %}
-    <input type="submit" value="Apri sede">
-    </p>
-</form>
-<form action="/admin" method="post">
-    <p>
-    <input type="hidden" name="changestatus" value="closed">
-    {% module xsrf_form_html() %}
-    <input type="submit" value="Chiudi sede">
+    <input type="submit" value="Cambia stato sede">
     </p>
 </form>
 </ul>
