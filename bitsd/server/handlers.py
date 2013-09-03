@@ -192,7 +192,7 @@ class AdminPageHandler(BaseHandler):
         status = self.get_argument('changestatus', default=None)
         if status: self.change_status()
 
-    def change_status(self, status):
+    def change_status(self):
         """Change maually the status of the BITS system"""
 
         curstatus = query.get_current_status()
