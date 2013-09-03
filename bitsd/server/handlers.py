@@ -190,25 +190,23 @@ class AdminPageHandler(BaseHandler):
     def post(self):
         """Issue admin commands."""
         status = self.get_argument('changestatus', default=None)
-        if status: self.submit_status(status)
+        if status: self.change_status()
 
-    def submit_status(self, status):
-        """Submit maually a new status to the BITS system"""
-
-        #To prevent from saving random stuff in the db
-        #coming form the status variable
-        textstatus = 'open' if (status == 'open') else 'closed'
+    def change_status(self, status):
+        """Change maually the status of the BITS system"""
 
         curstatus = query.get_current_status()
-        if curstatus is None or curstatus.value != textstatus:
-            LOG.info('Change of BITS status to status={}'.format(textstatus) +
-                     ' from web interface.')
-            status = query.log_status(textstatus, 'BITS')
-            broadcast(status.jsondict(wrap=True)) # wrapped in a dict
-            message = "Modifica dello stato effettuata."
+        if curstatus is None:
+            textstatus = "close"
         else:
-            message = "Stato gia' aperto/chiuso! Ignoro."
-            LOG.error('BITS already open/closed! Ignoring.')
+            if curstatus == "close": textstatus = "open"
+            else: textstatus = "close"
+
+        LOG.info('Change of BITS status to status={}'.format(textstatus) +
+                 ' from web interface.')
+        status = query.log_status(textstatus, 'BITS')
+        broadcast(status.jsondict(wrap=True)) # wrapped in a dict
+        message = "Modifica dello stato effettuata."
         
         self.render('templates/admin.html', page_message = message)
 
