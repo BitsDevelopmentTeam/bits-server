@@ -199,14 +199,17 @@ class AdminPageHandler(BaseHandler):
         if curstatus is None:
             textstatus = "close"
         else:
-            if curstatus == "close": textstatus = "open"
-            else: textstatus = "close"
+            if curstatus.value == "closed": textstatus = "open"
+            else: textstatus = "closed"
 
-        LOG.info('Change of BITS status to status={}'.format(textstatus) +
+        LOG.info('Change of BITS to status={}'.format(textstatus) +
                  ' from web interface.')
-        status = query.log_status(textstatus, 'BITS')
-        broadcast(status.jsondict(wrap=True)) # wrapped in a dict
-        message = "Modifica dello stato effettuata."
+        try:
+            status = query.log_status(textstatus, 'web')
+            broadcast(status.jsondict(wrap=True)) # wrapped in a dict
+            message = "Modifica dello stato effettuata."
+        except query.SameTimestampException:
+            message = "Errore: modifica troppo veloce!"
         
         self.render('templates/admin.html', page_message = message)
 

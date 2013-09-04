@@ -16,6 +16,12 @@ from tornado.options import options
 from .engine import persist, query_by_timestamp, count, query_by_attribute
 from .models import TemperatureSample, Status, Message, Page
 
+from datetime import datetime
+
+## Exceptions ##
+
+class SameTimestampException(Exception):
+    pass
 
 ## Getters ##
 
@@ -83,7 +89,10 @@ def log_temperature(value, sensor, modified_by):
 def log_status(status, modified_by):
     """Persist status to the DB."""
     sample = Status(status, modified_by)
-    persist(sample)
+    try:
+        persist(sample)
+    except: #FIXME
+        raise SameTimestampException()
     return sample
 
 
