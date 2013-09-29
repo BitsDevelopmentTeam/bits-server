@@ -189,14 +189,14 @@ class AdminPageHandler(BaseHandler):
         if status: self.change_status()
 
     def change_status(self):
-        """Change maually the status of the BITS system"""
+        """Manually change the status of the BITS system"""
 
         curstatus = query.get_current_status()
+
         if curstatus is None:
             textstatus = "closed"
         else:
-            if curstatus.value == "closed": textstatus = "open"
-            else: textstatus = "closed"
+            textstatus = "closed" if curstatus.value == "closed" else "open"
 
         LOG.info('Change of BITS to status={}'.format(textstatus) +
                  ' from web interface.')
