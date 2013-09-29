@@ -176,16 +176,12 @@ class LogoutPageHandler(BaseHandler):
 class AdminPageHandler(BaseHandler):
     """Handle browser requests for admin area."""
 
-    @tornado.web.asynchronous
-    @tornado.gen.coroutine
     @tornado.web.authenticated
     def get(self):
         """Display the admin page."""
         self.render('templates/admin.html',
                     page_message='Very secret information here')
 
-    @tornado.web.asynchronous
-    @tornado.gen.coroutine
     @tornado.web.authenticated
     def post(self):
         """Issue admin commands."""
@@ -197,7 +193,7 @@ class AdminPageHandler(BaseHandler):
 
         curstatus = query.get_current_status()
         if curstatus is None:
-            textstatus = "close"
+            textstatus = "closed"
         else:
             if curstatus.value == "closed": textstatus = "open"
             else: textstatus = "closed"

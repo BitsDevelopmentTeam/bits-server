@@ -10,13 +10,13 @@
 Common query helpers. These are shortcut to queries performed often
 by server engine.
 """
+from sqlalchemy.exc import IntegrityError
 
 from tornado.options import options
 
 from .engine import persist, query_by_timestamp, count, query_by_attribute
 from .models import TemperatureSample, Status, Message, Page
 
-from datetime import datetime
 
 ## Exceptions ##
 
@@ -91,7 +91,7 @@ def log_status(status, modified_by):
     sample = Status(status, modified_by)
     try:
         persist(sample)
-    except: #FIXME
+    except IntegrityError:  # FIXME
         raise SameTimestampException()
     return sample
 
