@@ -196,7 +196,7 @@ class AdminPageHandler(BaseHandler):
         if curstatus is None:
             textstatus = "closed"
         else:
-            textstatus = "closed" if curstatus.value == "closed" else "open"
+            textstatus = "open" if curstatus.value == "closed" else "close"
 
         LOG.info('Change of BITS to status={}'.format(textstatus) +
                  ' from web interface.')
