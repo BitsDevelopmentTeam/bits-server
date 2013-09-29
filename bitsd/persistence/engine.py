@@ -12,6 +12,7 @@ indipendently from the model.
 """
 
 from sqlalchemy import desc, create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, scoped_session
 from tornado.options import options
 from bitsd.common import LOG
@@ -40,7 +41,12 @@ def persist(data):
     LOG.debug('Persisting data {}'.format(data))
     session = Session()
     session.add(data)
-    session.commit()
+    try:
+        session.commit()
+    except IntegrityError as e:
+        LOG.error("Integrity error in DB {}".format(e))
+        session.rollback()
+        raise e
 
 
 def query_by_timestamp(model, limit=1, offset=0):
