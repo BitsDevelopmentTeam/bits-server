@@ -12,8 +12,6 @@ Assorted Tornado UI widgets and mixins.
 
 import tornado.web
 
-from bitsd.persistence.query import get_latest_statuses
-
 
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""

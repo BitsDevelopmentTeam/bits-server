@@ -19,7 +19,7 @@ import bitsd.persistence as persistence
 
 from bitsd.common import LOG
 
-from tornado.options import parse_command_line, options
+from tornado.options import parse_command_line
 from tornado.options import parse_config_file
 from tornado.log import enable_pretty_logging
 
