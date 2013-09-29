@@ -205,6 +205,7 @@ class AdminPageHandler(BaseHandler):
             broadcast(status.jsondict(wrap=True)) # wrapped in a dict
             message = "Modifica dello stato effettuata."
         except query.SameTimestampException:
+            LOG.error("Status changed too quickly, not logged.")
             message = "Errore: modifica troppo veloce!"
         
         self.render('templates/admin.html', page_message = message)
