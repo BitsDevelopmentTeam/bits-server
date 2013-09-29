@@ -44,7 +44,7 @@ def persist(data):
     try:
         session.commit()
     except IntegrityError as e:
-        LOG.error("Integrity error in DB {}".format(e))
+        LOG.error("Integrity error in DB, rolling back.")
         session.rollback()
         raise e
 
