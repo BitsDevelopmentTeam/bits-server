@@ -13,8 +13,10 @@ Fill Database with Markdown pages.
 
 import bitsd.properties
 
-from bitsd.persistence import start, persist
-from bitsd.persistence.pages.model import Page
+from bitsd.persistence import start
+from bitsd.persistence.models import Page
+from bitsd.persistence.engine import persist
+from tornado.options import parse_config_file
 
 
 if __name__ == '__main__':
