@@ -30,11 +30,10 @@ def start():
             (r'/status', handlers.StatusPageHandler),
             (r'/data', handlers.DataPageHandler),
             (r'/(info)', handlers.MarkdownPageHandler),
-            (r'/ws', handlers.StatusHandler)
+            (r'/ws', handlers.StatusHandler),
             (r'/login', handlers.LoginPageHandler),
             (r'/logout', handlers.LogoutPageHandler),
             (r'/admin', handlers.AdminPageHandler),
-
         ],
         ui_modules=uimodules,
         gzip=True,
