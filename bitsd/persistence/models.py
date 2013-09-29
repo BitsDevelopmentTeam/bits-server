@@ -87,6 +87,10 @@ class Status(Base):
         else:
             return data
 
+    def get_timestamp(self):
+        """Return the timestamp value of the object"""
+        return self.timestamp.isoformat(' ')
+
 
 class Message(Base):
     """Representation of a broadcast message."""
