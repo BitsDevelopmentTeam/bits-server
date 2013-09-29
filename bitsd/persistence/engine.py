@@ -12,7 +12,7 @@ indipendently from the model.
 """
 
 from sqlalchemy import desc, create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from tornado.options import options
 from bitsd.common import LOG
 
@@ -28,7 +28,8 @@ def connect():
     """
     global Session, Engine
     Engine = create_engine(options.db_uri, echo=options.log_queries)
-    Session = sessionmaker(bind=Engine)
+    session_factory = sessionmaker(bind=Engine)
+    Session = scoped_session(session_factory)
 
 
 def persist(data):
