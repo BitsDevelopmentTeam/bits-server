@@ -6,3 +6,4 @@ build
 MANIFEST
 *.pyc
 env
+.idea
