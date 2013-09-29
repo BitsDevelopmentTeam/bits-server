@@ -28,7 +28,11 @@ def connect():
     Open a connection to DB using parameters  from bitsd.conf and command line.
     """
     global Session, Engine
-    Engine = create_engine(options.db_uri, echo=options.log_queries)
+    Engine = create_engine(
+        options.db_uri,
+        pool_recycle=options.connection_recycle_timeout,
+        echo=options.log_queries
+    )
     session_factory = sessionmaker(bind=Engine)
     Session = scoped_session(session_factory)
 

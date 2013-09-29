@@ -49,7 +49,13 @@ define("fonera_host",
 define("db_uri",
     default="sqlite:///test.db",
     help="DB URI, in the form `dialect:///username:password@host`",
-    group='Config'
+    group="Database"
+)
+
+define("connection_recycle_timeout",
+    default=(60 * 60 * 7),  # 7 hours
+    help="Prevents the pool from using a particular connection that is older than this parameter, in seconds",
+    group="Database"
 )
 
 define("config",
