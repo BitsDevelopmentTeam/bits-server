@@ -11,6 +11,7 @@
 Fill Database with Markdown pages.
 """
 
+# DO NOT REMOVE
 import bitsd.properties
 
 from bitsd.persistence import start

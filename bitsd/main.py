@@ -10,7 +10,7 @@
 BITSd entry point and unix signal handlers.
 """
 
-# MUST be the first import
+# MUST be the first import, DO NOT REMOVE
 import bitsd.properties
 
 import bitsd.server as server

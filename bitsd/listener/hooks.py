@@ -20,7 +20,7 @@ from bitsd.common import LOG
 from bitsd.server.handlers import broadcast
 from bitsd.client.fonera import Fonera
 
-# Fixing Sphinx complaints
+# Fixing Sphinx complaints, DO NOT REMOVE
 import bitsd.properties
 
 from tornado.options import options
