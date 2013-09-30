@@ -13,9 +13,7 @@
 {% block subtitle %}Amministrazione{% end %}
 
 {% block body %}
-<ul class="admin">
-{{ page_message }}
-<br>
+<div>{{ page_message }}</div>
 <form action="/admin" method="post">
     <p>
     <input type="hidden" name="changestatus" value="change">
@@ -23,7 +21,5 @@
     <input type="submit" value="Cambia stato sede">
     </p>
 </form>
-</ul>
-
 {% end %}
 
