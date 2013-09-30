@@ -82,22 +82,19 @@ def get_latest_data():
 def log_temperature(value, sensor, modified_by):
     """Add a temperature sample to the DB."""
     sample = TemperatureSample(value, sensor, modified_by)
-    persist(sample)
-    return sample
+    return persist(sample)
 
 
 def log_status(status, modified_by):
     """Persist status to the DB."""
     sample = Status(status, modified_by)
     try:
-        persist(sample)
+        return persist(sample)
     except IntegrityError:  # FIXME
         raise SameTimestampException()
-    return sample
 
 
 def log_message(userid, message):
     """Persist message to DB."""
     message = Message(userid, message)
-    persist(message)
-    return message
+    return persist(message)

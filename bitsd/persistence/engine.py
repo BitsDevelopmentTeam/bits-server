@@ -38,7 +38,8 @@ def connect():
 
 
 def persist(data):
-    """Persist data to configured DB.
+    """Persist data to configured DB and return persisted object
+    in a consistent state.
 
     **Note:** will log what's being persisted, so don't put clear text password
     into `__str__()`."""
@@ -47,12 +48,14 @@ def persist(data):
     session.add(data)
     try:
         session.commit()
+        session.refresh(data)
     except IntegrityError as e:
         LOG.error("Integrity error in DB, rolling back.")
         session.rollback()
         raise e
     finally:
         session.close()
+    return data
 
 
 def query_by_timestamp(model, limit=1, offset=0):
