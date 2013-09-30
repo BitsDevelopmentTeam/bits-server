@@ -51,6 +51,8 @@ def persist(data):
         LOG.error("Integrity error in DB, rolling back.")
         session.rollback()
         raise e
+    finally:
+        session.close()
 
 
 def query_by_timestamp(model, limit=1, offset=0):
@@ -59,12 +61,14 @@ def query_by_timestamp(model, limit=1, offset=0):
     session = Session()
     query = session.query(model).order_by(desc(model.timestamp))
     if limit != 1:
-        return query[offset:offset+limit]
+        result = query[offset:offset+limit]
     else:
         try:
-            return query[offset]
+            result = query[offset]
         except IndexError:
-            return None
+            result = None
+    session.close()
+    return result
 
 
 def query_by_attribute(model, attribute, value, first=True):
@@ -73,11 +77,15 @@ def query_by_attribute(model, attribute, value, first=True):
     if attribute is a primary/candidate key)."""
     session = Session()
     query = session.query(model).filter_by(**{attribute: value})
-    return query.first() if first else query
+    result = query.first() if first else query
+    session.close()
+    return result
 
 
 def count(model):
     """Returns count of `model` instances in DB."""
     session = Session()
-    return session.query(model).count()
+    result = session.query(model).count()
+    session.close()
+    return result
 
