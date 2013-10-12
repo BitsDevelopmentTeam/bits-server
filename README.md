@@ -1,7 +1,7 @@
-What's BITSd?
-============
+What's BITS server?
+===================
 
-BITSd is a real time presence server originally developed at
+BITS server is a real time presence server originally developed at
 [POuL](http://www.poul.org) to let people know when to come and discuss
 FOSS, get assistance or simply make friends.
 
@@ -11,15 +11,15 @@ web browsers, native mobile apps, browser plugins, desktop widgets...
 
 Note
 ----
-Most of the URLs in this page refer to a running instance of BITSd, so they
+Most of the URLs in this page refer to a running instance of BITS server, so they
 will not work when viewing this document on GitHub (and should not, since
-BITSd is not installed yet).
+BITS server is not installed yet).
 
 
 Architecture overview
 =====================
 
-BITSd is completed by two hardware components, forming the 3-tier
+BITS server is completed by two hardware components, forming the 3-tier
 BITS architecture:
 
 1. A STm32 ARM Cortex board connected to an LCD display for messages/
@@ -40,7 +40,7 @@ Find the code on [GitHub](https://github.com/Otacon22/bits).
 This web server
 ===============
 
-BITSd is written in Python and is built on Tornado. It was created with a few
+BITS server is written in Python and is built on Tornado. It was created with a few
 objectives in mind:
 
 1. Handling requests via events (epoll on Linux) in a single process, instead of
@@ -56,7 +56,7 @@ Point _5_ is the actual reason why this project was started, as the legacy
 architecture had grown around a (very smart, to say all) kludge and was deemed
 to be unmaintainable.
 
-Actually, BITSd is composed by three components:
+Actually, BITS server is composed by three components:
 
 Web Server
 ----------
@@ -120,7 +120,7 @@ Notes
 External code
 -------------
 
-Assets in `bitsd/server/http/assets` have been imported from legacy project.
+Assets in `BITS server/server/http/assets` have been imported from legacy project.
 
 Some JS scripts are libraries licensed under the terms specified in the respective
 files, the other JS scripts and the CSS files had been coded by
@@ -150,7 +150,7 @@ You should use virtualenv to setup a clean environment for BITS.
 Start a local instance for testing
 ----------------------------------
 
-Simply execute `./bitsd.py` from this directory and watch the log closely ;)
+Simply execute `./BITS server.py` from this directory and watch the log closely ;)
 
 Rough Edges
 -----------
@@ -161,10 +161,10 @@ document as body and info as slug (and anything as title).
 Configuration
 -------------
 
-Most options can be configured via command line. Issue `bitsd.py --help`
+Most options can be configured via command line. Issue `BITS server.py --help`
 for a full list.
 
 Bugs and patches
 ================
-This project is hosted on [GitHub](https://github.com/esseks/bitsd), you
+This project is hosted on [GitHub](https://github.com/esseks/BITS server), you
 are welcome to use the bug tracker, wishlist and make pull requests.
