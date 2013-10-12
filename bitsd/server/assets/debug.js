@@ -6,7 +6,22 @@ module("debug", function (require, exports) {
 
         level = 0;
 
-    function setLevel(num) {
+    function setLevel(mode) {
+        switch (mode) {
+            case "production":
+                _setLevel(1)
+                break;
+            case "test":
+                _setLevel(2)
+                break;
+            case "debug":
+            default:
+                _setLevel(3)
+                break;
+        }
+    }
+
+    function _setLevel(num) {
         level = num;
     }
 

@@ -1,17 +1,17 @@
 main(function (require) {
     "use strict";
 
-    require("location");
-
     var Handler = require("handler").Handler,
         browserHandler = require("browser_handler"),
         WebSocket = require("websocket").WebSocket,
+        location = require("location"),
+        query = require("document").querySelector,
         debug = require("debug"),
 
-        ws = new WebSocket("ws://" + window.location.hostname + ":" + location.port + "/ws"),
+        ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/ws"),
         handler = new Handler(browserHandler);
 
-    debug.setLevel(3);
+    debug.setLevel(query("meta[name='mode']").content);
 
     ws.onmessage = function (event) {
         handler.webSocket(event);
