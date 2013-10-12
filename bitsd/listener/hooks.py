@@ -14,6 +14,7 @@ Hooks called by `.handlers` to handle specific commands.
 #     : and in __all__ below!!
 
 import base64
+from bitsd.persistence.models import Status
 
 import bitsd.persistence.query as query
 from bitsd.common import LOG
@@ -66,7 +67,7 @@ def handle_status_command(status):
         LOG.error('Non existent status {}, ignoring.'.format(status))
         return
 
-    textstatus = 'open' if status == 1 else 'closed'
+    textstatus = Status.OPEN if status == 1 else Status.CLOSED
     curstatus = query.get_current_status()
     if curstatus is None or curstatus.value != textstatus:
         status = query.log_status(textstatus, 'BITS')

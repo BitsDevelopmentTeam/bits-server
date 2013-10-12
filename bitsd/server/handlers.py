@@ -18,6 +18,7 @@ import tornado.websocket
 import tornado.auth
 
 from tornado.options import options
+from bitsd.persistence.models import Status
 
 from .notifier import MessageNotifier
 
@@ -104,7 +105,7 @@ class StatusPageHandler(BaseHandler):
     """Get a single digit, indicating BITS status (open/closed)"""
     def get(self):
         status = query.get_current_status()
-        self.write('1' if status is not None and status.value == 'open' else '0')
+        self.write('1' if status is not None and status.value == Status.OPEN else '0')
         self.finish()
 
 
@@ -194,9 +195,9 @@ class AdminPageHandler(BaseHandler):
         curstatus = query.get_current_status()
 
         if curstatus is None:
-            textstatus = "closed"
+            textstatus = Status.CLOSED
         else:
-            textstatus = "open" if curstatus.value == "closed" else "closed"
+            textstatus = Status.OPEN if curstatus.value == Status.CLOSED else Status.CLOSED
 
         LOG.info('Change of BITS to status={}'.format(textstatus) +
                  ' from web interface.')

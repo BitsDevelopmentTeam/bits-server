@@ -64,8 +64,11 @@ class Status(Base):
     """Representation of a logged status change."""
     __tablename__ = 'Status'
 
+    OPEN = 'open'
+    CLOSED = 'closed'
+
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
-    value = Column(Enum('open', 'closed'), nullable=False)
+    value = Column(Enum(OPEN, CLOSED), nullable=False)
     modified_by = Column(Enum('BITS', 'web'), nullable=False)
 
     def __init__(self, value, modified_by):
