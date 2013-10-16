@@ -25,6 +25,6 @@ source:
 rpm:
 	python setup.py bdist_rpm
 
-environment:
+virtualenv:
 	virtualenv env
-	source env/bin/activate && pip install tornado sqlalchemy markdown
+	. env/bin/activate && pip install tornado sqlalchemy markdown
