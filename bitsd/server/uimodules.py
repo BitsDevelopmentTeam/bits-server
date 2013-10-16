@@ -11,6 +11,14 @@ Assorted Tornado UI widgets and mixins.
 """
 
 import tornado.web
+from tornado.options import options
+
+
+class DebugMode(tornado.web.UIModule):
+    def render(self):
+        return '<meta name="mode" content="{mode}"/>'.format(
+            mode='debug' if options.developer_mode else 'production'
+        )
 
 
 class BasePage(tornado.web.UIModule):
@@ -42,12 +50,12 @@ class DynamicPage(tornado.web.UIModule):
             '/static/lib/g.line-min.js?v=1',
             '/static/lib/json2.js?v=2',
             '/static/lib/peppy.js?v=2',
-            '/static/debug.js?v=1',
+            '/static/debug.js?v=2',
             '/static/html5.js?v=1',
             '/static/browser_handler.js?v=1',
             '/static/handler.js?v=2',
             '/static/websocket.js?v=1',
-            '/static/index_main.js?v=3',
+            '/static/index_main.js?v=4',
         )
 
     def render(self):
