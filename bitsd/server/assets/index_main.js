@@ -5,7 +5,7 @@ main(function (require) {
         browserHandler = require("browser_handler"),
         WebSocket = require("websocket").WebSocket,
         location = require("location"),
-        query = require("document").querySelector,
+        query = require("peppy").query,
         debug = require("debug"),
 
         ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/ws"),
