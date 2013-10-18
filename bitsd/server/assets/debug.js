@@ -8,15 +8,15 @@ module("debug", function (require, exports) {
 
     function setLevel(mode) {
         switch (mode) {
-            case "production":
-                _setLevel(1)
+            case "debug":
+                _setLevel(3)
                 break;
             case "test":
                 _setLevel(2)
                 break;
-            case "debug":
+            case "production":
             default:
-                _setLevel(3)
+                _setLevel(1)
                 break;
         }
     }

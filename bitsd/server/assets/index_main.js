@@ -11,7 +11,12 @@ main(function (require) {
         ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/ws"),
         handler = new Handler(browserHandler);
 
-    debug.setLevel(query("meta[name='mode']").content);
+    var debugMeta = query("meta[name='mode']")[0];
+    if (debugMeta) {
+        debug.setLevel(debugMeta.content);
+    } else {
+        debug.setLevel("production");
+    }
 
     ws.onmessage = function (event) {
         handler.webSocket(event);
