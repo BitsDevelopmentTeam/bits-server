@@ -186,8 +186,6 @@ class LoginPageHandler(BaseHandler):
 class LogoutPageHandler(BaseHandler):
     """Handle login browser requests for logout from reserved area."""
 
-    @tornado.web.asynchronous
-    @tornado.gen.coroutine
     def get(self):
         """Display the logout page."""
         self.clear_cookie("usertoken")
