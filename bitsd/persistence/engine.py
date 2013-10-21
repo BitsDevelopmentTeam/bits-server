@@ -58,6 +58,14 @@ def persist(data):
     return data
 
 
+def delete(data):
+    """Delete data from DB."""
+    LOG.debug('Deleting {}'.format(data))
+    session = Session()
+    session.delete(data)
+    session.close()
+
+
 def query_by_timestamp(model, limit=1, offset=0):
     """Query at most `limit` samples by timestamp.
     Default to `limit=1` (latest value)."""
