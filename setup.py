@@ -20,32 +20,28 @@ setup(
     install_requires=[
         'tornado >= 2.3',
         'sqlalchemy >= 0.7',
-        'markdown'
+        'markdown',
+        'futures',
+        'pycares',
+        'passlib'
     ],
     packages=[
         'bitsd',
         'bitsd.client',
         'bitsd.listener',
-        'bitsd.listener.remote',
         'bitsd.persistence',
-        'bitsd.persistence.logger',
-        'bitsd.persistence.pages',
         'bitsd.server',
-        'bitsd.server.http',
-        'bitsd.server.http.templates',
-        'bitsd.server.websockets',
+        'bitsd.test',
     ],
     scripts=[
         'bitsd.py'
     ],
     package_data={
-        'bitsd.server.http': [
-            '*.html',
+        'bitsd.server': [
+            'templates/*.html',
             'assets/*',
+            'assets/lib/*'
         ],
-        'bitsd.server.http.templates': [
-            '*.html'
-        ]
     },
     data_files=[
         ('etc', [
