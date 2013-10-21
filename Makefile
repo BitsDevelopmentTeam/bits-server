@@ -27,4 +27,4 @@ rpm:
 
 virtualenv:
 	virtualenv env
-	. env/bin/activate && pip install tornado sqlalchemy markdown futures pycares
+	. env/bin/activate && pip install tornado sqlalchemy markdown futures pycares passlib
