@@ -15,6 +15,8 @@ from tornado.options import options
 
 
 class DebugMode(tornado.web.UIModule):
+    """If in developer mode, then render a debug meta header
+    which will toggle verbose JS logging."""
     def render(self):
         return '<meta name="mode" content="debug"/>' if options.developer_mode else ''
 
