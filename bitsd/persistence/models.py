@@ -145,3 +145,18 @@ class Page(Base):
         # TODO test regex
         # Strip will remove trailing '-'
         return re.sub(r'[^\w]+', '-', title).strip('-').lower()
+
+
+class User(Base):
+    """User name/password hash entity."""
+    __tablename__ = 'Users'
+
+    name = Column(String(length=256), primary_key=True)
+    hash = Column(String(length=512), nullable=False)
+
+    def __init__(self, name, hash):
+        self.name = name
+        self.hash = hash
+
+    def __str__(self):
+        return '{self.name}: {self.hash}'.format(self=self)

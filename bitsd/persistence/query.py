@@ -15,7 +15,7 @@ from sqlalchemy.exc import IntegrityError
 from tornado.options import options
 
 from .engine import persist, query_by_timestamp, count, query_by_attribute
-from .models import TemperatureSample, Status, Message, Page
+from .models import TemperatureSample, Status, Message, Page, User
 
 
 ## Exceptions ##
@@ -58,6 +58,13 @@ def get_current_message():
 def get_page(slug):
     """Get the page identified by the given slug."""
     return query_by_attribute(Page, 'slug', slug)
+
+
+def get_user(username):
+    """Get user by name."""
+    if not username:
+        return None
+    return query_by_attribute(User, 'name', username)
 
 
 def get_latest_data():
