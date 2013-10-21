@@ -18,6 +18,8 @@ from bitsd.persistence import start
 from bitsd.server.auth import useradd, userdel, usermod
 from tornado.options import parse_config_file
 
+from sqlalchemy.exc import IntegrityError
+
 import sys
 from getpass import getpass
 
@@ -35,7 +37,10 @@ if __name__ == '__main__':
 
     if action == 'add':
         password = getpass('Password for `{}`:'.format(username))
-        useradd(username, password)
+        try:
+            useradd(username, password)
+        except IntegrityError:
+            print "Error: user is already in database!"
     elif action == 'delete':
         userdel(username)
     elif action == 'modify':
