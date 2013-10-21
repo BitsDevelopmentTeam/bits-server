@@ -29,7 +29,8 @@ def useradd(username, password):
 
 def userdel(username):
     """Delete user from database."""
-    delete(username)
+    user = get_user(username)
+    delete(user)
 
 def usermod(username, password):
     """"Modify password for existing user."""

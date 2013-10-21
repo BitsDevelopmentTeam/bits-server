@@ -26,7 +26,7 @@ if __name__ == '__main__':
     try:
         parse_config_file('/etc/bitsd.conf')
     except IOError:
-        print ("No /etc/bitsd.conf found, ignoring.")
+        print ("[INFO] No /etc/bitsd.conf found, ignoring.")
 
     action = sys.argv[1]
     username = sys.argv[2]
