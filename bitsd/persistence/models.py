@@ -14,7 +14,8 @@ Models for persisted data.
 import re
 from datetime import datetime
 
-from sqlalchemy import Column
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Float, DateTime, Enum, Text, BigInteger, String, UnicodeText
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -96,18 +97,20 @@ class Message(Base):
     """Representation of a broadcast message."""
     __tablename__ = 'Message'
 
-    userid = Column(BigInteger, primary_key=True)
+    username = Column(String(length=100), ForeignKey("Users.name"), primary_key=True)
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
-    def __init__(self, userid, message):
-        self.userid = userid
+    author = relationship("Users")
+
+    def __init__(self, username, message):
+        self.username = username
         self.message = message
 
     def jsondict(self, wrap=False):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            'user': self.userid,
+            'user': self.username,
             'timestamp': self.timestamp.isoformat(' '),
             'value': self.message,
         }
