@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{#
+ # Copyright (C) 2013 Stefano Sanfilippo
+ # Copyright (C) 2013 BITS development team
+ #
+ # This file is part of bitsd, which is released under the terms of
+ # GNU GPLv3. See COPYING at top level for more information.
+ #}
+
+{% block title %}Autenticazione richiesta{% end %}
+{% block attrs %}class="authentication"{% end %}
+{% block subtitle %}Area protetta{% end %}
+
+{% block body %}
+<form action="/login" method="post">
+    <p>
+        <label for="username">Username:</label>
+        <input id="username" type="text" name="username" value="">
+    </p>
+    <p>
+        <label for="password">Password:</label>
+        <input id="password" type="password" name="password" value="">
+    </p>
+    {% module xsrf_form_html() %}
+    <p><input type="submit" value="Login"></p>
+    <input type="hidden" name="next" value="{{ next }}">
+</form>
+{% end %}
+

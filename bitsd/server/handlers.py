@@ -20,6 +20,7 @@ import tornado.auth
 from tornado.options import options
 from bitsd.persistence.models import Status
 
+from .auth import verify
 from .notifier import MessageNotifier
 
 import bitsd.persistence.query as query
@@ -61,7 +62,14 @@ def broadcast(message):
 
 class BaseHandler(tornado.web.RequestHandler):
     """Base requests handler"""
-    pass
+    USER_COOKIE_NAME = "usertoken"
+
+    def get_current_user(self):
+        #TODO
+        return self.get_secure_cookie(self.USER_COOKIE_NAME)
+
+    def get_login_url(self):
+        return '/login'
 
 
 class HomePageHandler(BaseHandler):
@@ -147,20 +155,32 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         LOG.debug('Unregistered client.')
 
 
-class LoginPageHandler(BaseHandler, tornado.auth.GoogleMixin):
+class LoginPageHandler(BaseHandler):
     """Handle login browser requests for reserved area."""
-
-    @tornado.web.asynchronous
-    @tornado.gen.coroutine
     def get(self):
-        """Display the login page."""
-        if self.get_argument("openid.mode", None):
-            user = yield self.get_authenticated_user()
-            self.set_secure_cookie("usertoken", user['claimed_id'],
-                                   expires_days=1)
-            self.redirect(self.get_argument('next', default='/'))
+        if self.get_current_user():
+            self.write('Already authenticated.')
+            self.finish()
         else:
-            self.authenticate_redirect()
+            next = self.get_argument("next", "/")
+            self.render('templates/login.html', next=next)
+
+    def post(self):
+        username = self.get_argument("username", None)
+        password = self.get_argument("password", None)
+        next = self.get_argument("next", "/")
+
+        if verify(username, password):
+            self.set_secure_cookie(
+                self.USER_COOKIE_NAME,
+                username,
+                expires_days=1
+            )
+            LOG.info("Authenticating user `{}`".format(username))
+            self.redirect(next)
+        else:
+            LOG.warning("Wrong authentication for user `{}`".format(username))
+            self.send_error(401)
 
 
 class LogoutPageHandler(BaseHandler):
@@ -171,7 +191,7 @@ class LogoutPageHandler(BaseHandler):
     def get(self):
         """Display the logout page."""
         self.clear_cookie("usertoken")
-        self.write("Logged out.")
+        self.redirect("/")
 
 
 class AdminPageHandler(BaseHandler):
@@ -210,14 +230,3 @@ class AdminPageHandler(BaseHandler):
             message = "Errore: modifica troppo veloce!"
         
         self.render('templates/admin.html', page_message = message)
-
-
-    def get_login_url(self):
-        """Returns the login URL if the client is not logged"""
-        return '/login'
-
-    def get_current_user(self):
-        """Returns the current user as seen from the signed cookie"""
-        return self.get_secure_cookie('usertoken')
-
-
