@@ -66,7 +66,10 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         #TODO
-        return self.get_secure_cookie(self.USER_COOKIE_NAME)
+        return self.get_secure_cookie(
+            self.USER_COOKIE_NAME,
+            max_age_days=options.cookie_max_age_days
+        )
 
     def get_login_url(self):
         return '/login'
@@ -174,7 +177,7 @@ class LoginPageHandler(BaseHandler):
             self.set_secure_cookie(
                 self.USER_COOKIE_NAME,
                 username,
-                expires_days=1
+                expires_days=options.cookie_max_age_days
             )
             LOG.info("Authenticating user `{}`".format(username))
             self.redirect(next)
