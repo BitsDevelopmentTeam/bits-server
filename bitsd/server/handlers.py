@@ -161,11 +161,10 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
 class LoginPageHandler(BaseHandler):
     """Handle login browser requests for reserved area."""
     def get(self):
+        next = self.get_argument("next", "/")
         if self.get_current_user():
-            self.write('Already authenticated.')
-            self.finish()
+            self.redirect(next)
         else:
-            next = self.get_argument("next", "/")
             self.render(
                 'templates/login.html',
                 next=next,
