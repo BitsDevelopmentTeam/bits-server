@@ -166,7 +166,11 @@ class LoginPageHandler(BaseHandler):
             self.finish()
         else:
             next = self.get_argument("next", "/")
-            self.render('templates/login.html', next=next)
+            self.render(
+                'templates/login.html',
+                next=next,
+                message=None
+            )
 
     def post(self):
         username = self.get_argument("username", None)
@@ -183,7 +187,11 @@ class LoginPageHandler(BaseHandler):
             self.redirect(next)
         else:
             LOG.warning("Wrong authentication for user `{}`".format(username))
-            self.send_error(401)
+            self.render(
+                'templates/login.html',
+                next=next,
+                message="Password/username sbagliati!"
+            )
 
 
 class LogoutPageHandler(BaseHandler):

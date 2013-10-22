@@ -26,5 +26,8 @@
     <p><input type="submit" value="Login"></p>
     <input type="hidden" name="next" value="{{ next }}">
 </form>
+{% if message %}
+<div id="message">{{ message }}</div>
+{% end %}
 {% end %}
 
