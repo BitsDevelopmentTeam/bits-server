@@ -37,10 +37,7 @@ if __name__ == '__main__':
 
     if action == 'add':
         password = getpass('Password for `{}`:'.format(username))
-        try:
-            useradd(username, password)
-        except IntegrityError:
-            print "Error: user is already in database!"
+        useradd(username, password)
     elif action == 'delete':
         userdel(username)
     elif action == 'modify':
