@@ -101,7 +101,7 @@ class Message(Base):
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
-    author = relationship("Users")
+    author = relationship("User") #FIXME
 
     def __init__(self, username, message):
         self.username = username
