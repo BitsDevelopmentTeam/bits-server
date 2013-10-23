@@ -94,23 +94,24 @@ class Status(Base):
 
 
 class Message(Base):
-    """Representation of a broadcast message."""
+    """Representation of a broadcast message.
+    Access the author object with `.author`"""
     __tablename__ = 'Message'
 
-    username = Column(String(length=100), ForeignKey("Users.name"), primary_key=True)
+    userid = Column(BigInteger, ForeignKey("User.userid"), primary_key=True)
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
-    author = relationship("User") #FIXME
+    author = relationship("User")
 
-    def __init__(self, username, message):
-        self.username = username
+    def __init__(self, userid, message):
+        self.userid = userid
         self.message = message
 
     def jsondict(self, wrap=False):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            'user': self.username,
+            'user': self.author.name,
             'timestamp': self.timestamp.isoformat(' '),
             'value': self.message,
         }
@@ -156,6 +157,7 @@ class User(Base):
 
     name = Column(String(length=256), primary_key=True)
     hash = Column(String(length=512), nullable=False)
+    userid = Column(Integer, primary_key=True)
 
     def __init__(self, name, hash):
         self.name = name
