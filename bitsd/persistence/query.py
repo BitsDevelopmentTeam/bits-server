@@ -67,6 +67,11 @@ def get_user(username):
     return query_by_attribute(User, 'name', username)
 
 
+def get_user_from_id(userid):
+    """Get user with specified userid"""
+    return query_by_attribute(User, 'userid', userid)
+
+
 def get_latest_data():
     """Get recent data as a JSON-serializable dictionary."""
     status = get_current_status()
@@ -101,7 +106,7 @@ def log_status(status, modified_by):
         raise SameTimestampException()
 
 
-def log_message(userid, message):
-    """Persist message to DB."""
-    message = Message(userid, message)
+def log_message(user, message):
+    """Persist message by user to DB."""
+    message = Message(user.userid, message)
     return persist(message)
