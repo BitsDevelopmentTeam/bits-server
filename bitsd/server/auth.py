@@ -17,7 +17,7 @@ def verify(session, username, password):
     and has correct password."""
     entity = get_user(session, username)
     if entity:
-        return Hasher.verify(password, entity.hash)
+        return Hasher.verify(password, entity.password)
     else:
         return False
 
