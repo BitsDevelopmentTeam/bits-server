@@ -83,6 +83,12 @@ define("cookie_secret",
     group='Internal'
 )
 
+define("cookie_max_age_days",
+    default=1,
+    help='Maximum age of the authentication cookie',
+    group='Internal'
+)
+
 define("log_queries",
     default=False, help="Log DB queries.", group='Debug')
 

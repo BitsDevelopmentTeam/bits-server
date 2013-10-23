@@ -21,7 +21,10 @@ from tornado.options import parse_config_file
 
 
 if __name__ == '__main__':
-    parse_config_file('/etc/bitsd.conf')
+    try:
+        parse_config_file('/etc/bitsd.conf')
+    except IOError:
+        print ("No /etc/bitsd.conf found, ignoring.")
 
     start()
 
