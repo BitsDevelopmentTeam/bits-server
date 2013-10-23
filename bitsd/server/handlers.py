@@ -243,7 +243,7 @@ class AdminPageHandler(BaseHandler):
                      ' from web interface.')
             try:
                 status = query.log_status(session, textstatus, 'web')
-                broadcast(status.jsondict(wrap=True))  # wrapped in a dict
+                broadcast(status.jsondict())
                 message = "Modifica dello stato effettuata."
             except query.SameTimestampException:
                 LOG.error("Status changed too quickly, not logged.")

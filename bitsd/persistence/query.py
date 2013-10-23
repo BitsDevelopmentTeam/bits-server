@@ -79,13 +79,13 @@ def get_latest_data(session):
     latest_temp_samples = get_latest_temperature_samples(session)
     latest_message = get_current_message(session)
 
-    json_or_none = lambda data: data.jsondict() if data is not None else ""
+    json_or_none = lambda data: data.jsondict(wrap=False) if data is not None else ""
     return {
         "status": json_or_none(status),
         "tempint": json_or_none(temp),
         "version": options.jsonver,
         "msg": json_or_none(latest_message),
-        "tempinthist": [sample.jsondict() for sample in latest_temp_samples]
+        "tempinthist": [sample.jsondict(wrap=False) for sample in latest_temp_samples]
     }
 
 
