@@ -110,7 +110,11 @@ def handle_message_command(message):
     else:
         text = decodedmex.decode('utf8')
         #FIXME author ID
-        message = query.log_message(0, text)
+        userid = 1
+        user = query.get_user_from_id(userid)
+        if not user:
+            LOG.warning("Non-existent user with id={}".format(userid))
+        message = query.log_message(user, text)
         broadcast(message.jsondict(wrap=True))
         FONERA.message(text)
 
