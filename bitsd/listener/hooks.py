@@ -118,6 +118,8 @@ def handle_message_command(message):
             if not user:
                 LOG.warning("Non-existent user with id={}".format(userid))
             message = query.log_message(session, user, text)
+            # We need a flush here so that the associated User is referenced
+            session.flush()
             broadcast(message.jsondict(wrap=True))
             FONERA.message(text)
 
