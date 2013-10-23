@@ -153,15 +153,15 @@ class Page(Base):
 
 class User(Base):
     """User name/password hash entity."""
-    __tablename__ = 'Users'
+    __tablename__ = 'User'
 
-    name = Column(String(length=256), primary_key=True)
-    hash = Column(String(length=512), nullable=False)
     userid = Column(Integer, primary_key=True)
+    name = Column(String(length=256), unique=True, nullable=False)
+    password = Column(String(length=512), nullable=False)
 
-    def __init__(self, name, hash):
+    def __init__(self, name, pwhash):
         self.name = name
-        self.hash = hash
+        self.password = pwhash
 
     def __str__(self):
-        return '{self.name}: {self.hash}'.format(self=self)
+        return '{self.name}: {self.password}'.format(self=self)
