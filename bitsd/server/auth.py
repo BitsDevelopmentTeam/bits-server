@@ -12,28 +12,28 @@ from bitsd.persistence.models import User
 from bitsd.persistence.engine import persist, delete
 
 
-def verify(username, password):
+def verify(session, username, password):
     """Return True if and only if username is in the users DB
     and has correct password."""
-    entity = get_user(username)
+    entity = get_user(session, username)
     if entity:
         return Hasher.verify(password, entity.hash)
     else:
         return False
 
 
-def useradd(username, password):
+def useradd(session, username, password):
     """Add user with hashed password to database"""
     user = User(username, Hasher.encrypt(password))
-    persist(user)
+    persist(session, user)
 
-def userdel(username):
+def userdel(session, username):
     """Delete user from database."""
-    user = get_user(username)
-    delete(user)
+    user = get_user(session, username)
+    delete(session, user)
 
-def usermod(username, password):
+def usermod(session, username, password):
     """"Modify password for existing user."""
-    user = get_user(username)
-    user.hash = Hasher.encrypt(password)
-    persist(user)
+    user = get_user(session, username)
+    user.password = Hasher.encrypt(password)
+    persist(session, user)

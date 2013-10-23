@@ -16,7 +16,7 @@ import bitsd.properties
 
 from bitsd.persistence import start
 from bitsd.persistence.models import Page
-from bitsd.persistence.engine import persist
+from bitsd.persistence.engine import persist, session_scope
 from tornado.options import parse_config_file
 
 
@@ -30,4 +30,5 @@ if __name__ == '__main__':
 
     with open('INFO.md', 'r') as info:
         infopage = Page('Info', info.read().decode('utf-8'))
-        persist(infopage)
+        with session_scope() as session:
+            persist(session, infopage)

@@ -12,13 +12,13 @@ Add, remove and modify users in database
 """
 
 # DO NOT REMOVE
+from bitsd.persistence.engine import session_scope
 import bitsd.properties
 
 from bitsd.persistence import start
 from bitsd.server.auth import useradd, userdel, usermod
 from tornado.options import parse_config_file
 
-from sqlalchemy.exc import IntegrityError
 
 import sys
 from getpass import getpass
@@ -35,11 +35,12 @@ if __name__ == '__main__':
 
     start()
 
-    if action == 'add':
-        password = getpass('Password for `{}`:'.format(username))
-        useradd(username, password)
-    elif action == 'delete':
-        userdel(username)
-    elif action == 'modify':
-        password = getpass('New password for `{}`:'.format(username))
-        usermod(username, password)
+    with session_scope() as session:
+        if action == 'add':
+            password = getpass('Password for `{}`:'.format(username))
+            useradd(session, username, password)
+        elif action == 'delete':
+            userdel(session, username)
+        elif action == 'modify':
+            password = getpass('New password for `{}`:'.format(username))
+            usermod(session, username, password)

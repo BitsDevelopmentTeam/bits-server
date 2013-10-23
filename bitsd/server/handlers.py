@@ -18,6 +18,7 @@ import tornado.websocket
 import tornado.auth
 
 from tornado.options import options
+from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 
 from .auth import verify
@@ -85,7 +86,8 @@ class HomePageHandler(BaseHandler):
 class DataPageHandler(BaseHandler):
     """Get BITS data in JSON, machine parseable."""
     def get(self):
-        self.write(query.get_latest_data())
+        with session_scope() as session:
+            self.write(query.get_latest_data(session))
         self.finish()
 
 
@@ -100,22 +102,25 @@ class LogPageHandler(BaseHandler):
         # We can safely cast to int() because of the path regex \d+
         offset = int(offset) if offset is not None else 0
 
-        self.render('templates/log.html',
-            latest_statuses=query.get_latest_statuses(
+        with session_scope() as session:
+            self.render('templates/log.html',
+                latest_statuses=query.get_latest_statuses(
+                    session,
+                    offset=offset,
+                    limit=self.LINES_PER_PAGE
+                ),
+                # Used by the paginator
                 offset=offset,
-                limit=self.LINES_PER_PAGE
-            ),
-            # Used by the paginator
-            offset=offset,
-            limit=self.LINES_PER_PAGE,
-            count=query.get_number_of_statuses(),
-        )
+                limit=self.LINES_PER_PAGE,
+                count=query.get_number_of_statuses(session),
+            )
 
 
 class StatusPageHandler(BaseHandler):
     """Get a single digit, indicating BITS status (open/closed)"""
     def get(self):
-        status = query.get_current_status()
+        with session_scope() as session:
+            status = query.get_current_status(session)
         self.write('1' if status is not None and status.value == Status.OPEN else '0')
         self.finish()
 
@@ -123,7 +128,8 @@ class StatusPageHandler(BaseHandler):
 class MarkdownPageHandler(BaseHandler):
     """Renders page from markdown source."""
     def get(self, slug):
-        page = query.get_page(slug)
+        with session_scope() as session:
+            page = query.get_page(session, slug)
 
         if page is None:
             raise tornado.web.HTTPError(404)
@@ -145,7 +151,9 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         """Register new handler with MessageNotifier."""
         StatusHandler.CLIENTS.register(self)
-        self.write_message(query.get_latest_data())
+        with session_scope() as session:
+            latest = query.get_latest_data(session)
+        self.write_message(latest)
         LOG.debug('Registered client')
 
     def on_message(self, message):
@@ -176,7 +184,10 @@ class LoginPageHandler(BaseHandler):
         password = self.get_argument("password", None)
         next = self.get_argument("next", "/")
 
-        if verify(username, password):
+        with session_scope() as session:
+            authenticated = verify(session, username, password)
+
+        if authenticated:
             self.set_secure_cookie(
                 self.USER_COOKIE_NAME,
                 username,
@@ -220,21 +231,22 @@ class AdminPageHandler(BaseHandler):
     def change_status(self):
         """Manually change the status of the BITS system"""
 
-        curstatus = query.get_current_status()
+        with session_scope() as session:
+            curstatus = query.get_current_status(session)
 
-        if curstatus is None:
-            textstatus = Status.CLOSED
-        else:
-            textstatus = Status.OPEN if curstatus.value == Status.CLOSED else Status.CLOSED
+            if curstatus is None:
+                textstatus = Status.CLOSED
+            else:
+                textstatus = Status.OPEN if curstatus.value == Status.CLOSED else Status.CLOSED
 
-        LOG.info('Change of BITS to status={}'.format(textstatus) +
-                 ' from web interface.')
-        try:
-            status = query.log_status(textstatus, 'web')
-            broadcast(status.jsondict(wrap=True)) # wrapped in a dict
-            message = "Modifica dello stato effettuata."
-        except query.SameTimestampException:
-            LOG.error("Status changed too quickly, not logged.")
-            message = "Errore: modifica troppo veloce!"
-        
-        self.render('templates/admin.html', page_message = message)
+            LOG.info('Change of BITS to status={}'.format(textstatus) +
+                     ' from web interface.')
+            try:
+                status = query.log_status(session, textstatus, 'web')
+                broadcast(status.jsondict(wrap=True))  # wrapped in a dict
+                message = "Modifica dello stato effettuata."
+            except query.SameTimestampException:
+                LOG.error("Status changed too quickly, not logged.")
+                message = "Errore: modifica troppo veloce!"
+
+            self.render('templates/admin.html', page_message=message)

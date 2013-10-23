@@ -11,8 +11,8 @@ Query engine internals: functions to store, retrieve and count data
 indipendently from the model.
 """
 
+from contextlib import contextmanager
 from sqlalchemy import desc, create_engine
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, scoped_session
 from tornado.options import options
 from bitsd.common import LOG
@@ -37,39 +37,41 @@ def connect():
     Session = scoped_session(session_factory)
 
 
-def persist(data):
+@contextmanager
+def session_scope():
+    """Provide a transactional scope around a series of operations."""
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        LOG.error("Error in DB, rolling back.")
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+
+def persist(session, data):
     """Persist data to configured DB and return persisted object
     in a consistent state.
 
     **Note:** will log what's being persisted, so don't put clear text password
     into `__str__()`."""
     LOG.debug('Persisting data {}'.format(data))
-    session = Session()
     session.add(data)
-    try:
-        session.commit()
-        session.refresh(data)
-    except IntegrityError as e:
-        LOG.error("Integrity error in DB, rolling back.")
-        session.rollback()
-        raise e
-    finally:
-        session.close()
     return data
 
 
-def delete(data):
+def delete(session, data):
     """Delete data from DB."""
     LOG.debug('Deleting {}'.format(data))
-    session = Session()
     session.delete(data)
-    session.close()
 
 
-def query_by_timestamp(model, limit=1, offset=0):
+def query_by_timestamp(session, model, limit=1, offset=0):
     """Query at most `limit` samples by timestamp.
     Default to `limit=1` (latest value)."""
-    session = Session()
     query = session.query(model).order_by(desc(model.timestamp))
     if limit != 1:
         result = query[offset:offset+limit]
@@ -78,25 +80,20 @@ def query_by_timestamp(model, limit=1, offset=0):
             result = query[offset]
         except IndexError:
             result = None
-    session.close()
     return result
 
 
-def query_by_attribute(model, attribute, value, first=True):
+def query_by_attribute(session, model, attribute, value, first=True):
     """Query all instances of `model` having `attribute == value`.
     If first is True, only first result will be returned (useful
     if attribute is a primary/candidate key)."""
-    session = Session()
     query = session.query(model).filter_by(**{attribute: value})
     result = query.first() if first else query
-    session.close()
     return result
 
 
-def count(model):
+def count(session, model):
     """Returns count of `model` instances in DB."""
-    session = Session()
     result = session.query(model).count()
-    session.close()
     return result
 
