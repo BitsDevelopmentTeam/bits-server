@@ -25,54 +25,59 @@ class SameTimestampException(Exception):
 
 ## Getters ##
 
-def get_current_status():
+def get_current_status(session):
     """Return a Status object representing most recent change."""
-    return query_by_timestamp(Status, limit=1)
+    return query_by_timestamp(session, Status, limit=1)
 
 
-def get_current_temperature():
+def get_current_temperature(session):
     """Return the most recent temperature sample."""
-    return query_by_timestamp(TemperatureSample, limit=1)
+    return query_by_timestamp(session, TemperatureSample, limit=1)
 
 
-def get_latest_temperature_samples():
+def get_latest_temperature_samples(session):
     """Query 100 TemperatureSample by timestamp."""
-    return query_by_timestamp(TemperatureSample, limit=100)
+    return query_by_timestamp(session, TemperatureSample, limit=100)
 
 
-def get_latest_statuses(limit=20, offset=0):
+def get_latest_statuses(session, limit=20, offset=0):
     """Query last 20 Status by timestamp."""
-    return query_by_timestamp(Status, limit=limit, offset=offset)
+    return query_by_timestamp(session, Status, limit=limit, offset=offset)
 
 
-def get_number_of_statuses():
+def get_number_of_statuses(session):
     """Get total number of logged statuses."""
-    return count(Status)
+    return count(session, Status)
 
 
-def get_current_message():
+def get_current_message(session):
     """Return message to display on website"""
-    return query_by_timestamp(Message, limit=1)
+    return query_by_timestamp(session, Message, limit=1)
 
 
-def get_page(slug):
+def get_page(session, slug):
     """Get the page identified by the given slug."""
-    return query_by_attribute(Page, 'slug', slug)
+    return query_by_attribute(session, Page, 'slug', slug)
 
 
-def get_user(username):
+def get_user(session, username):
     """Get user by name."""
     if not username:
         return None
-    return query_by_attribute(User, 'name', username)
+    return query_by_attribute(session, User, 'name', username)
 
 
-def get_latest_data():
+def get_user_from_id(session, userid):
+    """Get user with specified userid"""
+    return query_by_attribute(session, User, 'userid', userid)
+
+
+def get_latest_data(session):
     """Get recent data as a JSON-serializable dictionary."""
-    status = get_current_status()
-    temp = get_current_temperature()
-    latest_temp_samples = get_latest_temperature_samples()
-    latest_message = get_current_message()
+    status = get_current_status(session)
+    temp = get_current_temperature(session)
+    latest_temp_samples = get_latest_temperature_samples(session)
+    latest_message = get_current_message(session)
 
     json_or_none = lambda data: data.jsondict() if data is not None else ""
     return {
@@ -86,22 +91,22 @@ def get_latest_data():
 
 ## Loggers ##
 
-def log_temperature(value, sensor, modified_by):
+def log_temperature(session, value, sensor, modified_by):
     """Add a temperature sample to the DB."""
     sample = TemperatureSample(value, sensor, modified_by)
-    return persist(sample)
+    return persist(session, sample)
 
 
-def log_status(status, modified_by):
+def log_status(session, status, modified_by):
     """Persist status to the DB."""
     sample = Status(status, modified_by)
     try:
-        return persist(sample)
+        return persist(session, sample)
     except IntegrityError:  # FIXME
         raise SameTimestampException()
 
 
-def log_message(userid, message):
-    """Persist message to DB."""
-    message = Message(userid, message)
-    return persist(message)
+def log_message(session, user, message):
+    """Persist message by user to DB."""
+    message = Message(user.userid, message)
+    return persist(session, message)

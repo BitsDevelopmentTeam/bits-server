@@ -14,6 +14,7 @@ Hooks called by `.handlers` to handle specific commands.
 #     : and in __all__ below!!
 
 import base64
+from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 
 import bitsd.persistence.query as query
@@ -48,9 +49,9 @@ def handle_temperature_command(sensorid, value):
         LOG.error('Wrong type for parameters in temperature command!')
         return
 
-    temp = query.log_temperature(value, sensorid, 'BITS')
-    broadcast(temp.jsondict(wrap=True)) # wrapped in a dict
-
+    with session_scope() as session:
+        temp = query.log_temperature(session, value, sensorid, 'BITS')
+        broadcast(temp.jsondict(wrap=True))  # wrapped in a dict
 
 
 def handle_status_command(status):
@@ -68,12 +69,13 @@ def handle_status_command(status):
         return
 
     textstatus = Status.OPEN if status == 1 else Status.CLOSED
-    curstatus = query.get_current_status()
-    if curstatus is None or curstatus.value != textstatus:
-        status = query.log_status(textstatus, 'BITS')
-        broadcast(status.jsondict(wrap=True)) # wrapped in a dict
-    else:
-        LOG.error('BITS already open/closed! Ignoring.')
+    with session_scope() as session:
+        curstatus = query.get_current_status(session)
+        if curstatus is None or curstatus.value != textstatus:
+            status = query.log_status(session, textstatus, 'BITS')
+            broadcast(status.jsondict(wrap=True))  # wrapped in a dict
+        else:
+            LOG.error('BITS already open/closed! Ignoring.')
 
 
 def handle_enter_command(userid):
@@ -110,9 +112,14 @@ def handle_message_command(message):
     else:
         text = decodedmex.decode('utf8')
         #FIXME author ID
-        message = query.log_message(0, text)
-        broadcast(message.jsondict(wrap=True))
-        FONERA.message(text)
+        userid = 1
+        with session_scope() as session:
+            user = query.get_user_from_id(session, userid)
+            if not user:
+                LOG.warning("Non-existent user with id={}".format(userid))
+            message = query.log_message(session, user, text)
+            broadcast(message.jsondict(wrap=True))
+            FONERA.message(text)
 
 
 def handle_sound_command(soundid):

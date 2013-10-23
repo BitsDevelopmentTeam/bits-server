@@ -94,23 +94,24 @@ class Status(Base):
 
 
 class Message(Base):
-    """Representation of a broadcast message."""
+    """Representation of a broadcast message.
+    Access the author object with `.author`"""
     __tablename__ = 'Message'
 
-    username = Column(String(length=100), ForeignKey("Users.name"), primary_key=True)
+    userid = Column(BigInteger, ForeignKey("User.userid"), primary_key=True)
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
-    author = relationship("User") #FIXME
+    author = relationship("User")
 
-    def __init__(self, username, message):
-        self.username = username
+    def __init__(self, userid, message):
+        self.userid = userid
         self.message = message
 
     def jsondict(self, wrap=False):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            'user': self.username,
+            'user': self.author.name,
             'timestamp': self.timestamp.isoformat(' '),
             'value': self.message,
         }
@@ -152,14 +153,15 @@ class Page(Base):
 
 class User(Base):
     """User name/password hash entity."""
-    __tablename__ = 'Users'
+    __tablename__ = 'User'
 
-    name = Column(String(length=256), primary_key=True)
-    hash = Column(String(length=512), nullable=False)
+    userid = Column(Integer, primary_key=True)
+    name = Column(String(length=256), unique=True, nullable=False)
+    password = Column(String(length=512), nullable=False)
 
-    def __init__(self, name, hash):
+    def __init__(self, name, pwhash):
         self.name = name
-        self.hash = hash
+        self.password = pwhash
 
     def __str__(self):
-        return '{self.name}: {self.hash}'.format(self=self)
+        return '{self.name}: {self.password}'.format(self=self)
