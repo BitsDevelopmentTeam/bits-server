@@ -100,10 +100,7 @@ def log_temperature(session, value, sensor, modified_by):
 def log_status(session, status, modified_by):
     """Persist status to the DB."""
     sample = Status(status, modified_by)
-    try:
-        entity = persist(session, sample)
-    except IntegrityError:  # FIXME
-        raise SameTimestampException()
+    entity = persist(session, sample)
     # We need a flush here so that the timestamp is calculated
     session.flush()
     return entity

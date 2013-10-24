@@ -12,6 +12,7 @@ HTTP requests handlers.
 
 import markdown
 import datetime
+from sqlalchemy.exc import IntegrityError
 
 import tornado.web
 import tornado.websocket
@@ -245,7 +246,7 @@ class AdminPageHandler(BaseHandler):
                 status = query.log_status(session, textstatus, 'web')
                 broadcast(status.jsondict())
                 message = "Modifica dello stato effettuata."
-            except query.SameTimestampException:
+            except IntegrityError:
                 LOG.error("Status changed too quickly, not logged.")
                 message = "Errore: modifica troppo veloce!"
 
