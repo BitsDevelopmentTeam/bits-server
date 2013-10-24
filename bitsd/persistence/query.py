@@ -101,9 +101,12 @@ def log_status(session, status, modified_by):
     """Persist status to the DB."""
     sample = Status(status, modified_by)
     try:
-        return persist(session, sample)
+        entity = persist(session, sample)
     except IntegrityError:  # FIXME
         raise SameTimestampException()
+    # We need a flush here so that the timestamp is calculated
+    session.flush()
+    return entity
 
 
 def log_message(session, user, message):
