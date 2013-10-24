@@ -67,11 +67,17 @@ class BaseHandler(tornado.web.RequestHandler):
     USER_COOKIE_NAME = "usertoken"
 
     def get_current_user(self):
-        #TODO
+        """Retrieve current user name from secure cookie."""
         return self.get_secure_cookie(
             self.USER_COOKIE_NAME,
             max_age_days=options.cookie_max_age_days
         )
+
+    def get_current_user_entity(self):
+        """Retrieve current user entity from DB."""
+        with session_scope() as session:
+            username = self.get_current_user()
+            return query.get_user(session, username) if username else None
 
     def get_login_url(self):
         return '/login'
