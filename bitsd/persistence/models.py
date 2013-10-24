@@ -47,7 +47,7 @@ class TemperatureSample(Base):
     def __str__(self):
         return 'Temperature {.value}°C'.format(self)
 
-    def jsondict(self, wrap=False):
+    def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
             "timestamp": self.timestamp.isoformat(' '),
@@ -80,7 +80,7 @@ class Status(Base):
     def __str__(self):
         return 'Status {.value}'.format(self)
 
-    def jsondict(self, wrap=False):
+    def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
             "timestamp": self.timestamp.isoformat(' '),
@@ -108,7 +108,7 @@ class Message(Base):
         self.userid = userid
         self.message = message
 
-    def jsondict(self, wrap=False):
+    def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
             'user': self.author.name,
@@ -134,13 +134,14 @@ class Page(Base):
     def __str__(self):
         return 'Page: {.title}'.format(self)
 
-    def jsondict(self):
+    def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
-        return {
+        data = {
             "title": self.title,
             "body": self.body,
             "slug": self.slug
         }
+        return {"page": data} if wrap else data
 
     @staticmethod
     def slugify(title):

@@ -51,7 +51,7 @@ def handle_temperature_command(sensorid, value):
 
     with session_scope() as session:
         temp = query.log_temperature(session, value, sensorid, 'BITS')
-        broadcast(temp.jsondict(wrap=True))  # wrapped in a dict
+        broadcast(temp.jsondict())
 
 
 def handle_status_command(status):
@@ -73,7 +73,7 @@ def handle_status_command(status):
         curstatus = query.get_current_status(session)
         if curstatus is None or curstatus.value != textstatus:
             status = query.log_status(session, textstatus, 'BITS')
-            broadcast(status.jsondict(wrap=True))  # wrapped in a dict
+            broadcast(status.jsondict())
         else:
             LOG.error('BITS already open/closed! Ignoring.')
 
@@ -120,7 +120,7 @@ def handle_message_command(message):
             message = query.log_message(session, user, text)
             # We need a flush here so that the associated User is referenced
             session.flush()
-            broadcast(message.jsondict(wrap=True))
+            broadcast(message.jsondict())
             FONERA.message(text)
 
 
