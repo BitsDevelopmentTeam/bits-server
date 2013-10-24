@@ -248,6 +248,7 @@ class AdminPageHandler(BaseHandler):
 
             LOG.info('Change of BITS to status={}'.format(textstatus) +
                      ' from web interface.')
+            message = ''
             try:
                 status = query.log_status(session, textstatus, 'web')
                 broadcast(status.jsondict())
@@ -255,5 +256,6 @@ class AdminPageHandler(BaseHandler):
             except IntegrityError:
                 LOG.error("Status changed too quickly, not logged.")
                 message = "Errore: modifica troppo veloce!"
-
-            self.render('templates/admin.html', page_message=message)
+                raise
+            finally:
+                self.render('templates/admin.html', page_message=message)

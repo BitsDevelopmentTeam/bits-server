@@ -13,6 +13,7 @@ indipendently from the model.
 
 from contextlib import contextmanager
 from sqlalchemy import desc, create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, scoped_session
 from tornado.options import options
 from bitsd.common import LOG
@@ -44,6 +45,9 @@ def session_scope():
     try:
         yield session
         session.commit()
+    except IntegrityError as e:
+        LOG.error("Integrity error in DB, rolling back: {}".format(e))
+        session.rollback()
     except:
         LOG.error("Error in DB, rolling back.")
         session.rollback()
