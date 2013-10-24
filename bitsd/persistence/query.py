@@ -109,4 +109,7 @@ def log_status(session, status, modified_by):
 def log_message(session, user, message):
     """Persist message by user to DB."""
     message = Message(user.userid, message)
-    return persist(session, message)
+    entity = persist(session, message)
+    # We need a flush here so that the associated User is referenced
+    session.flush()
+    return entity
