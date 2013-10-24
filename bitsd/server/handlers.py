@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 Stefano Sanfilippo
 # Copyright (C) 2013 BITS development team
@@ -252,7 +253,7 @@ class AdminPageHandler(BaseHandler):
             try:
                 status = query.log_status(session, textstatus, 'web')
                 broadcast(status.jsondict())
-                message = "Modifica dello stato effettuata."
+                message = "Ora la sede è {}.".format(textstatus)
             except IntegrityError:
                 LOG.error("Status changed too quickly, not logged.")
                 message = "Errore: modifica troppo veloce!"
