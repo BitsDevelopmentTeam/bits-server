@@ -94,7 +94,9 @@ def get_latest_data(session):
 def log_temperature(session, value, sensor, modified_by):
     """Add a temperature sample to the DB."""
     sample = TemperatureSample(value, sensor, modified_by)
-    return persist(session, sample)
+    entity = persist(session, sample)
+    session.flush()
+    return entity
 
 
 def log_status(session, status, modified_by):
