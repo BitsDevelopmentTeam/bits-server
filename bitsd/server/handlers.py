@@ -135,6 +135,7 @@ class StatusPageHandler(BaseHandler):
 
 class MarkdownPageHandler(BaseHandler):
     """Renders page from markdown source."""
+    @cache(86400*10)
     def get(self, slug):
         with session_scope() as session:
             page = query.get_page(session, slug)
