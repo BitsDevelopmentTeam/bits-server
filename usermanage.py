@@ -12,9 +12,9 @@ Add, remove and modify users in database
 """
 
 # DO NOT REMOVE
-from bitsd.persistence.engine import session_scope
 import bitsd.properties
 
+from bitsd.persistence.engine import session_scope
 from bitsd.persistence import start
 from bitsd.server.auth import useradd, userdel, usermod
 from tornado.options import parse_config_file
