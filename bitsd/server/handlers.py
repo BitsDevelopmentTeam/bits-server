@@ -140,16 +140,16 @@ class MarkdownPageHandler(BaseHandler):
         with session_scope() as session:
             page = query.get_page(session, slug)
 
-        if page is None:
-            raise tornado.web.HTTPError(404)
+            if page is None:
+                raise tornado.web.HTTPError(404)
 
-        self.render('templates/mdpage.html',
-            body=markdown.markdown(
-                page.body,
-                safe_mode='escape' if options.mdescape else False,
-            ),
-            title=page.title,
-        )
+            self.render('templates/mdpage.html',
+                body=markdown.markdown(
+                    page.body,
+                    safe_mode='escape' if options.mdescape else False,
+                ),
+                title=page.title,
+            )
 
 
 class StatusHandler(tornado.websocket.WebSocketHandler):
