@@ -29,6 +29,7 @@ def start():
             (r'/log(?:/?|/(\d+))', handlers.LogPageHandler),
             (r'/status', handlers.StatusPageHandler),
             (r'/data', handlers.DataPageHandler),
+            (r'/presence', handlers.PresenceForecastHandler),
             (r'/(info)', handlers.MarkdownPageHandler),
             (r'/ws', handlers.StatusHandler),
             (r'/login', handlers.LoginPageHandler),

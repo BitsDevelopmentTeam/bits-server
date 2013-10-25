@@ -24,6 +24,7 @@ from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 
 from .auth import verify
+from bitsd.server.presence import PresenceForecaster
 from .notifier import MessageNotifier
 
 import bitsd.persistence.query as query
@@ -261,3 +262,16 @@ class AdminPageHandler(BaseHandler):
                 raise
             finally:
                 self.render('templates/admin.html', page_message=message)
+
+
+class PresenceForecastHandler(BaseHandler):
+    """Handler for presence stats.
+    Upon GET, it will render JSON-encoded probabilities,
+    as a 2D array (forecast for each weekday, at 30min granularity)."""
+    FORECASTER = PresenceForecaster()
+
+    @cache(86400)
+    def get(self):
+        data = self.FORECASTER.forecast()
+        self.write({"forecast": data})
+        self.finish()
