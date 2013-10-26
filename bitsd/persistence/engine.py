@@ -56,7 +56,7 @@ def session_scope():
         session.close()
 
 
-def persist(session, data):
+def persist(session, data, flush=True):
     """Persist data to configured DB and return persisted object
     in a consistent state.
 
@@ -64,6 +64,8 @@ def persist(session, data):
     into `__str__()`."""
     LOG.debug('Persisting data {}'.format(data))
     session.add(data)
+    if flush:
+        session.flush()
     return data
 
 

@@ -93,25 +93,15 @@ def get_latest_data(session):
 
 def log_temperature(session, value, sensor, modified_by):
     """Add a temperature sample to the DB."""
-    sample = TemperatureSample(value, sensor, modified_by)
-    entity = persist(session, sample)
-    session.flush()
-    return entity
+    return persist(session, TemperatureSample(value, sensor, modified_by))
 
 
 def log_status(session, status, modified_by):
     """Persist status to the DB."""
-    sample = Status(status, modified_by)
-    entity = persist(session, sample)
-    # We need a flush here so that the timestamp is calculated
-    session.flush()
-    return entity
+    return persist(session, Status(status, modified_by))
 
 
 def log_message(session, user, message):
     """Persist message by user to DB."""
-    message = Message(user.userid, message)
-    entity = persist(session, message)
-    # We need a flush here so that the associated User is referenced
-    session.flush()
-    return entity
+    return persist(session, Message(user.userid, message))
+
