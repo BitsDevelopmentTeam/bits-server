@@ -119,7 +119,7 @@ def handle_message_command(message):
                 LOG.warning("Non-existent user with id={}".format(userid))
             message = query.log_message(session, user, text)
             broadcast(message.jsondict())
-            FONERA.message(text)
+        FONERA.message(text)
 
 
 def handle_sound_command(soundid):
