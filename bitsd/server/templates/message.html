@@ -16,7 +16,7 @@
 <form action="/message" method="post">
     <textarea name="msgtext" rows="8" cols="80"></textarea>
     {% module xsrf_form_html() %}
-    <p><input type="submit" value="Invia..."></p>
+    <p><input type="submit" value="Invia"></p>
 </form>
 {% if message %}
 <div id="message">{{ message }}</div>
