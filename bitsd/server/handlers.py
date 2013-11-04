@@ -284,10 +284,14 @@ class MessagePageHandler(BaseHandler):
         text = self.get_argument('msgtext')
         username = self.get_current_user()
 
+        LOG.info("{} sent message {!r} from web".format(username, text))
+
         with session_scope() as session:
             user = query.get_user(session, username)
             message = query.log_message(session, user, text)
+            LOG.info("Broadcasting to clients")
             broadcast(message.jsondict())
+            LOG.info("Notifying Fonera")
             notifier.send_message(text)
 
         self.render(
