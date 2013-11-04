@@ -18,8 +18,12 @@ from tornado.options import options
 from .handlers import RemoteListener
 from bitsd.common import bind, LOG
 
+from . import hooks
+
 def start():
     """Connect and bind listeners. **MUST** be called at startup."""
+    __inject_broadcast()
+
     fonera = RemoteListener()
     LOG.info('Starting remote control...')
     LOG.info(
@@ -34,3 +38,8 @@ def start():
         options.control_local_usocket,
         address=options.control_local_address
     )
+
+
+def __inject_broadcast():
+    from bitsd.server.handlers import broadcast
+    hooks.broadcast = broadcast

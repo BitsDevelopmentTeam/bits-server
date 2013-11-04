@@ -20,7 +20,10 @@ from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 import bitsd.persistence.query as query
 from bitsd.common import LOG
-from bitsd.server.handlers import broadcast
+
+
+#: This will be initialized by bitsd.listener.start()
+broadcast = None
 
 
 __all__ = [
