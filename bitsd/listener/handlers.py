@@ -94,16 +94,18 @@ class RemoteListener(tornado.tcpserver.TCPServer):
         self.STREAM = stream
         self.STREAM.read_until(b'\n', self.handle_command)
 
-    def message(self, message):
+    @staticmethod
+    def message(message):
         """
         A message is added to the list of messages shown on the Fonera display.
         """
         try:
-            self.STREAM.write("message {}\n".format(base64.b64encode(message)))
+            RemoteListener.STREAM.write("message {}\n".format(base64.b64encode(message)))
         except StreamClosedError as error:
             LOG.error('Could not push message to Fonera! {}'.format(error))
 
-    def status(self, status):
+    @staticmethod
+    def status(status):
         """
         Send open or close status to the BITS Fonera.
         Status can be either 0 / 1 or Status.CLOSED / Status.OPEN
@@ -114,18 +116,19 @@ class RemoteListener(tornado.tcpserver.TCPServer):
             status = 1 if status == Status.OPEN else 0
 
         try:
-            self.STREAM.write("status {}\n".format(status))
+            RemoteListener.STREAM.write("status {}\n".format(status))
         except StreamClosedError as error:
             LOG.error('Could not push status to Fonera! {}'.format(error))
 
-    def sound(self, soundid):
+    @staticmethod
+    def sound(soundid):
         """
         Play a sound on the fonera.
         The parameter is an index into a list of predefined sounds.
         Sad trombone anyone?
         """
         try:
-            self.STREAM.write("sound {}\n".format(soundid))
+            RemoteListener.STREAM.write("sound {}\n".format(soundid))
         except StreamClosedError as error:
             LOG.error('Could not push sound to Fonera! {}'.format(error))
 
