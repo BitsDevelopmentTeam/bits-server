@@ -99,10 +99,7 @@ class RemoteListener(tornado.tcpserver.TCPServer):
         """
         A message is added to the list of messages shown on the Fonera display.
         """
-        try:
-            RemoteListener.STREAM.write("message {}\n".format(base64.b64encode(message)))
-        except StreamClosedError as error:
-            LOG.error('Could not push message to Fonera! {}'.format(error))
+        RemoteListener.send("message {}\n".format(base64.b64encode(message)))
 
     @staticmethod
     def status(status):
@@ -115,10 +112,7 @@ class RemoteListener(tornado.tcpserver.TCPServer):
         except ValueError:
             status = 1 if status == Status.OPEN else 0
 
-        try:
-            RemoteListener.STREAM.write("status {}\n".format(status))
-        except StreamClosedError as error:
-            LOG.error('Could not push status to Fonera! {}'.format(error))
+        RemoteListener.send("status {}\n".format(status))
 
     @staticmethod
     def sound(soundid):
@@ -127,10 +121,14 @@ class RemoteListener(tornado.tcpserver.TCPServer):
         The parameter is an index into a list of predefined sounds.
         Sad trombone anyone?
         """
+        RemoteListener.send("sound {}\n".format(soundid))
+
+    @staticmethod
+    def send(string):
         try:
-            RemoteListener.STREAM.write("sound {}\n".format(soundid))
+            RemoteListener.STREAM.write(string)
         except StreamClosedError as error:
-            LOG.error('Could not push sound to Fonera! {}'.format(error))
+            LOG.error('Could not push message to Fonera! {}'.format(error))
 
     def handle_command(self, command):
         """Reacts to received commands (callback).
