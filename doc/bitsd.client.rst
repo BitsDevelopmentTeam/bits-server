@@ -9,11 +9,3 @@ client Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`fonera` Module
---------------------
-
-.. automodule:: bitsd.client.fonera
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
