@@ -109,12 +109,13 @@ def handle_message_command(message):
         LOG.error('Received message is not valid base64: {!r}'.format(message))
     else:
         text = decodedmex.decode('utf8')
-        #FIXME author ID
-        userid = 1
+        #FIXME maybe get author ID from message?
+        user = "BITS"
         with session_scope() as session:
-            user = query.get_user_from_id(session, userid)
+            user = query.get_user(session, user)
             if not user:
-                LOG.warning("Non-existent user with id={}".format(userid))
+                LOG.error("Non-existent user {}, not logging message.".format(user))
+                return
             message = query.log_message(session, user, text)
             broadcast(message.jsondict())
         notifier.send_message(text)
