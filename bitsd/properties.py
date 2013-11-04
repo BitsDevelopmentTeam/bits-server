@@ -23,24 +23,24 @@ define("web_usocket",
     group="Networking"
 )
 
-define("remote_port",
+define("control_local_port",
     default=8888,
     help="Port for fonera server. Only if ws_usocket is not defined.",
     group='Networking'
 )
 
-define("remote_usocket",
+define("control_local_usocket",
     default='', help="Unix socket the remote control will be listening on.",
     group="Networking"
 )
 
-define("remote_address",
+define("control_local_address",
     default="127.0.0.1",
     help="The address the remote control will be bound to.",
     group='Networking'
 )
 
-define("fonera_host",
+define("control_remote_address",
     default="127.0.0.1",
     help="The address of the remote control unit (Fonera).",
     group="Networking"

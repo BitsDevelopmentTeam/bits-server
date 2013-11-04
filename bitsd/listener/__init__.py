@@ -24,13 +24,13 @@ def start():
     LOG.info('Starting remote control...')
     LOG.info(
         'My IP is {}, remote IP is {}'.format(
-            options.remote_address,
-            options.fonera_host
+            options.control_local_address,
+            options.control_remote_address
         )
     )
     bind(
         fonera,
-        options.remote_port,
-        options.remote_usocket,
-        address=options.remote_address
+        options.control_local_port,
+        options.control_local_usocket,
+        address=options.control_local_address
     )

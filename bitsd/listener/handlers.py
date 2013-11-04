@@ -80,10 +80,13 @@ class RemoteListener(tornado.tcpserver.TCPServer):
 
     def handle_stream(self, stream, address):
         """Handles inbound TCP connections asynchronously."""
-        if address[0] != options.fonera_host:
-            LOG.error(("Remote received commands from `{}`, "
+        if address[0] != options.control_remote_address:
+            LOG.error((
+                "Remote received commands from `{}`, "
                 "expected from `{}`. Ignoring.").format(
-            address, options.fonera_host))
+                    address,
+                    options.control_remote_address
+            ))
             return
         if self.STREAM is not None:
             LOG.warning("New connection from Fonera, closing the previous one.")
