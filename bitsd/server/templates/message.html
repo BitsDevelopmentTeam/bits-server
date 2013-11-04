@@ -14,7 +14,7 @@
 
 {% block body %}
 <form action="/message" method="post">
-    <textarea name="msgtext" rows="8" cols="80"></textarea>
+    <textarea name="msgtext" rows="8" cols="80">{{ text }}</textarea>
     {% module xsrf_form_html() %}
     <p><input type="submit" value="Invia"></p>
 </form>

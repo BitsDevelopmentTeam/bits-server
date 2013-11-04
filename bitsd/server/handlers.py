@@ -277,7 +277,7 @@ class PresenceForecastHandler(BaseHandler):
 class MessagePageHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render('templates/message.html', message=None)
+        self.render('templates/message.html', message=None, text='')
 
     @tornado.web.authenticated
     def post(self):
@@ -292,5 +292,6 @@ class MessagePageHandler(BaseHandler):
 
         self.render(
             'templates/message.html',
-            message='Messaggio inviato correttamente!'
+            message='Messaggio inviato correttamente!',
+            text=text
         )
