@@ -83,30 +83,29 @@ class RemoteListener(tornado.tcpserver.TCPServer):
 
     def __init__(self):
         super(RemoteListener, self).__init__()
-        self.STREAM = None
 
     def handle_stream(self, stream, address):
         """Handles inbound TCP connections asynchronously."""
+        LOG.info("New connection from Fonera.")
         if address[0] != options.control_remote_address:
-            LOG.error((
-                "Remote received commands from `{}`, "
-                "expected from `{}`. Ignoring.").format(
+            LOG.error(
+                "Connection from `{}`, expected from `{}`. Ignoring.".format(
                     address,
                     options.control_remote_address
             ))
             return
-        if self.STREAM is not None:
-            LOG.warning("New connection from Fonera, closing the previous one.")
-            self.STREAM.close()
-        self.STREAM = stream
-        self.STREAM.read_until(b'\n', self.handle_command)
+        if RemoteListener.STREAM is not None:
+            LOG.warning("Another connection was open, closing the previous one.")
+            RemoteListener.STREAM.close()
+        RemoteListener.STREAM = stream
+        RemoteListener.STREAM.read_until(b'\n', self.handle_command)
 
     def handle_command(self, command):
         """Reacts to received commands (callback).
         Will separate args and call appropriate handlers."""
 
         # Meanwhile, go on with commands...
-        self.STREAM.read_until(b'\n', self.handle_command)
+        RemoteListener.STREAM.read_until(b'\n', self.handle_command)
 
         command = command.strip('\n')
 
