@@ -24,7 +24,7 @@ from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 
 from .auth import verify
-from bitsd.server.presence import PresenceForecaster
+from .presence import PresenceForecaster
 from .notifier import MessageNotifier
 
 import bitsd.persistence.query as query
@@ -74,12 +74,6 @@ class BaseHandler(tornado.web.RequestHandler):
             self.USER_COOKIE_NAME,
             max_age_days=options.cookie_max_age_days
         )
-
-    def get_current_user_entity(self):
-        """Retrieve current user entity from DB."""
-        with session_scope() as session:
-            username = self.get_current_user()
-            return query.get_user(session, username) if username else None
 
     def get_login_url(self):
         return '/login'
@@ -275,3 +269,24 @@ class PresenceForecastHandler(BaseHandler):
         data = self.FORECASTER.forecast()
         self.write({"forecast": data})
         self.finish()
+
+
+class MessagePageHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('templates/message.html', message=None)
+
+    @tornado.web.authenticated
+    def post(self):
+        text = self.get_argument('msgtext')
+        username = self.get_current_user()
+
+        with session_scope() as session:
+            user = query.get_user(session, username)
+            message = query.log_message(session, user, text)
+            broadcast(message.jsondict())
+
+        self.render(
+            'templates/message.html',
+            message='Messaggio inviato correttamente!'
+        )
