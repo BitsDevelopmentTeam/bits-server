@@ -20,6 +20,8 @@ import tornado.websocket
 import tornado.auth
 
 from tornado.options import options
+
+import bitsd.listener.notifier as notifier
 from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 
@@ -249,6 +251,7 @@ class AdminPageHandler(BaseHandler):
             try:
                 status = query.log_status(session, textstatus, 'web')
                 broadcast(status.jsondict())
+                notifier.send_status(textstatus)
                 message = "Ora la sede è {}.".format(textstatus)
             except IntegrityError:
                 LOG.error("Status changed too quickly, not logged.")
@@ -285,6 +288,7 @@ class MessagePageHandler(BaseHandler):
             user = query.get_user(session, username)
             message = query.log_message(session, user, text)
             broadcast(message.jsondict())
+            notifier.send_message(text)
 
         self.render(
             'templates/message.html',
