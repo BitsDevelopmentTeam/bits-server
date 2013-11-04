@@ -8,22 +8,22 @@
  # GNU GPLv3. See COPYING at top level for more information.
  #}
 
-{% block title %}Amministrazione{% end %}
-{% block attrs %}class="admin"{% end %}
-{% block subtitle %}Amministrazione{% end %}
+{% block title %}Messaggi{% end %}
+{% block attrs %}class="messages"{% end %}
+{% block subtitle %}Invialo a tutto il POuL{% end %}
 
 {% block body %}
-<div>{{ page_message }}</div>
-<form action="/admin" method="post">
-    <p>
-    <input type="hidden" name="changestatus" value="change">
+<form action="/message" method="post">
+    <textarea name="msgtext" rows="8" cols="80"></textarea>
     {% module xsrf_form_html() %}
-    <input type="submit" value="Cambia stato sede">
-    </p>
+    <p><input type="submit" value="Invia..."></p>
 </form>
+{% if message %}
+<div id="message">{{ message }}</div>
+{% end %}
 <ul class="link">
     <li><a id="logout" href="/logout">Logout</a></li>
-    <li><a id="messages" href="/message">Invia messaggio</a></li>
+    <li><a id="admin" href="/admin">Admin</a></li>
 </ul>
 {% end %}
 
