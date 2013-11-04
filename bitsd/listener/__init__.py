@@ -41,5 +41,6 @@ def start():
 
 
 def __inject_broadcast():
+    """Lazily load broadcast() function to break circular dependencies"""
     from bitsd.server.handlers import broadcast
     hooks.broadcast = broadcast
