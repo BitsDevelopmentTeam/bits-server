@@ -70,7 +70,10 @@ class Status(Base):
     AWAY = 'away'
 
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
-    value = Column(Enum(OPEN, CLOSED, AWAY), nullable=False)
+    value = Column(
+        Enum(OPEN, CLOSED, AWAY),
+        nullable=False
+    )
     modified_by = Column(Enum('BITS', 'web'), nullable=False)
 
     def __init__(self, value, modified_by):
