@@ -23,7 +23,7 @@ from .hooks import *
 
 def send(string):
     if RemoteListener.STREAM is None:
-        LOG.error("No Fonera connected! Not sending {}".format(string))
+        LOG.error("No Fonera connected! Not sending {!r}".format(string))
         return
     try:
         RemoteListener.STREAM.write(string)
