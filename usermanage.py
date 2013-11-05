@@ -44,3 +44,8 @@ if __name__ == '__main__':
         elif action == 'modify':
             password = getpass('New password for `{}`:'.format(username))
             usermod(session, username, password)
+        else:
+            sys.stderr.write(
+                "Usage: {} add|delete|modify <username>\n".format(sys.argv[0])
+            )
+            sys.exit(1)
