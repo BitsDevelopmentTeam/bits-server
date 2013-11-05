@@ -80,13 +80,16 @@ def get_latest_data(session):
     latest_message = get_current_message(session)
 
     json_or_none = lambda data: data.jsondict(wrap=False) if data is not None else ""
-    return {
+    data = {
         "status": json_or_none(status),
         "tempint": json_or_none(temp),
         "version": options.jsonver,
         "message": json_or_none(latest_message),
         "tempinthist": [sample.jsondict(wrap=False) for sample in latest_temp_samples]
     }
+
+    # Prune null attributes
+    return dict((key, value) for key, value in data.iteritems() if data[key])
 
 
 ## Loggers ##
