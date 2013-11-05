@@ -33,6 +33,7 @@ def check():
 class TemperatureSample(Base):
     """Representation of a logged temperature sample."""
     __tablename__ = 'Temperature'
+    __table_args__ = {'mysql_engine': 'InnoDB'}
 
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     value = Column(Float, primary_key=True)
@@ -64,6 +65,7 @@ class TemperatureSample(Base):
 class Status(Base):
     """Representation of a logged status change."""
     __tablename__ = 'Status'
+    __table_args__ = {'mysql_engine': 'InnoDB'}
 
     OPEN = 'open'
     CLOSED = 'closed'
@@ -100,8 +102,9 @@ class Message(Base):
     """Representation of a broadcast message.
     Access the author object with `.author`"""
     __tablename__ = 'Message'
+    __table_args__ = {'mysql_engine': 'InnoDB'}
 
-    userid = Column(BigInteger, ForeignKey("User.userid"), primary_key=True)
+    userid = Column(Integer, ForeignKey("User.userid"), primary_key=True)
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
@@ -124,6 +127,7 @@ class Message(Base):
 class Page(Base):
     """Representation of a wiki page."""
     __tablename__ = 'Pages'
+    __table_args__ = {'mysql_engine': 'InnoDB'}
 
     slug = Column(String(length=100), primary_key=True)
     title = Column(String(length=100), nullable=False)
@@ -158,6 +162,7 @@ class Page(Base):
 class User(Base):
     """User name/password hash entity."""
     __tablename__ = 'User'
+    __table_args__ = {'mysql_engine': 'InnoDB'}
 
     userid = Column(Integer, primary_key=True)
     name = Column(String(length=256), unique=True, nullable=False)
