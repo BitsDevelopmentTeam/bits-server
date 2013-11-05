@@ -1,8 +1,8 @@
 <nav id="paginator"><ul>
     {% if offset >= limit %}
-    <li><a href='{{ baseurl }}/{{ offset - limit }}'>←</a></li>
+    <li><a href='{{ baseurl }}?offset={{ offset - limit }}'>←</a></li>
     {% end %}
     {% if offset + limit <= count %}
-    <li><a href='{{ baseurl }}/{{ offset + limit }}'>→</a></li>
+    <li><a href='{{ baseurl }}?offset={{ offset + limit }}'>→</a></li>
     {% end %}
 </ul></nav>

@@ -100,25 +100,43 @@ class LogPageHandler(BaseHandler):
     """Handle historical data browser requests."""
     LINES_PER_PAGE = 20
 
-    @tornado.web.removeslash
-    def get(self, offset):
+    def get(self):
         """Display and paginate log."""
-
-        # We can safely cast to int() because of the path regex \d+
-        offset = int(offset) if offset is not None else 0
+        wants_json = self.get_argument("format", "html") == "json"
+        offset = self.get_integer_or_400("offset", 0)
+        limit = self.get_integer_or_400("limit", self.LINES_PER_PAGE)
 
         with session_scope() as session:
-            self.render('templates/log.html',
-                latest_statuses=query.get_latest_statuses(
-                    session,
-                    offset=offset,
-                    limit=self.LINES_PER_PAGE
-                ),
-                # Used by the paginator
+            latest_statuses = query.get_latest_statuses(
+                session,
                 offset=offset,
-                limit=self.LINES_PER_PAGE,
-                count=query.get_number_of_statuses(session),
+                limit=limit
             )
+            if wants_json:
+                self.write(self.jsonize(latest_statuses))
+                self.finish()
+            else:
+                self.render('templates/log.html',
+                    latest_statuses=latest_statuses,
+                    # Used by the paginator
+                    offset=offset,
+                    limit=self.LINES_PER_PAGE,
+                    count=query.get_number_of_statuses(session),
+                )
+
+    @staticmethod
+    def jsonize(latest_statuses):
+        """Turn an array of Status objects into a JSON-serializable dict"""
+        data = [s.jsondict(wrap=False) for s in latest_statuses]
+        return {"log": data}
+
+    def get_integer_or_400(self, name, default):
+        """Try to get the parameter by name (and default), then convert it to
+        integer. In case of failure, raise a HTTP error 400"""
+        try:
+            return int(self.get_argument(name, default))
+        except ValueError:
+            raise tornado.web.HTTPError(400)
 
 
 class StatusPageHandler(BaseHandler):

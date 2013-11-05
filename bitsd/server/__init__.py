@@ -26,7 +26,7 @@ def start():
     application = tornado.web.Application([
             # FIXME daltonism workaround, should be implemented client-side
             (r'/(?:|blind)', handlers.HomePageHandler),
-            (r'/log(?:/?|/(\d+))', handlers.LogPageHandler),
+            (r'/log', handlers.LogPageHandler),
             (r'/status', handlers.StatusPageHandler),
             (r'/data', handlers.DataPageHandler),
             (r'/presence', handlers.PresenceForecastHandler),
