@@ -84,7 +84,7 @@ def get_latest_data(session):
         "status": json_or_none(status),
         "tempint": json_or_none(temp),
         "version": options.jsonver,
-        "msg": json_or_none(latest_message),
+        "message": json_or_none(latest_message),
         "tempinthist": [sample.jsondict(wrap=False) for sample in latest_temp_samples]
     }
 

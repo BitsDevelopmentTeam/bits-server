@@ -141,7 +141,6 @@ nav#paginator ul li {
 }
 
 #last.msg div {
-  visibility: hidden;
   display: inline;
   padding-left:1em;
   margin-left:1em;

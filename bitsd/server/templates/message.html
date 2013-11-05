@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{#
+ # Copyright (C) 2013 Stefano Sanfilippo
+ # Copyright (C) 2013 BITS development team
+ #
+ # This file is part of bitsd, which is released under the terms of
+ # GNU GPLv3. See COPYING at top level for more information.
+ #}
+
+{% block title %}Messaggi{% end %}
+{% block attrs %}class="messages"{% end %}
+{% block subtitle %}Invia a tutto il POuL{% end %}
+
+{% block body %}
+<form action="/message" method="post">
+    <textarea name="msgtext" rows="8" cols="80">{{ text }}</textarea>
+    {% module xsrf_form_html() %}
+    <p><input type="submit" value="Invia"></p>
+</form>
+{% if message %}
+<div id="message">{{ message }}</div>
+{% end %}
+<ul class="link">
+    <li><a id="logout" href="/logout">Logout</a></li>
+    <li><a id="admin" href="/admin">Cambia stato sede</a></li>
+</ul>
+{% end %}
+

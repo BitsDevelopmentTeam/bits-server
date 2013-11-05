@@ -20,11 +20,13 @@ import tornado.websocket
 import tornado.auth
 
 from tornado.options import options
+
+import bitsd.listener.notifier as notifier
 from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 
 from .auth import verify
-from bitsd.server.presence import PresenceForecaster
+from .presence import PresenceForecaster
 from .notifier import MessageNotifier
 
 import bitsd.persistence.query as query
@@ -74,12 +76,6 @@ class BaseHandler(tornado.web.RequestHandler):
             self.USER_COOKIE_NAME,
             max_age_days=options.cookie_max_age_days
         )
-
-    def get_current_user_entity(self):
-        """Retrieve current user entity from DB."""
-        with session_scope() as session:
-            username = self.get_current_user()
-            return query.get_user(session, username) if username else None
 
     def get_login_url(self):
         return '/login'
@@ -255,6 +251,7 @@ class AdminPageHandler(BaseHandler):
             try:
                 status = query.log_status(session, textstatus, 'web')
                 broadcast(status.jsondict())
+                notifier.send_status(textstatus)
                 message = "Ora la sede è {}.".format(textstatus)
             except IntegrityError:
                 LOG.error("Status changed too quickly, not logged.")
@@ -275,3 +272,30 @@ class PresenceForecastHandler(BaseHandler):
         data = self.FORECASTER.forecast()
         self.write({"forecast": data})
         self.finish()
+
+
+class MessagePageHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('templates/message.html', message=None, text='')
+
+    @tornado.web.authenticated
+    def post(self):
+        text = self.get_argument('msgtext')
+        username = self.get_current_user()
+
+        LOG.info("{} sent message {!r} from web".format(username, text))
+
+        with session_scope() as session:
+            user = query.get_user(session, username)
+            message = query.log_message(session, user, text)
+            LOG.info("Broadcasting to clients")
+            broadcast(message.jsondict())
+            LOG.info("Notifying Fonera")
+            notifier.send_message(text)
+
+        self.render(
+            'templates/message.html',
+            message='Messaggio inviato correttamente!',
+            text=text
+        )
