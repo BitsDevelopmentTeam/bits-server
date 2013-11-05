@@ -7,8 +7,8 @@ main(function (require) {
         location = require("location"),
         query = require("peppy").query,
         debug = require("debug"),
-
-        ws = new WebSocket("wss://" + location.hostname + ":" + location.port + "/ws"),
+        protocol = /https/.test(location.protocol)? "wss": "ws",
+        ws = new WebSocket(protocol + "://" + location.hostname + ":" + location.port + "/ws"),
         handler = new Handler(browserHandler);
 
     var debugMeta = query("meta[name='mode']")[0];
