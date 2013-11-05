@@ -14,12 +14,16 @@ Hooks called by `.handlers` to handle specific commands.
 #     : and in __all__ below!!
 
 import base64
+from bitsd.listener import notifier
 
 from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 import bitsd.persistence.query as query
 from bitsd.common import LOG
-from bitsd.server.handlers import broadcast
+
+
+#: This will be initialized by bitsd.listener.start()
+broadcast = None
 
 
 __all__ = [
@@ -31,7 +35,8 @@ __all__ = [
     'handle_sound_command'
 ]
 
-def handle_temperature_command(fonera, sensorid, value):
+
+def handle_temperature_command(sensorid, value):
     """Receives and log data received from remote sensor."""
     LOG.info('Received temperature: sensorid={}, value={}'.format(sensorid, value))
     try:
@@ -46,7 +51,7 @@ def handle_temperature_command(fonera, sensorid, value):
         broadcast(temp.jsondict())
 
 
-def handle_status_command(fonera, status):
+def handle_status_command(status):
     """Update status.
     Will reject two identical and consecutive updates
     (prevents opening when already open and vice-versa)."""
@@ -66,12 +71,12 @@ def handle_status_command(fonera, status):
         if curstatus is None or curstatus.value != textstatus:
             status = query.log_status(session, textstatus, 'BITS')
             broadcast(status.jsondict())
-            fonera.status(textstatus)
+            notifier.send_status(textstatus)
         else:
             LOG.error('BITS already open/closed! Ignoring.')
 
 
-def handle_enter_command(fonera, userid):
+def handle_enter_command(userid):
     """Handles signal triggered when a new user enters."""
     LOG.info('Received enter command: id={}'.format(userid))
     try:
@@ -83,7 +88,7 @@ def handle_enter_command(fonera, userid):
     LOG.error('handle_enter_command not implemented.')
 
 
-def handle_leave_command(fonera, userid):
+def handle_leave_command(userid):
     """Handles signal triggered when a known user leaves."""
     LOG.info('Received leave command: id={}'.format(userid))
     try:
@@ -95,7 +100,7 @@ def handle_leave_command(fonera, userid):
     LOG.error('handle_leave_command not implemented.')
 
 
-def handle_message_command(fonera, message):
+def handle_message_command(message):
     """Handles message broadcast requests."""
     LOG.info('Received message command: message={!r}'.format(message))
     try:
@@ -104,18 +109,19 @@ def handle_message_command(fonera, message):
         LOG.error('Received message is not valid base64: {!r}'.format(message))
     else:
         text = decodedmex.decode('utf8')
-        #FIXME author ID
-        userid = 1
+        #FIXME maybe get author ID from message?
+        user = "BITS"
         with session_scope() as session:
-            user = query.get_user_from_id(session, userid)
+            user = query.get_user(session, user)
             if not user:
-                LOG.warning("Non-existent user with id={}".format(userid))
+                LOG.error("Non-existent user {}, not logging message.".format(user))
+                return
             message = query.log_message(session, user, text)
             broadcast(message.jsondict())
-        fonera.message(text)
+        notifier.send_message(text)
 
 
-def handle_sound_command(fonera, soundid):
+def handle_sound_command(soundid):
     """Handles requests to play a sound."""
     LOG.info('Received sound command: id={}'.format(soundid))
     try:
@@ -124,4 +130,4 @@ def handle_sound_command(fonera, soundid):
         LOG.error('Wrong type for parameters in temperature command!')
         return
     else:
-        fonera.sound(soundid)
+        notifier.send_sound(soundid)

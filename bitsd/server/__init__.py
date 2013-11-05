@@ -35,6 +35,7 @@ def start():
             (r'/login', handlers.LoginPageHandler),
             (r'/logout', handlers.LogoutPageHandler),
             (r'/admin', handlers.AdminPageHandler),
+            (r'/message', handlers.MessagePageHandler),
         ],
         ui_modules=uimodules,
         gzip=True,

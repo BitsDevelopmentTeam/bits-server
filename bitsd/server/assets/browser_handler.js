@@ -172,15 +172,15 @@ module("browser_handler", function (require, exports) {
         sedeModifiedBy.innerHTML = status.modifiedby;
     }
 
-    // Handle MSGs arrival (somewhere in the future)
-    function msgHandler(msg, first) {
-        debug.log("MSG arrived but there isn't an handler");
-        /* pass
-        if(first) show(msg);
-        msgUser.innerHTML = msg.user;
-        msgTimestamp.innerHTML = msg.timestamp;
-        msgValue.innerHTML = msg.value;
-        */
+    // Handle MSGs arrival
+    function msgHandler(message, first) {
+        debug.log("Displaying message");
+        if(first) {
+            show(msg);
+        }
+        msgUser.innerHTML = message.user;
+        msgTimestamp.innerHTML = message.timestamp;
+        msgValue.innerHTML = message.value;
     }
 
     // Handle tempInt arrival
