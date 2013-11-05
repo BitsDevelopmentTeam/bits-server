@@ -126,7 +126,8 @@ class StatusPageHandler(BaseHandler):
     def get(self):
         with session_scope() as session:
             status = query.get_current_status(session)
-        self.write('1' if status is not None and status.value == Status.OPEN else '0')
+            answer = '1' if status is not None and status.value == Status.OPEN else '0'
+        self.write(answer)
         self.finish()
 
 
