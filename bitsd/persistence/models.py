@@ -36,8 +36,8 @@ class TemperatureSample(Base):
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
-    value = Column(Float, primary_key=True)
-    sensor = Column(Integer, nullable=False)
+    value = Column(Float, nullable=False)
+    sensor = Column(Integer, primary_key=True)
     modified_by = Column(Enum('BITS', 'web'), nullable=False)
 
     def __init__(self, value, sensor, modified_by):
