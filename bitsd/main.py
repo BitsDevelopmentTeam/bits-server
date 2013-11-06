@@ -73,6 +73,6 @@ def main():
     signal.signal(signal.SIGINT, sig_handler)
 
     if not options.log_requests:
-        logging.getLogger("tornado.access").setLevel("WARNING")
+        logging.getLogger("tornado.access").setLevel(logging.WARNING)
 
     tornado.ioloop.IOLoop.instance().start()
