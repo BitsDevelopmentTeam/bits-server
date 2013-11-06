@@ -90,7 +90,14 @@ define("cookie_max_age_days",
 )
 
 define("log_queries",
-    default=False, help="Log DB queries.", group='Debug')
+    default=False, help="Log DB queries.", group='Logging'
+)
+
+define("log_requests",
+    default=True,
+    help="Log HTTP requests. Non (200|304) responses are still logged.",
+    group="Logging"
+)
 
 define("developer_mode",
     default=False,

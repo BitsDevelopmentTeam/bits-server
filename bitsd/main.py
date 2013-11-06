@@ -20,7 +20,7 @@ import bitsd.persistence as persistence
 from bitsd.common import LOG
 
 from tornado.options import parse_command_line
-from tornado.options import parse_config_file
+from tornado.options import parse_config_file, options
 from tornado.log import enable_pretty_logging
 
 import tornado.ioloop
@@ -28,6 +28,7 @@ import tornado.ioloop
 import signal
 import time
 import sys
+import logging
 
 # Signal code adapted from https://gist.github.com/kachayev/1387470
 
@@ -70,5 +71,8 @@ def main():
     # Add signal handlers...
     signal.signal(signal.SIGTERM, sig_handler)
     signal.signal(signal.SIGINT, sig_handler)
+
+    if not options.log_requests:
+        logging.getLogger("tornado.access").setLevel("WARNING")
 
     tornado.ioloop.IOLoop.instance().start()
