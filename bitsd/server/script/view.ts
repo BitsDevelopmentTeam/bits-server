@@ -17,18 +17,23 @@ export class BrowserEventListener implements model.IEventListener {
     private $messageTimestamp = this.$message.find(".timestamp");
     private $messageValue = this.$message.find(".value");
     private $chart = $("#temperature_graph");
+    private $favicon = $('[rel="icon"]');
 
-    private trend = new Trend();
+    private trend: Trend = null;
     private chart = new TemperatureChart(this.$chart);
     private temperatures: model.ITemperatureEvent[] = null;
 
     temperature(te: model.ITemperatureEvent) {
+        debug.logger.log("New temperature received: ", te);
+        if (this.trend === null)
+            this.trend = new Trend(te.temperature);
         this.trend.add(te.temperature);
 
         this.$temperature.show();
 
-        this.$temperatureValue.text(te.temperature.toString());
+        this.$temperatureValue.text(te.temperature.toPrecision(3) + "°C");
         this.$temperatureTrend.text(this.trend.toString());
+        this.$temperature.attr("class", te.temperature > 20 ? "high" : "low");
 
         if (this.temperatures !== null) {
             this.temperatures.shift();
@@ -38,12 +43,14 @@ export class BrowserEventListener implements model.IEventListener {
     }
 
     temperatureHistory(temps:model.ITemperatureEvent[]) {
+        debug.logger.log("New temps received: ", temps);
         this.$chart.show();
         this.temperatures = temps;
         this.chart.render(this.temperatures);
     }
 
     message(msg:model.IMessageEvent) {
+        debug.logger.log("New message received: ", msg);
         this.$message.show();
         this.$messageUser.text(msg.from.name);
         this.$messageValue.text(msg.content);
@@ -51,8 +58,10 @@ export class BrowserEventListener implements model.IEventListener {
     }
 
     status(s:model.IStatusEvent) {
+        debug.logger.log("New status received: ", s);
         this.$status.show();
-        this.$statusValue.text(model.Status[s.status]);
+        this.$statusValue.attr("class", model.Status[s.status] + " value");
+        this.$favicon.attr("href", "/static/" + model.Status[s.status] + ".ico");
         this.$statusModifiedBy.text(s.from.name);
         this.$statusTimestamp.text(s.when.toDateString());
     }
@@ -82,7 +91,7 @@ class TemperatureChart {
     private labels(tss: model.ITemperatureEvent[], num: number): string[] {
         var l: string[] = [],
             interval = tss.length / num,
-            offset = (tss.length % num) / 2;
+            offset = 0;//(tss.length % num) / 2;
 
         for (var i = 0; i < num; i++) {
             var date = tss[i * interval + offset].when;
@@ -105,10 +114,12 @@ class TemperatureChart {
 
 class Trend {
     diff: number = 0;
-    oldValue: number = 0;
+
+    constructor(public oldValue: number) {}
 
     add(value) {
         this.diff = value - this.oldValue;
+        this.oldValue = value;
         debug.logger.log("The difference between the current temp and the old temp is", this.diff);
     }
 

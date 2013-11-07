@@ -9,6 +9,10 @@ export class Controller {
     }
 
     handleUpdate(dict: any) {
+        if (dict.status !== undefined) {
+            this.mux.status(mm.StatusEvent.create(dict.status));
+        }
+
         if (dict.tempint !== undefined) {
             this.mux.temperature(mm.TemperatureEvent.create(dict.tempint));
         }
@@ -19,10 +23,6 @@ export class Controller {
 
         if (dict.tempinthist !== undefined) {
             this.mux.temperatureHistory(mm.ArrayTemperatureEvent.create(dict.tempinthist));
-        }
-
-        if (dict.status !== undefined) {
-            this.mux.status(mm.StatusEvent.create(dict.status));
         }
     }
 }
