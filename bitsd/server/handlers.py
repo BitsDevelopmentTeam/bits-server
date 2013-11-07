@@ -14,6 +14,7 @@ HTTP requests handlers.
 import markdown
 import datetime
 from sqlalchemy.exc import IntegrityError
+from tornado.escape import xhtml_escape
 
 import tornado.web
 import tornado.websocket
@@ -302,6 +303,8 @@ class MessagePageHandler(BaseHandler):
     def post(self):
         text = self.get_argument('msgtext')
         username = self.get_current_user()
+
+        text = xhtml_escape(text)
 
         LOG.info("{} sent message {!r} from web".format(username, text))
 
