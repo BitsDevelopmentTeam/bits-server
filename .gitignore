@@ -7,3 +7,4 @@ MANIFEST
 *.pyc
 env
 .idea
+bitsd/server/assets/*.js
