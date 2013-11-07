@@ -22,4 +22,4 @@ $(function() {
     socket.onerror = function (event) {
         debug.logger.error("WS Error", event);
     };
-})
+});
