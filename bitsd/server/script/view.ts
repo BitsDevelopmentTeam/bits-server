@@ -19,6 +19,7 @@ export class BrowserEventListener implements model.IEventListener {
     private $chart = $("#temperature_graph");
     private $favicon = $('[rel="icon"]');
 
+    private initTitle: string = document.title;
     private trend: Trend = null;
     private chart = new TemperatureChart(this.$chart);
     private temperatures: model.ITemperatureEvent[] = null;
@@ -37,7 +38,7 @@ export class BrowserEventListener implements model.IEventListener {
 
         if (this.temperatures !== null) {
             this.temperatures.shift();
-            this.temperatures.unshift(te);
+            this.temperatures.push(te);
             this.chart.render(this.temperatures);
         }
     }
@@ -59,11 +60,17 @@ export class BrowserEventListener implements model.IEventListener {
 
     status(s:model.IStatusEvent) {
         debug.logger.log("New status received: ", s);
+        document.title = this.capitalize(model.Status[s.status]) + " " + this.initTitle;
         this.$status.show();
         this.$statusValue.attr("class", model.Status[s.status] + " value");
         this.$favicon.attr("href", "/static/" + model.Status[s.status] + ".ico");
         this.$statusModifiedBy.text(s.from.name);
         this.$statusTimestamp.text(s.when.toDateString());
+    }
+
+    private capitalize(str: string) {
+        debug.logger.log("Capitilizing string", str);
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     static create(): model.IEventListener {
@@ -90,12 +97,13 @@ class TemperatureChart {
 
     private labels(tss: model.ITemperatureEvent[], num: number): string[] {
         var l: string[] = [],
-            interval = tss.length / num,
-            offset = 0;//(tss.length % num) / 2;
+            interval = Math.floor(tss.length / num),
+            offset = Math.floor((tss.length % num) / 2);
 
         for (var i = 0; i < num; i++) {
             var date = tss[i * interval + offset].when;
 
+            console.log(date.getHours().toString() + ":" + date.getMinutes().toString());
             l.push(date.getHours().toString() + ":" + date.getMinutes().toString());
         }
 

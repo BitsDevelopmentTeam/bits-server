@@ -70,7 +70,7 @@ export class ArrayTemperatureEvent {
         var tes: TemperatureEvent[] = [];
 
         for (var i = 0, len = dict.length; i < len; i++) {
-            tes.push(TemperatureEvent.create(dict[i]))
+            tes.unshift(TemperatureEvent.create(dict[i]))
         }
 
         return tes;

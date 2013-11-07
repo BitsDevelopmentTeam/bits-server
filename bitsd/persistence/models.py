@@ -51,7 +51,7 @@ class TemperatureSample(Base):
     def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            "timestamp": self.timestamp.isoformat(' '),
+            "timestamp": int(float(self.timestamp.strftime('%s.%f')) * 1000),
             "value": self.value,
             "modifiedby": self.modified_by,
             "sensor": self.sensor
@@ -88,7 +88,7 @@ class Status(Base):
     def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            "timestamp": self.timestamp.isoformat(' '),
+            "timestamp": int(float(self.timestamp.strftime('%s.%f')) * 1000),
             "modifiedby": self.modified_by,
             "value": self.value
         }
@@ -118,7 +118,7 @@ class Message(Base):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
             'user': self.author.name,
-            'timestamp': self.timestamp.isoformat(' '),
+            'timestamp': int(float(self.timestamp.strftime('%s.%f')) * 1000),
             'value': self.message,
         }
         return {'message': data} if wrap else data
