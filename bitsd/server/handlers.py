@@ -113,6 +113,11 @@ class LogPageHandler(BaseHandler):
                 offset=offset,
                 limit=limit
             )
+
+            # Handle limit = 1 case (result is not a list)
+            if type(latest_statuses) == Status:
+                latest_statuses = [latest_statuses]
+
             if wants_json:
                 self.write(self.jsonize(latest_statuses))
                 self.finish()
