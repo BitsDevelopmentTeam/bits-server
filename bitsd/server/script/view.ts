@@ -47,7 +47,7 @@ export class BrowserEventListener implements model.IEventListener {
         debug.logger.log("New temps received: ", temps);
         this.$chart.show();
         this.temperatures = temps;
-        this.temperature.pop();
+        this.temperatures.pop();
         this.chart.render(this.temperatures);
     }
 
