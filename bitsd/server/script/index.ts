@@ -8,12 +8,14 @@ import debug = require("debug");
 
 $(function() {
     var controller = new c.Controller(),
-        listener: m.IEventListener = v.BrowserEventListener.create(),
+        indexListener: m.IEventListener = v.IndexEventListener.create(),
+        titleListener: m.IEventListener = v.TitleEventListener.create(),
         socket = new ws.Socket(/https/.test(location.protocol)? "wss": "ws" + "://" + location.hostname + ":" + location.port +"/ws");
 
     debug.logger.level = $("meta[name='mode']").attr("content") || "production";
 
-    controller.register(listener);
+    controller.register(indexListener);
+    controller.register(titleListener);
 
     socket.onmessage = (event) => controller.handleUpdate($.parseJSON(event.data));
 

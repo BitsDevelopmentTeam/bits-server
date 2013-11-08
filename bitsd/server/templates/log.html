@@ -11,6 +11,9 @@
 {% block title %}Storico{% end %}
 {% block attrs %}class="storico"{% end %}
 {% block subtitle %}Storico{% end %}
+{% block preamble%}
+    {% module DynamicPage("history") %}
+{% end %}
 
 {% block body %}
 <ul class="status">

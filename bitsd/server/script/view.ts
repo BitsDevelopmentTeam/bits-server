@@ -4,7 +4,7 @@
 import model = require("model");
 import debug = require("debug");
 
-export class BrowserEventListener implements model.IEventListener {
+export class IndexEventListener implements model.IEventListener {
     private $temperature  = $("#temp");
     private $temperatureValue = this.$temperature.find(".value");
     private $temperatureTrend = this.$temperature.find(".trend");
@@ -17,9 +17,7 @@ export class BrowserEventListener implements model.IEventListener {
     private $messageTimestamp = this.$message.find(".timestamp");
     private $messageValue = this.$message.find(".value");
     private $chart = $("#temperature_graph");
-    private $favicon = $('[rel="icon"]');
 
-    private initTitle: string = document.title;
     private trend: Trend = null;
     private chart = new TemperatureChart(this.$chart);
     private temperatures: model.ITemperatureEvent[] = null;
@@ -61,21 +59,79 @@ export class BrowserEventListener implements model.IEventListener {
 
     status(s:model.IStatusEvent) {
         debug.logger.log("New status received: ", s);
-        document.title = this.capitalize(model.Status[s.status]) + " " + this.initTitle;
         this.$status.show();
         this.$statusValue.attr("class", model.Status[s.status] + " value");
-        this.$favicon.attr("href", "/static/" + model.Status[s.status] + ".ico");
         this.$statusModifiedBy.text(s.from.name);
         this.$statusTimestamp.text(s.when.toDateString());
     }
 
+    static create(): model.IEventListener {
+        return new IndexEventListener();
+    }
+}
+
+export class TitleEventListener implements model.IEventListener {
+    private $favicon = $('[rel="icon"]');
+    private initTitle: string = document.title;
+
+    temperature(event: model.ITemperatureEvent) {
+        debug.logger.log("New temperature received: ", event);
+    }
+
+    temperatureHistory(events: model.ITemperatureEvent[]) {
+        debug.logger.log("New temperature array received: ", event);
+    }
+
+    message(event: model.IMessageEvent) {
+        debug.logger.log("New message received: ", event);
+
+    }
+
+    status(event: model.IStatusEvent) {
+        debug.logger.log("New status received: ", event);
+        this.$favicon.attr("href", "/static/" + model.Status[event.status] + ".ico");
+        document.title = this.capitalize(model.Status[event.status]) + " " + this.initTitle;
+    }
+
     private capitalize(str: string) {
-        debug.logger.log("Capitilizing string", str);
+        debug.logger.log("Capitilizing string: ", str);
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     static create(): model.IEventListener {
-        return new BrowserEventListener();
+        return new TitleEventListener();
+    }
+}
+
+export class HistoryEventListener implements model.IEventListener {
+    private $stata = $(".status > li");
+
+    temperature(event: model.ITemperatureEvent) {
+        debug.logger.log("New temperature received: ", event);
+    }
+
+    temperatureHistory(events: model.ITemperatureEvent[]) {
+        debug.logger.log("New temperature array received: ", event);
+    }
+
+    message(event: model.IMessageEvent) {
+        debug.logger.log("New message received: ", event);
+
+
+    }
+
+    status(event: model.IStatusEvent) {
+        debug.logger.log("New status received: ", event);
+        var $status = $(event.when);
+        $status.wrap("<li></li>");
+        $status.addClass(model.Status[event.status]);
+        $status.insertBefore(this.$stata.get(0));
+        this.$stata.last().remove();
+        this.$stata.append("")
+    }
+
+    static create(): model.IEventListener {
+        return new HistoryEventListener();
     }
 }
 
@@ -106,7 +162,6 @@ class TemperatureChart {
         for (var i = 0; i < num; i++) {
             var date = tss[i * interval + offset].when;
 
-            console.log(date.getHours().toString() + ":" + date.getMinutes().toString());
             l.push(date.getHours().toString() + ":" + date.getMinutes().toString());
         }
 

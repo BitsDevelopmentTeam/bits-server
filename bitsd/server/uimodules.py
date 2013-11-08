@@ -49,10 +49,12 @@ class DynamicPage(tornado.web.UIModule):
         )
 
     def html_body(self):
-        return "<script src='/static/lib/require.js?v=2.1.9' data-main='/static/index' type='text/javascript'></script>"
+        return "<script src='/static/lib/require.js?v=2.1.9' data-main='/static/" + self._main + "' type='text/javascript'></script>"
 
-    def render(self):
+    def render(self, main):
+        self._main = main
         return ''
+
 
 class PresenceWidget(tornado.web.UIModule):
     """Render a table showing the probability to find the BITS open,
