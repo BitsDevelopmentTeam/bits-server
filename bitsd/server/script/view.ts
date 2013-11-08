@@ -170,7 +170,7 @@ class Trend {
 
     constructor(public oldValue: number) {}
 
-    add(value) {
+    add(value: number) {
         this.diff = value - this.oldValue;
         this.oldValue = value;
         debug.logger.log("The difference between the current temp and the old temp is", this.diff);
