@@ -51,14 +51,14 @@ export class IndexEventListener implements model.IEventListener {
         this.$message.show();
         this.$messageUser.text(msg.from.name);
         this.$messageValue.text(msg.content);
-        this.$messageTimestamp.text(msg.when.toDateString());
+        this.$messageTimestamp.text(DateUtils.simple(msg.when));
     }
 
     status(s:model.IStatusEvent) {
         this.$status.show();
         this.$statusValue.attr("class", model.Status[s.status] + " value");
         this.$statusModifiedBy.text(s.from.name);
-        this.$statusTimestamp.text(s.when.toDateString());
+        this.$statusTimestamp.text(DateUtils.simple(s.when));
     }
 
     static create(): model.IEventListener {
@@ -92,6 +92,7 @@ export class TitleEventListener implements model.IEventListener {
 
 export class HistoryEventListener implements model.IEventListener {
     private firstStatus = true;
+    private $stata = $("ul.status");
 
     temperature(event: model.ITemperatureEvent) {}
 
@@ -103,9 +104,9 @@ export class HistoryEventListener implements model.IEventListener {
         if (!this.firstStatus) {
             var $status = $("<li>");
             $status.addClass(model.Status[event.status]);
-            $status.text(event.when.toString());
-            $status.insertBefore(".status > li");
-            $(".status > li").last().remove();
+            $status.text(DateUtils.simple(event.when));
+            this.$stata.prepend($status);
+            this.$stata.find("li").last().remove();
         } else {
             this.firstStatus = false;
         }
@@ -183,5 +184,11 @@ class Trend {
         } else {
             return "↘";
         }
+    }
+}
+
+class DateUtils {
+    static simple(date: Date): string {
+        return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     }
 }
