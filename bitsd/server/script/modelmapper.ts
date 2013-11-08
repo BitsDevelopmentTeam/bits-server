@@ -21,7 +21,7 @@ export class StatusEvent implements model.IStatusEvent {
 
     static create(dict: any): model.IStatusEvent {
         var se = new StatusEvent;
-        se.status = dict.value == "open" ? model.Status.open : model.Status.close;
+        se.status = model.Status[model.Status[dict.value]];
         se.from = User.create(dict.modifiedby);
         se.when = MDate.create(dict.timestamp);
         return se;

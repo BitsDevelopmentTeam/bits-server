@@ -104,7 +104,7 @@ export class TitleEventListener implements model.IEventListener {
 }
 
 export class HistoryEventListener implements model.IEventListener {
-    private $stata = $(".status > li");
+    private firstStatus = true;
 
     temperature(event: model.ITemperatureEvent) {
         debug.logger.log("New temperature received: ", event);
@@ -116,18 +116,19 @@ export class HistoryEventListener implements model.IEventListener {
 
     message(event: model.IMessageEvent) {
         debug.logger.log("New message received: ", event);
-
-
     }
 
     status(event: model.IStatusEvent) {
-        debug.logger.log("New status received: ", event);
-        var $status = $(event.when);
-        $status.wrap("<li></li>");
-        $status.addClass(model.Status[event.status]);
-        $status.insertBefore(this.$stata.get(0));
-        this.$stata.last().remove();
-        this.$stata.append("")
+        if (!this.firstStatus) {
+            debug.logger.log("New status received: ", event);
+            var $status = $("<li>");
+            $status.addClass(model.Status[event.status]);
+            $status.text(event.when.toString());
+            $status.insertBefore(".status > li");
+            $(".status > li").last().remove();
+        } else {
+            this.firstStatus = false;
+        }
     }
 
     static create(): model.IEventListener {
