@@ -2,15 +2,12 @@
 /// <reference path="helpers/window.extend.d.ts" />
 
 class FakeWebSocket {
-    public onmessage: Function;
+    public onmessage: Function = undefined;
 
     constructor() {
         var self = this;
-        $.get("/data", function(response) {
-            if (self.onmessage != undefined) {
-                self.onmessage({data: response})
-            }
-        });
+
+        $.get("/data", (response) => self.onmessage !== undefined && self.onmessage({data: response}));
     }
 }
 
