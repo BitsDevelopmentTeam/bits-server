@@ -326,3 +326,11 @@ class MessagePageHandler(BaseHandler):
             message='Messaggio inviato correttamente!',
             text=text
         )
+
+
+class RTCHandler(BaseHandler):
+    def get(self):
+        now = datetime.datetime.now()
+        self.write(now.strftime("%Y-%m-%d %H:%M:%S"))
+        self.finish()
+
