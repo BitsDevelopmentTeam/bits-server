@@ -93,7 +93,9 @@ class TemperatureChart {
             datasets: [this.dataset(tss)]
         };
 
-        new Chart(this.ctx).Line(data)
+        new Chart(this.ctx).Line(data, {
+            scaleGridLineColor : "rgba(255,255,255,.05)"
+        });
     }
 
     private labels(tss: model.ITemperatureEvent[], num: number): string[] {
@@ -117,7 +119,12 @@ class TemperatureChart {
             d.push(tss[i].temperature);
         }
 
-        return {data: d};
+        return {
+            fillColor : "rgba(0,255,0,0.5)",
+			strokeColor : "rgba(0,255,0,1)",
+			pointColor : "rgba(255,0,0,1)",
+            pointStrokeColor: "#fff",
+            data: d};
     }
 }
 
