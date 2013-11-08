@@ -12,6 +12,10 @@
 {% block subtitle %}{{ title }}{% end %}
 {% block attrs%}id="bitsdesc"{% end %}
 
+{% block preamble%}
+    {% module DynamicPage() %}
+{% end %}
+
 {% block body %}
 {% raw body %}
 {% end %}
