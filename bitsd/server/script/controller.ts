@@ -1,5 +1,6 @@
 import mm = require("modelmapper");
 import model = require("model");
+import debug = require("debug");
 
 export class Controller {
     private mux = new MuxEventListener();
@@ -35,24 +36,28 @@ class MuxEventListener implements model.IEventListener {
     }
 
     temperature(temp: model.ITemperatureEvent) {
+        debug.logger.log("New event: ", temp);
         for (var i = 0, len = this.handlers.length; i < len; i++) {
             this.handlers[i].temperature(temp);
         }
     }
 
     temperatureHistory(temps: model.ITemperatureEvent[]) {
+        debug.logger.log("New event: ", temps);
         for (var i = 0, len = this.handlers.length; i < len; i++) {
             this.handlers[i].temperatureHistory(temps);
         }
     }
 
     message(msg: model.IMessageEvent) {
+        debug.logger.log("New event: ", msg);
         for (var i = 0, len = this.handlers.length; i < len; i++) {
             this.handlers[i].message(msg);
         }
     }
 
     status(s: model.IStatusEvent) {
+        debug.logger.log("New event: ", s);
         for (var i = 0, len = this.handlers.length; i < len; i++) {
             this.handlers[i].status(s);
         }

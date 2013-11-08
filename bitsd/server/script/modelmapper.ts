@@ -10,6 +10,10 @@ class User implements model.IUser {
         u.name = name;
         return u;
     }
+
+    toString() {
+        return "User(name=" + name + ")";
+    }
 }
 
 export class StatusEvent implements model.IStatusEvent {
@@ -25,6 +29,10 @@ export class StatusEvent implements model.IStatusEvent {
         se.from = User.create(dict.modifiedby);
         se.when = MDate.create(dict.timestamp);
         return se;
+    }
+
+    toString() {
+        return "StatusEvent(status= " + model.Status[this.status] + ",from=" + this.from.toString() + ",when=" + this.when.toString() + ")";
     }
 }
 
@@ -45,6 +53,10 @@ class Sensor implements model.ISensor {
         s.id = id;
         return s;
     }
+
+    toString() {
+        return "Sensor(id=" + this.id.toString() +")";
+    }
 }
 
 export class TemperatureEvent implements model.ITemperatureEvent {
@@ -61,6 +73,10 @@ export class TemperatureEvent implements model.ITemperatureEvent {
         te.sensor = Sensor.create(dict.sensor);
         return te;
     }
+
+   toString() {
+        return "TemperatureEvent(temperature= " + this.temperature.toString() + ",sensor=" + this.sensor.toString() + ",when=" + this.when.toString() + ")";
+   }
 }
 
 export class ArrayTemperatureEvent {
@@ -90,5 +106,9 @@ export class MessageEvent implements model.IMessageEvent {
         me.from = User.create(dict.user);
         me.when = MDate.create(dict.timestamp);
         return me;
+    }
+
+    toString() {
+        return "MessageEvent(from= " + this.from.toString() + ",content=" + this.content.toString() + ",when=" + this.when.toString() + ")";
     }
 }

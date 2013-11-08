@@ -14,7 +14,7 @@ export interface IEvent {
     when: Date;
 }
 
-export enum Status { open, closed }
+export enum Status { closed, open }
 
 export interface ISensor {
     id: number;

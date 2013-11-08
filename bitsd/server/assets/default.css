@@ -160,7 +160,7 @@ nav#paginator ul li {
   color: #00FF00;
 }
 
-#sede .close:after {
+#sede .closed:after {
   content: "chiusa";
   color: #FF0000;
 }
