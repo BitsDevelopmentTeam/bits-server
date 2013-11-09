@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python
 #
 # Copyright (C) 2013 Stefano Sanfilippo
 # Copyright (C) 2013 BITS development team
