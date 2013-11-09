@@ -189,12 +189,12 @@ class Trend {
 
 class DateUtils {
     static simple(date: Date): string {
-        return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " + date.getHours() + ":" + twoNums(date.getMinutes()) + ":" + twoNums(date.getSeconds());
+        return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " + date.getHours() + ":" + DateUtils.twoNums(date.getMinutes()) + ":" + DateUtils.twoNums(date.getSeconds());
     }
 
     static twoNums(num: number): string {
-        if (num > 60) throw new RangeException("num out of bound");
-        if (num < 0) throw new RangeException("num out of bound");
+        if (num > 60) throw new RangeException();
+        if (num < 0) throw new RangeException();
 
         return num > 10 ? num.toString() : "0" + num.toString();
     }
