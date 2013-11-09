@@ -9,3 +9,13 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 tsc -t ES3 --removeComments --outDir $DIR/../assets/ --module amd $DIR/*.ts
+
+for FILE in $DIR/../assets/*.js; do
+ ccjs $FILE > $FILE.compiled
+done
+
+for FILE in $DIR/../assets/*.compiled; do
+ filename=$(basename $FILE)
+ filename="${filename%.*}"
+ mv $FILE $DIR/../assets/$filename
+done
