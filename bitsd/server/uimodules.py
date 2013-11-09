@@ -44,7 +44,6 @@ class DynamicPage(tornado.web.UIModule):
     """Module providing JS for dynamic pages."""
     def javascript_files(self):
         return (
-            '/static/lib/zepto.min.js?v=1.0',
             '/static/lib/Chart.min.js?v=0.2',
             '/static/lib/sockjs.min.js?v=0.3'
         )
