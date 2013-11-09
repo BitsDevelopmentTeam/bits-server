@@ -49,9 +49,10 @@ class DynamicPage(tornado.web.UIModule):
         )
 
     def html_body(self):
-        return "<script src='/static/lib/require.js?v=2.1.9' data-main='/static/" + self._main + "' type='text/javascript'></script>"
+        body = "<script src='/static/lib/require.js?v=2.1.9' data-main='/static/{}' type='text/javascript'></script>"
+        return body.format(self._main)
 
-    def render(self, main = "other"):
+    def render(self, main="other"):
         self._main = main
         return ''
 
