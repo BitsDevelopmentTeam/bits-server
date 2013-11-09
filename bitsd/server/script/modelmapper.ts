@@ -1,3 +1,5 @@
+"use strict"
+
 import model = require("model");
 
 class User implements model.IUser {

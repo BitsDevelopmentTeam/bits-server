@@ -1,5 +1,6 @@
 /// <reference path="helpers/zepto.d.ts" />
 /// <reference path="helpers/Chart.d.ts" />
+"use strict"
 
 import model = require("model");
 import debug = require("debug");

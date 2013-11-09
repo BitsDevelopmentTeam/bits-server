@@ -1,3 +1,5 @@
+"use strict"
+
 export interface IEventListener {
     temperature(event: ITemperatureEvent)
     temperatureHistory(events: ITemperatureEvent[])

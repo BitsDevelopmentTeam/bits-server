@@ -1,3 +1,5 @@
+"use strict"
+
 export interface ILogger {
     getLevel(): string;
     setLevel(newLevel: string);

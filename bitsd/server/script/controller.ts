@@ -1,3 +1,5 @@
+"use strict"
+
 import mm = require("modelmapper");
 import model = require("model");
 import debug = require("debug");
