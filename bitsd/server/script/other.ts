@@ -11,7 +11,7 @@ $(function() {
         titleListener: m.IEventListener = v.TitleEventListener.create(),
         socket = new SockJS("/data");
 
-    debug.logger.level = $("meta[name='mode']").attr("content") || "production";
+    debug.logger.setLevel($("meta[name='mode']").attr("content") || "production");
 
     controller.register(titleListener);
 

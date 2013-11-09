@@ -12,7 +12,7 @@ $(function() {
         historyListener: m.IEventListener = v.HistoryEventListener.create(),
         socket = new SockJS("/data");
 
-    debug.logger.level = $("meta[name='mode']").attr("content") || "production";
+    debug.logger.setLevel($("meta[name='mode']").attr("content") || "production");
 
     controller.register(historyListener);
     controller.register(titleListener);
