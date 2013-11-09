@@ -142,9 +142,12 @@ class TemperatureChart {
             offset = Math.floor((tss.length % num) / 2);
 
         for (var i = 0; i < num; i++) {
-            var date = tss[i * interval + offset].when;
+            var date = tss[i * interval + offset].when,
+                minutes = date.getMinutes(),
+                minutesRep = minutes < 10 ? "0" + minutes.toString() : minutes.toString();
 
-            l.push(date.getHours().toString() + ":" + date.getMinutes().toString());
+
+            l.push(date.getHours().toString() + ":" + minutesRep);
         }
 
         return l;
