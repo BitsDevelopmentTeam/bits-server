@@ -138,31 +138,91 @@ We strove to keep markup as clean and semantic as possible.
 Bootstrap your instance
 =======================
 
+TL;DR
+-----
+
+First create a Python environment with all libraries inside with:
+
+    $ make virtualenv
+
+Activate it with:
+
+    $ . env/bin/activate
+
+If this is the first time the daemon is run or if the DB has been reset, issue:
+
+    $ ./bootstrap.py
+
+Then start the daemon with:
+
+    $ ./bitsd.py
+
+When developing, you will find particurarly useful `--developer_mode` and
+`--log_queries` command line options (see more below).
+
 Requirements
 ------------
 
-You will need **Python 3** (developed on 3.2, 3.3 is fine) installed,
-**Tornado 2.4** and **SQLAlchemy 0.7** (but 0.8 should be fine)
-somewhere in the Python path.
+BITS is developed on Python 2.7. Python3k is not supported nor we look
+forward to, although we will switch to it at some point in the future.
 
-You should use virtualenv to setup a clean environment for BITS.
+Hard dependencies are:
+
+* **Tornado 3.0** asynchronous/non blocking web server on which BITS runs.
+* **SQLAlchemy > 0.7** ORM and DB abstraction layer.
+* **markdown** for rendering wiki pages.
+* **passlib** a great abstraction over `crypt` for strong password hashing.
+
+The following are not strictly necessary, but will enhance performance:
+
+* **futures** nice implementation of the working queue used by the non-blocking engine. 
+* **pycares** non-blocking DNS resolver.
+* **virtualenv** for setting up a virtual environment.
 
 Start a local instance for testing
 ----------------------------------
 
-Simply execute `./BITS server.py` from this directory and watch the log closely ;)
+Before first use, you will have to load wiki pages into the database by running
+the `./bootstrap.py` script.
 
-Rough Edges
------------
+Simply execute `./bitsd.py` from this directory and watch the log closely ;)
+If not configured otherwise, a SQLite DB named `test.db` will be created.
 
-Currently, you **have to put /info page in the DB**, just use this
-document as body and info as slug (and anything as title).
+Developer mode
+--------------
+
+Developer mode is turned on by passing the `--developer_mode` option
+to `./bitsd.py`. When in DM, a few things happen:
+
+1. Python modules are autoreloaded when a change is detected.
+2. Verbose log is activated both in browser Javascript console and server.
+3. Tornado is started in debug mode.
+
+Another option useful for debugging is `--log_queries`, which does exactly that:
+logs actual SQL passed to DBMS.
+
+**You really do _not_ want** to activate these options when in production,
+trust me.
 
 Configuration
 -------------
 
-Most options can be configured via command line. Issue `BITS server.py --help`
+Most options can be configured via command line. Issue `./bitsd --help`
 for a full list.
+
+Managing users
+--------------
+
+Users can be added, removed and modified using `./usermanage.py` script:
+
+    $ ./usermanage.py add test
+    Password for `test`:
+
+    $ ./usermanage.py delete test
+
+    $ ./usermanage.py modify test
+    New password for `test`:
+
 
 Bugs and patches
 ================
