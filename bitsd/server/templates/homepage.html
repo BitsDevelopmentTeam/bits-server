@@ -9,7 +9,7 @@
  #}
 
 {% block preamble%}
-    {% module DynamicPage() %}
+    {% module DynamicPage("index") %}
 {% end %}
 
 {% block title %}Homepage{% end %}
@@ -33,7 +33,7 @@
   </li>
   <li id="graphs">
     {% module PresenceWidget() %}
-    <div id="temperature_graph"></div>
+    <canvas id="temperature_graph" width="380" height="380"></canvas>
   </li>
 </ul>
 {% end %}
