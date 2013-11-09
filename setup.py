@@ -34,13 +34,16 @@ setup(
         'bitsd.test',
     ],
     scripts=[
-        'bitsd.py'
+        'bitsd.py',
+        'usermanage.py',
+        'bootstrap.py'
     ],
     package_data={
         'bitsd.server': [
             'templates/*.html',
             'assets/*',
-            'assets/lib/*'
+            'assets/lib/*',
+            'scripts/*'
         ],
     },
     data_files=[

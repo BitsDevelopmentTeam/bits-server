@@ -20,7 +20,7 @@ def send_message(text):
     """
     A message is added to the list of messages shown on the Fonera display.
     """
-    handlers.send("message {}\n".format(base64.b64encode(text)))
+    handlers.send("message {}\n".format(base64.b64encode(text.encode('utf-8'))))
 
 
 def send_status(value):

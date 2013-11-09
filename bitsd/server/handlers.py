@@ -14,6 +14,7 @@ HTTP requests handlers.
 import markdown
 import datetime
 from sqlalchemy.exc import IntegrityError
+from tornado.escape import xhtml_escape
 
 import tornado.web
 import tornado.websocket
@@ -112,6 +113,11 @@ class LogPageHandler(BaseHandler):
                 offset=offset,
                 limit=limit
             )
+
+            # Handle limit = 1 case (result is not a list)
+            if type(latest_statuses) == Status:
+                latest_statuses = [latest_statuses]
+
             if wants_json:
                 self.write(self.jsonize(latest_statuses))
                 self.finish()
@@ -303,6 +309,8 @@ class MessagePageHandler(BaseHandler):
         text = self.get_argument('msgtext')
         username = self.get_current_user()
 
+        text = xhtml_escape(text)
+
         LOG.info("{} sent message {!r} from web".format(username, text))
 
         with session_scope() as session:
@@ -318,3 +326,11 @@ class MessagePageHandler(BaseHandler):
             message='Messaggio inviato correttamente!',
             text=text
         )
+
+
+class RTCHandler(BaseHandler):
+    def get(self):
+        now = datetime.datetime.now()
+        self.write(now.strftime("%Y-%m-%d %H:%M:%S"))
+        self.finish()
+

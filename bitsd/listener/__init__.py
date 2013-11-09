@@ -27,7 +27,7 @@ def start():
     fonera = RemoteListener()
     LOG.info('Starting remote control...')
     LOG.info(
-        'My IP is {}, remote IP is {}'.format(
+        'My IP address is {}, remote IP address is {}'.format(
             options.control_local_address,
             options.control_remote_address
         )
