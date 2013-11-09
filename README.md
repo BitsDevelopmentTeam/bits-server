@@ -188,22 +188,6 @@ the `./bootstrap.py` script.
 Simply execute `./bitsd.py` from this directory and watch the log closely ;)
 If not configured otherwise, a SQLite DB named `test.db` will be created.
 
-Developer mode
---------------
-
-Developer mode is turned on by passing the `--developer_mode` option
-to `./bitsd.py`. When in DM, a few things happen:
-
-1. Python modules are autoreloaded when a change is detected.
-2. Verbose log is activated both in browser Javascript console and server.
-3. Tornado is started in debug mode.
-
-Another option useful for debugging is `--log_queries`, which does exactly that:
-logs actual SQL passed to DBMS.
-
-**You really do _not_ want** to activate these options when in production,
-trust me.
-
 Configuration
 -------------
 
@@ -223,8 +207,53 @@ Users can be added, removed and modified using `./usermanage.py` script:
     $ ./usermanage.py modify test
     New password for `test`:
 
+Development
+===========
+
+Developer mode
+--------------
+
+Developer mode is turned on by passing the `--developer_mode` option
+to `./bitsd.py`. When in DM, a few things happen:
+
+1. Python modules are autoreloaded when a change is detected.
+2. Verbose log is activated both in browser Javascript console and server.
+3. Tornado is started in debug mode.
+
+Another option useful for debugging is `--log_queries`, which does exactly that:
+logs actual SQL passed to DBMS.
+
+**You really do _not_ want** to activate these options when in production,
+trust me.
+
+GIT workflow
+------------
+
+The upstream repository has two main branches:
+
+* **master** is the stable branch.
+    1. _no branch_ shall be merged directly into `master`
+    2. _only commits_ that can be pushed directly on this branch are typos
+       and extremely urgent bugfixes. Anything else shall be merged in `development`
+       (see below).
+    3. since all changes committed to `master` are failsafe, changes can be
+       merged into another branch anytime.
+* **development** is the branche where (guess what?) development is carried on.
+  **this code is not guaranteed to be safe for production** or even to execute.
+    1. _new features_ will be developed in branches of `development`, then merged
+       back when ready.
+    2. _merge_ to `development` can happen as soon as the new feature is considered
+       ready.
+    3. when  code in `development` has been deemed stable, it can be merged into
+       `master`.
+
+Never push directly into upstream repository. Instead, fork the repo on GitHub,
+develop according to the workflow above in your fork and then file a pull
+request as soon as you have a changeset ready.
+
+This way, it will be easy to track blocks of commits and features introduced.
 
 Bugs and patches
-================
+----------------
 This project is hosted on [GitHub](https://github.com/esseks/BITS server), you
 are welcome to use the bug tracker, wishlist and make pull requests.
