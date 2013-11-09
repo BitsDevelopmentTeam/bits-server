@@ -142,12 +142,9 @@ class TemperatureChart {
             offset = Math.floor((tss.length % num) / 2);
 
         for (var i = 0; i < num; i++) {
-            var date = tss[i * interval + offset].when,
-                minutes = date.getMinutes(),
-                minutesRep = minutes < 10 ? "0" + minutes.toString() : minutes.toString();
+            var date = tss[i * interval + offset].when;
 
-
-            l.push(date.getHours().toString() + ":" + minutesRep);
+            l.push(date.getHours().toString() + ":" + DateUtils.twoNums(date.getMinutes()));
         }
 
         return l;
@@ -192,6 +189,13 @@ class Trend {
 
 class DateUtils {
     static simple(date: Date): string {
-        return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " + date.getHours() + ":" + twoNums(date.getMinutes()) + ":" + twoNums(date.getSeconds());
+    }
+
+    static twoNums(num: number): string {
+        if (num > 60) throw new RangeException("num out of bound");
+        if (num < 0) throw new RangeException("num out of bound");
+
+        return num > 10 ? num.toString() : "0" + num.toString();
     }
 }
