@@ -46,10 +46,10 @@ class DynamicPage(tornado.web.UIModule):
         )
 
     def html_body(self):
-        return "<script>document.write('<script src=\"/static/lib/' + ('__proto__' in {} ? 'zepto.min.js?v=1.0' : 'jquery.min.js?v=1.10.2') + '\"><\/script>')</script>" + \
-               "<!--[if lt IE 9]><script src='/static/lib/html5shiv.min.js?v=3.7.0'></script><![endif]-->" + \
-               "<!--[if lte IE 8]><script src='/static/lib/excanvas.js?v=1.0'></script><![endif]-->" + \
-               "<script src='/static/lib/require.min.js?v=2.1.9' data-main='/static/" + self._main + "' type='text/javascript'></script>"
+        return """<script>document.write('<script src="/static/lib/' + ('__proto__' in {{}} ? 'zepto.min.js?v=1.0' : 'jquery.min.js?v=1.10.2') + '"><\/script>')</script>
+<!--[if lt IE 9]><script src='/static/lib/html5shiv.min.js?v=3.7.0'></script><![endif]-->
+<!--[if lte IE 8]><script src='/static/lib/excanvas.js?v=1.0'></script><![endif]-->
+<script src='/static/lib/require.min.js?v=2.1.9' data-main='/static/{}' type='text/javascript'></script>""".format(self._main)
 
     def render(self, main="other"):
         self._main = main
