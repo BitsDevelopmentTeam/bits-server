@@ -3,9 +3,28 @@
 "use strict"
 
 import model = require("model");
+import c = require("controller");
 import debug = require("debug");
 
-export class IndexEventListener implements model.IEventListener {
+class MainComponent implements model.IConfigChangeEventListener {
+    $html = $("html");
+
+    constructor() {
+        if (model.Config.singleton().getBlind()) {
+            this.$html.addClass("blind");
+        }
+    }
+
+    onConfigChange():void {
+        if (model.Config.singleton().getBlind()) {
+            this.$html.addClass("blind");
+        } else {
+            this.$html.removeClass("blind");
+        }
+    }
+}
+
+class IndexBodyComponent implements model.IEventListener {
     private $temperature  = $("#temp");
     private $temperatureValue = this.$temperature.find(".value");
     private $temperatureTrend = this.$temperature.find(".trend");
@@ -21,9 +40,9 @@ export class IndexEventListener implements model.IEventListener {
 
     private trend: Trend = null;
     private chart = new TemperatureChart(this.$chart);
-    private temperatures: model.ITemperatureEvent[] = null;
+    private temperatures: model.ITemperatureEvent[] = [];
 
-    temperature(te: model.ITemperatureEvent) {
+    private onTemperature(te: model.ITemperatureEvent) {
         if (this.trend === null)
             this.trend = new Trend(te.temperature);
         this.trend.add(te.temperature);
@@ -33,51 +52,46 @@ export class IndexEventListener implements model.IEventListener {
         this.$temperatureValue.text(te.temperature.toPrecision(3) + "°C");
         this.$temperatureTrend.text(this.trend.toString());
         this.$temperature.attr("class", te.temperature > 20 ? "high" : "low");
-
-        if (this.temperatures !== null) {
-            this.temperatures.shift();
-            this.temperatures.push(te);
-            this.chart.render(this.temperatures);
-        }
     }
 
-    temperatureHistory(temps:model.ITemperatureEvent[]) {
+    onTemperatureHistory(temps:model.ITemperatureEvent[]) {
         this.$chart.show();
-        this.temperatures = temps;
-        this.temperatures.pop();
+
+        for (var i = 0, len = temps.length; i < len; i++) {
+            this.temperatures.shift();
+        }
+
+        for (var i = 0, len = temps.length; i < len; i++) {
+            this.temperatures.push(temps[i]);
+        }
+
+        this.onTemperature(temps[i-1]);
+
         this.chart.render(this.temperatures);
     }
 
-    message(msg:model.IMessageEvent) {
+    onMessage(msg:model.IMessageEvent) {
         this.$message.show();
         this.$messageUser.text(msg.from.name);
         this.$messageValue.text(msg.content);
         this.$messageTimestamp.text(DateUtils.simple(msg.when));
     }
 
-    status(s:model.IStatusEvent) {
+    onStatus(s:model.IStatusEvent) {
         this.$status.show();
         this.$statusValue.attr("class", model.Status[s.status] + " value");
         this.$statusModifiedBy.text(s.from.name);
         this.$statusTimestamp.text(DateUtils.simple(s.when));
     }
 
-    static create(): model.IEventListener {
-        return new IndexEventListener();
-    }
+    onConfigChange():void {}
 }
 
-export class TitleEventListener implements model.IEventListener {
+class TitleComponent implements model.IStatusEventListener {
     private $favicon = $('[rel="icon"]');
     private initTitle: string = document.title;
 
-    temperature(event: model.ITemperatureEvent) {}
-
-    temperatureHistory(events: model.ITemperatureEvent[]) {}
-
-    message(event: model.IMessageEvent) {}
-
-    status(event: model.IStatusEvent) {
+    onStatus(event: model.IStatusEvent) {
         this.$favicon.attr("href", "/static/" + model.Status[event.status] + ".ico");
         document.title = this.capitalize(model.Status[event.status]) + " " + this.initTitle;
     }
@@ -85,23 +99,13 @@ export class TitleEventListener implements model.IEventListener {
     private capitalize(str: string) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
-
-    static create(): model.IEventListener {
-        return new TitleEventListener();
-    }
 }
 
-export class HistoryEventListener implements model.IEventListener {
+class HistoryBodyComponent implements model.IStatusEventListener {
     private firstStatus = true;
     private $stata = $("ul.status");
 
-    temperature(event: model.ITemperatureEvent) {}
-
-    temperatureHistory(events: model.ITemperatureEvent[]) {}
-
-    message(event: model.IMessageEvent) {}
-
-    status(event: model.IStatusEvent) {
+    onStatus(event: model.IStatusEvent) {
         if (!this.firstStatus) {
             var $status = $("<li>");
             $status.addClass(model.Status[event.status]);
@@ -113,9 +117,7 @@ export class HistoryEventListener implements model.IEventListener {
         }
     }
 
-    static create(): model.IEventListener {
-        return new HistoryEventListener();
-    }
+    onConfigChange():void {}
 }
 
 class TemperatureChart {
@@ -166,18 +168,57 @@ class TemperatureChart {
     }
 }
 
+export interface UI {
+    init(c:c.Controller): void
+}
+
+export class MainUI implements UI {
+    private constructor() {}
+
+    init(c:c.Controller): void {
+        c.mux.addConfigChangeEventListener(new MainComponent());
+        c.mux.addStatusEventListener(new TitleComponent());
+    }
+
+    static create(): UI {
+        return new MainUI();
+    }
+}
+
+export class IndexUI extends MainUI {
+    init(c:c.Controller): void {
+        super.init(c);
+        c.mux.addListener(new IndexBodyComponent());
+    }
+
+    static create(): UI {
+        return new IndexUI();
+    }
+}
+
+export class HistoryUI extends MainUI {
+    init(c:c.Controller): void {
+        super.init(c);
+        c.mux.addStatusEventListener(new HistoryBodyComponent());
+    }
+
+    static create(): UI {
+        return new HistoryUI();
+    }
+}
+
 class Trend {
     diff: number = 0;
 
     constructor(public oldValue: number) {}
 
-    add(value: number) {
+    add(value: number): void {
         this.diff = value - this.oldValue;
         this.oldValue = value;
         debug.logger.log("The difference between the current temp and the old temp is", this.diff);
     }
 
-    toString() {
+    toString(): string {
         if (this.diff === 0) {
             return "→";
         } else if (this.diff > 0) {
