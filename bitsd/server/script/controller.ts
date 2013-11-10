@@ -1,65 +1,49 @@
+/// <reference path="helpers/zepto.d.ts" />
+/// <reference path="helpers/sockjs.d.ts" />
+
+"use strict"
+
 import mm = require("modelmapper");
 import model = require("model");
 import debug = require("debug");
 
 export class Controller {
-    private mux = new MuxEventListener();
+    mux = new model.MuxEventListener();
+    private firstTemp = true;
+    private socket: SockJS = new SockJS("/data");
 
-    register(listener: model.IEventListener) {
-        this.mux.addListener(listener);
+    constructor() {
+        debug.logger.setLevel($("meta[name='mode']").attr("content") || "production");
+        $("[href='#blind']").on("click", (event) => !(this.blindClicked() || true))
+        this.socket.onmessage = (event) => this.handleUpdate(event.data);
     }
 
-    handleUpdate(dict: any) {
+    private handleUpdate(dict: any) {
         if (dict.status !== undefined) {
-            this.mux.status(mm.StatusEvent.create(dict.status));
+            this.mux.onStatus(mm.StatusEvent.create(dict.status));
         }
 
         if (dict.tempint !== undefined) {
-            this.mux.temperature(mm.TemperatureEvent.create(dict.tempint));
+            if (!this.firstTemp) {
+                this.mux.onTemperatureHistory([mm.TemperatureEvent.create(dict.tempint)]);
+            } else {
+                this.firstTemp = false;
+            }
         }
 
         if (dict.message !== undefined) {
-            this.mux.message(mm.MessageEvent.create(dict.message));
+            this.mux.onMessage(mm.MessageEvent.create(dict.message));
         }
 
         if (dict.tempinthist !== undefined) {
-            this.mux.temperatureHistory(mm.ArrayTemperatureEvent.create(dict.tempinthist));
-        }
-    }
-}
-
-class MuxEventListener implements model.IEventListener {
-    handlers: model.IEventListener[] = [];
-
-    addListener(listener: model.IEventListener) {
-        this.handlers.push(listener);
-    }
-
-    temperature(temp: model.ITemperatureEvent) {
-        debug.logger.log("New event: ", temp);
-        for (var i = 0, len = this.handlers.length; i < len; i++) {
-            this.handlers[i].temperature(temp);
+            this.mux.onTemperatureHistory(mm.ArrayTemperatureEvent.create(dict.tempinthist));
         }
     }
 
-    temperatureHistory(temps: model.ITemperatureEvent[]) {
-        debug.logger.log("New event: ", temps);
-        for (var i = 0, len = this.handlers.length; i < len; i++) {
-            this.handlers[i].temperatureHistory(temps);
-        }
-    }
-
-    message(msg: model.IMessageEvent) {
-        debug.logger.log("New event: ", msg);
-        for (var i = 0, len = this.handlers.length; i < len; i++) {
-            this.handlers[i].message(msg);
-        }
-    }
-
-    status(s: model.IStatusEvent) {
-        debug.logger.log("New event: ", s);
-        for (var i = 0, len = this.handlers.length; i < len; i++) {
-            this.handlers[i].status(s);
-        }
+    private blindClicked(): boolean {
+        var config = model.Config.singleton();
+        config.setBlind(!config.getBlind());
+        this.mux.onConfigChange();
+        return true;
     }
 }

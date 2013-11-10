@@ -1,5 +1,8 @@
+"use strict"
+
 export interface ILogger {
-    level: string;
+    getLevel(): string;
+    setLevel(newLevel: string);
     log(...args);
     error(...args);
     panic(...args);
@@ -13,11 +16,11 @@ class Logger implements ILogger {
         this.levels = args;
     }
 
-    set level(l: string) {
+    setLevel(l: string) {
         this.levelId = this.levels.indexOf(l);
     }
 
-    get level(): string {
+    getLevel(): string {
         return this.levels[this.levelId];
     }
 

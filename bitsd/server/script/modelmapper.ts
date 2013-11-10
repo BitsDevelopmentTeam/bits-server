@@ -1,3 +1,5 @@
+"use strict"
+
 import model = require("model");
 
 class User implements model.IUser {
@@ -25,7 +27,7 @@ export class StatusEvent implements model.IStatusEvent {
 
     static create(dict: any): model.IStatusEvent {
         var se = new StatusEvent;
-        se.status = model.Status[dict.value];
+        se.status = dict.value === "open" ? model.Status.open : model.Status.closed;
         se.from = User.create(dict.modifiedby);
         se.when = MDate.create(dict.timestamp);
         return se;

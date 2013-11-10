@@ -24,11 +24,7 @@ class DebugMode(tornado.web.UIModule):
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
     def css_files(self):
-        css = ['/static/default.css?v=1',]
-        # FIXME daltonism workaround, should be implemented client-side
-        if 'blind' in self.request.path:
-            css.append('/static/dalton.css?v=1')
-        return css
+        return ['/static/default.css?v=1',]
 
     def html_head(self):
         return  """
@@ -44,13 +40,16 @@ class DynamicPage(tornado.web.UIModule):
     """Module providing JS for dynamic pages."""
     def javascript_files(self):
         return (
-            '/static/lib/zepto.min.js?v=1.0',
             '/static/lib/Chart.min.js?v=0.2',
+            '/static/lib/sockjs.min.js?v=0.3',
+            '/static/lib/cookies.min.js?v=0.3.1'
         )
 
     def html_body(self):
-        body = "<script src='/static/lib/require.js?v=2.1.9' data-main='/static/{}' type='text/javascript'></script>"
-        return body.format(self._main)
+        return "<script>document.write('<script src=\"/static/lib/' + ('__proto__' in {} ? 'zepto.min.js?v=1.0' : 'jquery.min.js?v=1.10.2') + '\"><\/script>')</script>" + \
+               "<!--[if lt IE 9]><script src='/static/lib/html5shiv.min.js?v=3.7.0'></script><![endif]-->" + \
+               "<!--[if lte IE 8]><script src='/static/lib/excanvas.js?v=1.0'></script><![endif]-->" + \
+               "<script src='/static/lib/require.min.js?v=2.1.9' data-main='/static/" + self._main + "' type='text/javascript'></script>"
 
     def render(self, main="other"):
         self._main = main
