@@ -167,6 +167,7 @@ class MarkdownPageHandler(BaseHandler):
                 title=page.title,
             )
 
+
 class StatusConnection(SockJSConnection):
     """Handler for POuL status via websocket"""
 
@@ -188,6 +189,7 @@ class StatusConnection(SockJSConnection):
         """Unregister this handler when the connection is closed."""
         StatusConnection.CLIENTS.unregister(self)
         LOG.debug('Unregistered client.')
+
 
 class LoginPageHandler(BaseHandler):
     """Handle login browser requests for reserved area."""
