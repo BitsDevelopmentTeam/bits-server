@@ -106,17 +106,22 @@ class HistoryBodyComponent implements model.IStatusEventListener {
     private $stata = $("ul.status");
 
     onStatus(event: model.IStatusEvent) {
-        if (!this.firstStatus) {
-            var $status = $("<li>");
-            $status.addClass(model.Status[event.status]);
-            $status.text(DateUtils.simple(event.when));
-            this.$stata.prepend($status);
-            this.$stata.find("li").last().remove();
-        } else {
-            this.firstStatus = false;
+        if (this.endsWith(document.URL, "/log") || this.endsWith(document.URL, "/log?offset=0")) {
+            if (!this.firstStatus) {
+                var $status = $("<li>");
+                $status.addClass(model.Status[event.status]);
+                $status.text(DateUtils.simple(event.when));
+                this.$stata.prepend($status);
+                this.$stata.find("li").last().remove();
+            } else {
+                this.firstStatus = false;
+            }
         }
     }
 
+    private endsWith(str: string, suffix: string): boolean {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
     onConfigChange():void {}
 }
 

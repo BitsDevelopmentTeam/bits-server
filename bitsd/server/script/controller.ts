@@ -14,7 +14,7 @@ export class Controller {
 
     constructor() {
         debug.logger.setLevel($("meta[name='mode']").attr("content") || "production");
-        $("[href='#blind']").on("click", (event) => this.blindClicked())
+        $("[href='#blind']").on("click", (event) => !(this.blindClicked() || true))
         this.socket.onmessage = (event) => this.handleUpdate(event.data);
     }
 
