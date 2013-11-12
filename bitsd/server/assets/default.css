@@ -8,6 +8,14 @@ html {
   font-family: sans;
 }
 
+.blind {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
 a {
   color: #00FF00;
 }
@@ -160,7 +168,7 @@ nav#paginator ul li {
   color: #00FF00;
 }
 
-#sede .close:after {
+#sede .closed:after {
   content: "chiusa";
   color: #FF0000;
 }
