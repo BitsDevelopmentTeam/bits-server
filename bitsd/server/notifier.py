@@ -31,4 +31,4 @@ class MessageNotifier(object):
     def broadcast(self, message):
         """Notify all clients."""
         for client in self.clients:
-            client.send(message)
+            client.write_message(message)

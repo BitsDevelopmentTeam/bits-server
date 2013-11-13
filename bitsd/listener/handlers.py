@@ -27,8 +27,8 @@ def send(string):
         return
     try:
         RemoteListener.STREAM.write(string)
-    except StreamClosedError:
-        LOG.error('Fonera has disconnected, cannot send update.')
+    except StreamClosedError as error:
+        LOG.error('Could not push message to Fonera! {}'.format(error))
 
 
 class RemoteListener(tornado.tcpserver.TCPServer):

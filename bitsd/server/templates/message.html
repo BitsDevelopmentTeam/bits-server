@@ -12,10 +12,6 @@
 {% block attrs %}class="messages"{% end %}
 {% block subtitle %}Invia a tutto il POuL{% end %}
 
-{% block preamble%}
-    {% module DynamicPage() %}
-{% end %}
-
 {% block body %}
 <form action="/message" method="post">
     <textarea name="msgtext" rows="8" cols="80">{{ text }}</textarea>

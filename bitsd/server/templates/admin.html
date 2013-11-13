@@ -12,10 +12,6 @@
 {% block attrs %}class="admin"{% end %}
 {% block subtitle %}Amministrazione{% end %}
 
-{% block preamble%}
-    {% module DynamicPage() %}
-{% end %}
-
 {% block body %}
 <div>{{ page_message }}</div>
 <form action="/admin" method="post">

@@ -24,7 +24,11 @@ class DebugMode(tornado.web.UIModule):
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
     def css_files(self):
-        return ['/static/default.css?v=1',]
+        css = ['/static/default.css?v=1',]
+        # FIXME daltonism workaround, should be implemented client-side
+        if 'blind' in self.request.path:
+            css.append('/static/dalton.css?v=1')
+        return css
 
     def html_head(self):
         return  """
@@ -40,19 +44,21 @@ class DynamicPage(tornado.web.UIModule):
     """Module providing JS for dynamic pages."""
     def javascript_files(self):
         return (
-            '/static/lib/Chart.min.js?v=0.2',
-            '/static/lib/sockjs.min.js?v=0.3',
-            '/static/lib/cookies.min.js?v=0.3.1'
+            '/static/module.js?v=1',
+            '/static/lib/raphael-min.js?v=1',
+            '/static/lib/g.raphael-min.js?v=1',
+            '/static/lib/g.line-min.js?v=1',
+            '/static/lib/json2.js?v=2',
+            '/static/lib/peppy.js?v=2',
+            '/static/debug.js?v=3',
+            '/static/html5.js?v=1',
+            '/static/browser_handler.js?v=3',
+            '/static/handler.js?v=2',
+            '/static/websocket.js?v=2',
+            '/static/index_main.js?v=5',
         )
 
-    def html_body(self):
-        return """<script>document.write('<script src="/static/lib/' + ('__proto__' in {{}} ? 'zepto.min.js?v=1.0' : 'jquery.min.js?v=1.10.2') + '"><\/script>')</script>
-<!--[if lt IE 9]><script src='/static/lib/html5shiv.min.js?v=3.7.0'></script><![endif]-->
-<!--[if lte IE 8]><script src='/static/lib/excanvas.js?v=1.0'></script><![endif]-->
-<script src='/static/lib/require.min.js?v=2.1.9' data-main='/static/{}' type='text/javascript'></script>""".format(self._main)
-
-    def render(self, main="other"):
-        self._main = main
+    def render(self):
         return ''
 
 

@@ -22,8 +22,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from . import engine
 
 #: Base class for declared models.
-from bitsd.common import to_unix_micro
-
 Base = declarative_base()
 
 
@@ -53,7 +51,7 @@ class TemperatureSample(Base):
     def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            "timestamp": to_unix_micro(self.timestamp),
+            "timestamp": self.timestamp.isoformat(' '),
             "value": self.value,
             "modifiedby": self.modified_by,
             "sensor": self.sensor
@@ -90,7 +88,7 @@ class Status(Base):
     def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            "timestamp": to_unix_micro(self.timestamp),
+            "timestamp": self.timestamp.isoformat(' '),
             "modifiedby": self.modified_by,
             "value": self.value
         }
@@ -120,7 +118,7 @@ class Message(Base):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
             'user': self.author.name,
-            'timestamp': to_unix_micro(self.timestamp),
+            'timestamp': self.timestamp.isoformat(' '),
             'value': self.message,
         }
         return {'message': data} if wrap else data

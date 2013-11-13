@@ -22,8 +22,6 @@ import tornado.auth
 
 from tornado.options import options
 
-from sockjs.tornado import SockJSConnection
-
 import bitsd.listener.notifier as notifier
 from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
@@ -66,7 +64,7 @@ def broadcast(message):
     """Broadcast given message to all clients. `message`
     may be either a string, which is directly broadcasted, or a dictionay
     that is JSON-serialized automagically before sending."""
-    StatusConnection.CLIENTS.broadcast(message)
+    StatusHandler.CLIENTS.broadcast(message)
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -89,6 +87,14 @@ class HomePageHandler(BaseHandler):
     @cache(86400*10)
     def get(self):
         self.render('templates/homepage.html')
+
+
+class DataPageHandler(BaseHandler):
+    """Get BITS data in JSON, machine parseable."""
+    def get(self):
+        with session_scope() as session:
+            self.write(query.get_latest_data(session))
+        self.finish()
 
 
 class LogPageHandler(BaseHandler):
@@ -168,17 +174,17 @@ class MarkdownPageHandler(BaseHandler):
             )
 
 
-class StatusConnection(SockJSConnection):
+class StatusHandler(tornado.websocket.WebSocketHandler):
     """Handler for POuL status via websocket"""
 
     CLIENTS = MessageNotifier('Status handler queue')
 
-    def on_open(self, info):
+    def open(self):
         """Register new handler with MessageNotifier."""
-        StatusConnection.CLIENTS.register(self)
+        StatusHandler.CLIENTS.register(self)
         with session_scope() as session:
             latest = query.get_latest_data(session)
-        self.send(latest)
+        self.write_message(latest)
         LOG.debug('Registered client')
 
     def on_message(self, message):
@@ -187,7 +193,7 @@ class StatusConnection(SockJSConnection):
 
     def on_close(self):
         """Unregister this handler when the connection is closed."""
-        StatusConnection.CLIENTS.unregister(self)
+        StatusHandler.CLIENTS.unregister(self)
         LOG.debug('Unregistered client.')
 
 

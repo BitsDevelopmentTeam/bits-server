@@ -6,7 +6,7 @@
 # GNU GPLv3. See COPYING at top level for more information.
 #
 
-"""Common elements  and utilities shared between all modules."""
+"""Common elements needed by all modules."""
 
 from tornado.netutil import bind_sockets, bind_unix_socket
 from tornado.options import options
@@ -46,8 +46,3 @@ def bind(server, port, usocket, address=None):
         sockets = bind_sockets(port, address=address)
         server.add_sockets(sockets)
         LOG.info('Started')
-
-
-def to_unix_micro(timestamp):
-    """Convert a datetime object into a unix milliseconds timestamp"""
-    return int(float(timestamp.strftime('%s.%f')) * 1000)
