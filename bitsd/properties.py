@@ -77,6 +77,12 @@ define("assets_path",
     group='Internal'
 )
 
+define("min_login_retry",
+    default=5,
+    help="Min interval in seconds between two login attempts",
+    group="Internal"
+)
+
 define("cookie_secret",
     default='Very random value, not like this',
     help='Secret used to generate securely hashed cookies',

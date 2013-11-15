@@ -26,7 +26,7 @@ import bitsd.listener.notifier as notifier
 from bitsd.persistence.engine import session_scope
 from bitsd.persistence.models import Status
 
-from .auth import verify
+from .auth import verify, DoSError
 from .presence import PresenceForecaster
 from .notifier import MessageNotifier
 
@@ -211,14 +211,26 @@ class LoginPageHandler(BaseHandler):
             )
 
     def post(self):
-        username = self.get_argument("username", None)
-        password = self.get_argument("password", None)
+        username = self.get_argument("username")
+        password = self.get_argument("password")
         next = self.get_argument("next", "/")
 
         with session_scope() as session:
-            authenticated = verify(session, username, password)
+            try:
+                verified = verify(session, username, password)
+            except DoSError as e:
+                LOG.warning("Too fast login attempt for user `{}`: {:.4}s".format(
+                    username,
+                    e.timeSinceLastAttempt
+                ))
+                self.render(
+                    'templates/login.html',
+                    next=next,
+                    message="Tentativo troppo veloce, riprova tra un attimo."
+                )
+                return
 
-        if authenticated:
+        if verified:
             self.set_secure_cookie(
                 self.USER_COOKIE_NAME,
                 username,

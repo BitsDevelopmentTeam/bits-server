@@ -167,6 +167,7 @@ class User(Base):
     userid = Column(Integer, primary_key=True)
     name = Column(String(length=256), unique=True, nullable=False)
     password = Column(String(length=512), nullable=False)
+    lastLoginAttempt = Column(DateTime)
 
     def __init__(self, name, pwhash):
         self.name = name
