@@ -223,6 +223,7 @@ class LoginPageHandler(BaseHandler):
                     username,
                     e.timeSinceLastAttempt
                 ))
+                self.log_offender_details()
                 self.render(
                     'templates/login.html',
                     next=next,
@@ -240,11 +241,17 @@ class LoginPageHandler(BaseHandler):
             self.redirect(next)
         else:
             LOG.warning("Wrong authentication for user `{}`".format(username))
+            self.log_offender_details()
             self.render(
                 'templates/login.html',
                 next=next,
                 message="Password/username sbagliati!"
             )
+
+    def log_offender_details(self):
+        userAgent = self.request.headers.get("User-Agent", '<unknown>')
+        remoteIp = self.request.remote_ip
+        LOG.warning("Request came from %s, user agent is '%s'", remoteIp, userAgent)
 
 
 class LogoutPageHandler(BaseHandler):
