@@ -43,6 +43,7 @@ def start():
         debug=options.developer_mode,
         static_path=options.assets_path,
         xsrf_cookies=True,
+        xheaders=True,
         cookie_secret=options.cookie_secret
     )
     server = tornado.httpserver.HTTPServer(application) #TODO other options
