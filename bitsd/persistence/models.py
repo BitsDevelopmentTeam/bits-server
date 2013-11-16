@@ -22,6 +22,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from . import engine
 
 #: Base class for declared models.
+from tornado.escape import xhtml_escape
+
 Base = declarative_base()
 
 
@@ -114,12 +116,14 @@ class Message(Base):
         self.userid = userid
         self.message = message
 
-    def jsondict(self, wrap=True):
-        """Return a JSON-serializable dictionary representing the object"""
+    def jsondict(self, wrap=True, escape=True):
+        """Return a JSON-serializable dictionary representing the object.
+
+        When escape is True, the HTML entities in the message body are escaped."""
         data = {
             'user': self.author.name,
             'timestamp': self.timestamp.isoformat(' '),
-            'value': self.message,
+            'value': xhtml_escape(self.message) if escape else self.message,
         }
         return {'message': data} if wrap else data
 
