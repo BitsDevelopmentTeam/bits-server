@@ -171,7 +171,6 @@ class User(Base):
     userid = Column(Integer, primary_key=True)
     name = Column(String(length=256), unique=True, nullable=False)
     password = Column(String(length=512), nullable=False)
-    lastLoginAttempt = Column(DateTime)
 
     def __init__(self, name, pwhash):
         self.name = name
@@ -179,3 +178,22 @@ class User(Base):
 
     def __str__(self):
         return '{self.name}: {self.password}'.format(self=self)
+
+
+class LoginAttempt(Base):
+    """Holds IP address, user and timestamp for failed login attempts.
+
+     Failed attempts are kept in order to prevent DoS and bruteforcing attacks."""
+    __tablename__ = 'LoginAttempt'
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
+
+    username = Column(String(length=256), primary_key=True)
+    ipaddress = Column(String(length=256), primary_key=True)
+    timestamp = Column(DateTime, nullable=False, default=datetime.now)
+
+    def __init__(self, username, ipaddress):
+        self.username = username
+        self.ipaddress = ipaddress
+
+    def __str__(self):
+        return 'Failed attempt for `{self.username}` from {self.ipaddress} at {self.timestamp}'.format(self=self)
