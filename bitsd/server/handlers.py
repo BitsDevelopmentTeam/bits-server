@@ -212,16 +212,14 @@ class LoginPageHandler(BaseHandler):
     def post(self):
         username = self.get_argument("username")
         password = self.get_argument("password")
+        ip_address = self.request.remote_ip
         next = self.get_argument("next", "/")
 
         with session_scope() as session:
             try:
-                verified = verify(session, username, password)
-            except DoSError as e:
-                LOG.warning("Too fast login attempt for user `{}`: {:.4}s".format(
-                    username,
-                    e.timeSinceLastAttempt
-                ))
+                verified = verify(session, username, password, ip_address)
+            except DoSError as error:
+                LOG.warning("DoS protection: {}".format(error))
                 self.log_offender_details()
                 self.render(
                     'templates/login.html',
@@ -239,7 +237,7 @@ class LoginPageHandler(BaseHandler):
             LOG.info("Authenticating user `{}`".format(username))
             self.redirect(next)
         else:
-            LOG.warning("Wrong authentication for user `{}`".format(username))
+            LOG.warning("Failed authentication for user `{}`".format(username))
             self.log_offender_details()
             self.render(
                 'templates/login.html',
