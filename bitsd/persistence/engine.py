@@ -60,7 +60,7 @@ def persist(session, data, flush=True):
     """Persist data to configured DB and return persisted object
     in a consistent state.
 
-    **Note:** will log what's being persisted, so don't put clear text password
+    **Note:** might log what's being persisted, so don't put clear text password
     into `__str__()`."""
     LOG.debug('Persisting data {}'.format(data))
     session.add(data)
