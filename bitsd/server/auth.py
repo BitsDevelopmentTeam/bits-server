@@ -9,11 +9,16 @@ from datetime import datetime, timedelta
 
 from passlib.hash import sha512_crypt as Hasher
 from tornado.options import options
+from recaptcha import RecaptchaClient
+
 from bitsd.persistence.query import get_user, get_last_login_attempt, log_last_login_attempt
 from bitsd.persistence.models import User
 from bitsd.persistence.engine import persist, delete
 
 from bitsd.common import LOG
+
+
+ReCaptcha = RecaptchaClient(options.recaptcha_privkey, options.recaptcha_pubkey)
 
 
 class DoSError(Exception):

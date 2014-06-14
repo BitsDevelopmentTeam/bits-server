@@ -13,6 +13,8 @@ Assorted Tornado UI widgets and mixins.
 import tornado.web
 from tornado.options import options
 
+from bitsd.server.auth import ReCaptcha
+
 
 class DebugMode(tornado.web.UIModule):
     """If in developer mode, then render a debug meta header
@@ -94,4 +96,13 @@ class PaginatorWidget(tornado.web.UIModule):
             offset=offset,
             limit=limit,
             count=count
+        )
+
+
+class ReCaptchaWidget(tornado.web.UIModule):
+    """"Displays a reCAPTCHA widget"""
+    def render(self, previous_attempt_incorrect):
+        return ReCaptcha.get_challenge_markup(
+            was_previous_solution_incorrect=previous_attempt_incorrect,
+            use_ssl=True
         )

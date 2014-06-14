@@ -95,6 +95,19 @@ define("cookie_max_age_days",
     group='Internal'
 )
 
+
+define("recaptcha_pubkey",
+   default="pubkey",
+   help="ReCaptcha public key",
+   group="Internal"
+)
+
+define("recaptcha_privkey",
+   default="privkey",
+   help="ReCaptcha private key",
+   group="Internal"
+)
+
 define("log_queries",
     default=False, help="Log DB queries.", group='Logging'
 )
