@@ -217,7 +217,7 @@ class LoginPageHandler(BaseHandler):
         next = self.get_argument("next", "/")
         captcha_challenge = self.get_argument("recaptcha_challenge_field", "")
         captcha_response = self.get_argument("recaptcha_response_field", "")
-        has_recapcha = captcha_challenge or captcha_response
+        has_recaptcha = captcha_challenge or captcha_response
 
         with session_scope() as session:
             try:
@@ -230,7 +230,7 @@ class LoginPageHandler(BaseHandler):
                     next=next,
                     message="Tentativi dal tuo IP over 9000...",
                     show_recaptcha=True,
-                    previous_attempt_incorrect=has_recapcha
+                    previous_attempt_incorrect=has_recaptcha
                 )
                 return
 
@@ -249,7 +249,7 @@ class LoginPageHandler(BaseHandler):
                 'templates/login.html',
                 next=next,
                 message="Password/username sbagliati!",
-                show_recaptcha=has_recapcha,
+                show_recaptcha=has_recaptcha,
                 # If we have a captcha at this point, it means we already failed once
                 previous_attempt_incorrect=True
             )
