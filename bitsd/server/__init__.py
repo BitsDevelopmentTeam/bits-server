@@ -17,12 +17,14 @@ from tornado.options import options
 
 from . import handlers
 from . import uimodules
+from . import auth
 
 from bitsd.common import LOG, bind
 
 
 def start():
     """Setup HTTP/WS server. **MUST** be called prior to any operation."""
+    auth.ReCaptcha.init()
     application = tornado.web.Application([
             # FIXME daltonism workaround, should be implemented client-side
             (r'/(?:|blind)', handlers.HomePageHandler),

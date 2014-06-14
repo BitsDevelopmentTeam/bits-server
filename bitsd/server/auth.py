@@ -18,7 +18,15 @@ from bitsd.persistence.engine import persist, delete
 from bitsd.common import LOG
 
 
-ReCaptcha = RecaptchaClient(options.recaptcha_privkey, options.recaptcha_pubkey)
+class ReCaptcha(object):
+    @classmethod
+    def init(cls):
+        """"Lazily create reCAPTCHA object. This MUST be called before using ReCaptcha.
+
+        Lazy init allows to load keys from config file."""
+        client = RecaptchaClient(options.recaptcha_privkey, options.recaptcha_pubkey)
+        cls.is_solution_correct = client.is_solution_correct
+        cls.get_challenge_markup = client.get_challenge_markup
 
 
 class DoSError(Exception):
