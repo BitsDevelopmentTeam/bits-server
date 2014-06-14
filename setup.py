@@ -23,7 +23,8 @@ setup(
         'markdown',
         'futures',
         'pycares',
-        'passlib'
+        'passlib',
+        'recaptcha'
     ],
     packages=[
         'bitsd',
