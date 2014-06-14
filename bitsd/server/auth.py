@@ -19,6 +19,9 @@ from bitsd.common import LOG
 
 
 class ReCaptcha(object):
+    is_solution_correct = None
+    get_challenge_markup = None
+
     @classmethod
     def init(cls):
         """"Lazily create reCAPTCHA object. This MUST be called before using ReCaptcha.
