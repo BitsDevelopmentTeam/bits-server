@@ -24,7 +24,7 @@ class ReCaptcha(object):
         """"Lazily create reCAPTCHA object. This MUST be called before using ReCaptcha.
 
         Lazy init allows to load keys from config file."""
-        client = RecaptchaClient(options.recaptcha_privkey, options.recaptcha_pubkey)
+        client = RecaptchaClient(options.recaptcha_privkey, options.recaptcha_pubkey, recaptcha_options={"theme": "white"})
         cls.is_solution_correct = client.is_solution_correct
         cls.get_challenge_markup = client.get_challenge_markup
 
