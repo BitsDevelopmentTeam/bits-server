@@ -206,27 +206,31 @@ class LoginPageHandler(BaseHandler):
             self.render(
                 'templates/login.html',
                 next=next,
-                message=None
+                message=None,
+                show_recaptcha=False
             )
 
     def post(self):
         username = self.get_argument("username")
         password = self.get_argument("password")
+        ip_address = self.request.remote_ip
         next = self.get_argument("next", "/")
+        captcha_challenge = self.get_argument("recaptcha_challenge_field", "")
+        captcha_response = self.get_argument("recaptcha_response_field", "")
+        has_recaptcha = captcha_challenge or captcha_response
 
         with session_scope() as session:
             try:
-                verified = verify(session, username, password)
-            except DoSError as e:
-                LOG.warning("Too fast login attempt for user `{}`: {:.4}s".format(
-                    username,
-                    e.timeSinceLastAttempt
-                ))
+                verified = verify(session, username, password, ip_address, has_recaptcha, captcha_challenge, captcha_response)
+            except DoSError as error:
+                LOG.warning("DoS protection: {}".format(error))
                 self.log_offender_details()
                 self.render(
                     'templates/login.html',
                     next=next,
-                    message="Tentativo troppo veloce, riprova tra un attimo."
+                    message="Tentativi dal tuo IP over 9000...",
+                    show_recaptcha=True,
+                    previous_attempt_incorrect=has_recaptcha
                 )
                 return
 
@@ -239,12 +243,15 @@ class LoginPageHandler(BaseHandler):
             LOG.info("Authenticating user `{}`".format(username))
             self.redirect(next)
         else:
-            LOG.warning("Wrong authentication for user `{}`".format(username))
+            LOG.warning("Failed authentication for user `{}`".format(username))
             self.log_offender_details()
             self.render(
                 'templates/login.html',
                 next=next,
-                message="Password/username sbagliati!"
+                message="Password/username sbagliati!",
+                show_recaptcha=has_recaptcha,
+                # If we have a captcha at this point, it means we already failed once
+                previous_attempt_incorrect=True
             )
 
     def log_offender_details(self):

@@ -22,6 +22,11 @@
         <label for="password">Password:</label>
         <input id="password" type="password" name="password" value="">
     </p>
+    {% if show_recaptcha %}
+        <div id="recaptcha-wrapper">
+            {% module ReCaptchaWidget(previous_attempt_incorrect) %}
+        </div>
+    {% end %}
     {% module xsrf_form_html() %}
     <p><input type="submit" value="Login"></p>
     <input type="hidden" name="next" value="{{ next }}">

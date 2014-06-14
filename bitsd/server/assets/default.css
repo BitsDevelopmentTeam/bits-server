@@ -210,3 +210,8 @@ nav#paginator ul li {
 #bitsdesc #languages li.last:after {
   content: "";
 }
+
+#recaptcha-wrapper {
+    width: 300px;
+    margin: 0 auto;
+}

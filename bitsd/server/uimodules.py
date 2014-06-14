@@ -13,6 +13,8 @@ Assorted Tornado UI widgets and mixins.
 import tornado.web
 from tornado.options import options
 
+from bitsd.server.auth import ReCaptcha
+
 
 class DebugMode(tornado.web.UIModule):
     """If in developer mode, then render a debug meta header
@@ -24,7 +26,7 @@ class DebugMode(tornado.web.UIModule):
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
     def css_files(self):
-        css = ['/static/default.css?v=1',]
+        css = ['/static/default.css?v=2',]
         # FIXME daltonism workaround, should be implemented client-side
         if 'blind' in self.request.path:
             css.append('/static/dalton.css?v=1')
@@ -71,7 +73,7 @@ class PresenceWidget(tornado.web.UIModule):
     def render(self):
         #TODO samples = get_latest_statuses(5000)
         #TODO + TODO gray
-        return '<img src="bits_presence.png" height=380 width=380 alt="Grafico delle presenze" id="presence_graph"/>'
+        return '<img src="bits_presence.png" height="380" width="380" alt="Grafico delle presenze" id="presence_graph"/>'
 
 
 class PaginatorWidget(tornado.web.UIModule):
@@ -94,4 +96,13 @@ class PaginatorWidget(tornado.web.UIModule):
             offset=offset,
             limit=limit,
             count=count
+        )
+
+
+class ReCaptchaWidget(tornado.web.UIModule):
+    """"Displays a reCAPTCHA widget"""
+    def render(self, previous_attempt_incorrect):
+        return ReCaptcha.get_challenge_markup(
+            was_previous_solution_incorrect=previous_attempt_incorrect,
+            use_ssl=True
         )
