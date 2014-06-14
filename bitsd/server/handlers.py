@@ -221,7 +221,7 @@ class LoginPageHandler(BaseHandler):
 
         with session_scope() as session:
             try:
-                verified = verify(session, username, password, ip_address, captcha_challenge, captcha_response)
+                verified = verify(session, username, password, ip_address, has_recaptcha, captcha_challenge, captcha_response)
             except DoSError as error:
                 LOG.warning("DoS protection: {}".format(error))
                 self.log_offender_details()

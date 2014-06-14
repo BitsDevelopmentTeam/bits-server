@@ -38,7 +38,7 @@ class DoSError(Exception):
     pass
 
 
-def verify(session, username, supplied_password, ip_address, recaptcha_challenge, recaptcha_response):
+def verify(session, username, supplied_password, ip_address, has_captcha, recaptcha_challenge, recaptcha_response):
     """Verify user credentials.
 
     If the username exists, then the supplied password is hashed and
@@ -57,15 +57,21 @@ def verify(session, username, supplied_password, ip_address, recaptcha_challenge
 
     A DoS protection is necessary because password hashing is an expensive operation.
     """
-    # If we have a captcha and it was not solved correctly, nope
-    if recaptcha_challenge or recaptcha_response:
-        if not ReCaptcha.is_solution_correct(recaptcha_response, recaptcha_challenge, ip_address):
+    if has_captcha:
+        solved_captcha = ReCaptcha.is_solution_correct(recaptcha_response, recaptcha_challenge, ip_address)
+        # Exit immediately if wrong answer
+        if not solved_captcha:
             return False
+    else:
+        solved_captcha = False
 
     # Save "now" so that the two timestamp checks are referred to the same instant
     now = datetime.now()
 
     def detect_dos(attempt, timeout):
+        if solved_captcha:
+            return False
+
         # Otherwise, check timing
         if attempt is not None:
             too_quick = (now - attempt.timestamp) < timeout
