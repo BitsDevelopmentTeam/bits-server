@@ -41,7 +41,11 @@ def verify(session, username, supplied_password, ip_address):
 
     A DoS protection is necessary because password hashing is an expensive operation.
     """
-    def detect_dos(attempt, now, timeout):
+    # Save "now" so that the two timestamp checks are referred to the same instant
+    now = datetime.now()
+
+    def detect_dos(attempt, timeout):
+        # Otherwise, check timing
         if attempt is not None:
             too_quick = (now - attempt.timestamp) < timeout
             if too_quick:
@@ -52,15 +56,13 @@ def verify(session, username, supplied_password, ip_address):
                 session.delete(attempt)
         return False
 
-    # Save "now" so that the two timestamp checks are referred to the same instant
-    now = datetime.now()
     last_attempt_for_ip = get_last_login_attempt(session, ip_address)
     last_attempt_for_ip_and_username = get_last_login_attempt(session, ip_address, username)
 
-    if detect_dos(last_attempt_for_ip, now, timedelta(seconds=1)):
+    if detect_dos(last_attempt_for_ip, timedelta(seconds=1)):
         raise DoSError("Too frequent requests from {}".format(ip_address))
 
-    if detect_dos(last_attempt_for_ip_and_username, now, timedelta(seconds=options.min_login_retry)):
+    if detect_dos(last_attempt_for_ip_and_username, timedelta(seconds=options.min_login_retry)):
         raise DoSError("Too frequent attempts from {} for username `{}`".format(ip_address, username))
 
     user = get_user(session, username)
