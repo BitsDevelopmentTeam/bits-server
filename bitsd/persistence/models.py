@@ -187,7 +187,7 @@ class LoginAttempt(Base):
     __tablename__ = 'LoginAttempt'
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
-    username = Column(String(length=256), nullable=False)
+    username = Column(String(length=256), primary_key=True)
     ipaddress = Column(String(length=64), nullable=False)
     timestamp = Column(DateTime, nullable=False, default=datetime.now)
 
