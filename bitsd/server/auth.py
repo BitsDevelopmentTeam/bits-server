@@ -31,7 +31,7 @@ class ReCaptcha(object):
 
 class DoSError(Exception):
     """DoS error: raise by verify() if the user is trying
-    to authenticated too fast"""
+    to authenticate too fast"""
     pass
 
 
