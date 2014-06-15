@@ -14,7 +14,7 @@ Models for persisted data.
 import re
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, ForeignKey, UniqueConstraint, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Float, DateTime, Enum, Text, BigInteger, String, UnicodeText
 from sqlalchemy.ext.declarative import declarative_base
@@ -169,7 +169,7 @@ class User(Base):
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     userid = Column(Integer, primary_key=True)
-    name = Column(String(length=256), unique=True, nullable=False)
+    name = Column(String(length=256), unique=True, nullable=False, index=True)
     password = Column(String(length=512), nullable=False)
 
     def __init__(self, name, pwhash):
@@ -187,11 +187,13 @@ class LoginAttempt(Base):
     __tablename__ = 'LoginAttempt'
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
-    username = Column(String(length=256), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    username = Column(String(length=256), nullable=True)
     ipaddress = Column(String(length=64), nullable=False)
     timestamp = Column(DateTime, nullable=False, default=datetime.now)
 
     UniqueConstraint('username', 'ipaddress', name='user_ip_key')
+    Index('user_IP_login_attempt_idx', username, ipaddress, unique=True)
 
     def __init__(self, username, ipaddress):
         self.username = username
