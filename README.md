@@ -172,6 +172,7 @@ Hard dependencies are:
 * **SQLAlchemy > 0.7** ORM and DB abstraction layer.
 * **markdown** for rendering wiki pages.
 * **passlib** a great abstraction over `crypt` for strong password hashing.
+* **recaptcha** reCAPTCHA client library for protecting login form.
 
 The following are not strictly necessary, but will enhance performance:
 
