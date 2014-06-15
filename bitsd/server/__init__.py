@@ -45,9 +45,8 @@ def start():
         debug=options.developer_mode,
         static_path=options.assets_path,
         xsrf_cookies=True,
-        xheaders=True,
         cookie_secret=options.cookie_secret
     )
-    server = tornado.httpserver.HTTPServer(application) #TODO other options
+    server = tornado.httpserver.HTTPServer(application, xheaders=options.reverse_proxied)
     LOG.info('Starting HTTP/WS server...')
     bind(server, options.web_port, options.web_usocket)

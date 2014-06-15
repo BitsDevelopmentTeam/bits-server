@@ -46,6 +46,12 @@ define("control_remote_address",
     group="Networking"
 )
 
+define("reverse_proxied",
+    default=False,
+    help="Get remote IP address via X- headers (use when reverse proxied).",
+    group="Networking"
+)
+
 define("db_uri",
     default="sqlite:///test.db",
     help="DB URI, in the form `dialect:///username:password@host`",
