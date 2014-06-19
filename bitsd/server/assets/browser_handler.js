@@ -195,7 +195,7 @@ module("browser_handler", function (require, exports) {
         if (lastTimestamp !== tempInt.timestamp) {
             tempTrend.innerHTML = trend.newValue(tempInt.value);
             if (!first) {
-                tempGraph.addTemp(tempInt);
+                //TODO tempGraph.addTemp(tempInt);
             }
         }
         temp.setAttribute("class", tempInt.value > 20 ? "high" : "low");
@@ -230,3 +230,4 @@ module("browser_handler", function (require, exports) {
     exports.tempInt = tempIntHandler;
     exports.tempIntHist = tempIntHistHandler;
 });
+
