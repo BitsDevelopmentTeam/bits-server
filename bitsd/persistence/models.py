@@ -169,7 +169,7 @@ class User(Base):
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     userid = Column(Integer, primary_key=True)
-    name = Column(String(length=256), unique=True, nullable=False, index=True)
+    name = Column(String(length=256), unique=True, nullable=False)
     password = Column(String(length=512), nullable=False)
 
     def __init__(self, name, pwhash):
