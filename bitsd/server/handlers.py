@@ -53,8 +53,8 @@ def cache(seconds):
     """
     def set_cacheable(get_function):
         def wrapper(self, *args, **kwargs):
-            self.set_header("Expires", datetime.datetime.utcnow() +
-                datetime.timedelta(seconds=seconds))
+            self.set_header("Expires", datetime.utcnow() +
+                timedelta(seconds=seconds))
             self.set_header("Cache-Control", "max-age=" + str(seconds))
             return get_function(self, *args, **kwargs)
         return wrapper
