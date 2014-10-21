@@ -13,7 +13,7 @@ HTTP requests handlers.
 import json
 
 import markdown
-import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import distinct
 from sqlalchemy.exc import IntegrityError
 
@@ -362,15 +362,23 @@ class MessagePageHandler(BaseHandler):
 
 class RTCHandler(BaseHandler):
     def get(self):
-        now = datetime.datetime.now()
+        now = datetime.now()
         self.write(now.strftime("%Y-%m-%d %H:%M:%S"))
         self.finish()
 
 
 class MACUpdateHandler(BaseHandler):
     ROSTER = []
+    LAST_ATTEMPT = datetime.now()
 
     def post(self):
+        now = datetime.now()
+        if (now - MACUpdateHandler.LAST_ATTEMPT) < timedelta(seconds=options.mac_update_interval):
+            LOG.warning("Too frequent attempts to update, remote IP address is {}".format(self.request.remote_ip))
+            raise HTTPError(403, "Too frequent")
+        else:
+            MACUpdateHandler.LAST_ATTEMPT = now
+
         try:
             password = self.get_argument("password")
             macs = self.get_argument("macs")

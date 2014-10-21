@@ -153,3 +153,9 @@ define("mac_update_password",
    help="Authentication token for live presence updates",
    group="Networking"
 )
+
+define("mac_update_interval",
+   default=0,
+   help="Minimum number of seconds between two successive MAC updates.",
+   group="Networking"
+)
