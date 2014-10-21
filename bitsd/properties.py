@@ -147,3 +147,9 @@ define("usocket_mode",
     help="Permissions for chmod on the unix sockets",
     group="Networking"
 )
+
+define("mac_update_password",
+   default="default",
+   help="Authentication token for live presence updates",
+   group="Networking"
+)

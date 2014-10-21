@@ -10,12 +10,15 @@
 """
 HTTP requests handlers.
 """
+import json
 
 import markdown
 import datetime
+from sqlalchemy import distinct
 from sqlalchemy.exc import IntegrityError
 
 import tornado.web
+from tornado.web import MissingArgumentError, HTTPError, RequestHandler
 import tornado.websocket
 import tornado.auth
 
@@ -23,7 +26,7 @@ from tornado.options import options
 
 import bitsd.listener.notifier as notifier
 from bitsd.persistence.engine import session_scope
-from bitsd.persistence.models import Status
+from bitsd.persistence.models import Status, User, MACToUser
 
 from .auth import verify, DoSError
 from .presence import PresenceForecaster
@@ -31,7 +34,7 @@ from .notifier import MessageNotifier
 
 import bitsd.persistence.query as query
 
-from bitsd.common import LOG
+from bitsd.common import LOG, secure_compare
 
 
 def cache(seconds):
@@ -357,3 +360,36 @@ class RTCHandler(BaseHandler):
         self.write(now.strftime("%Y-%m-%d %H:%M:%S"))
         self.finish()
 
+
+class MACUpdateHandler(BaseHandler):
+    ROSTER = []
+
+    def post(self):
+        try:
+            password = self.get_argument("password")
+            macs = self.get_argument("macs")
+        except MissingArgumentError:
+            LOG.warning("MAC update received malformed parameters: {}", self.request.arguments)
+            raise HTTPError(400, "Bad parameters list")
+
+        if not secure_compare(password, options.mac_update_password):
+            LOG.warning("Client provided wrong password for MAC update!")
+            raise HTTPError(403, "Wrong password")
+
+        LOG.info("Authorized request to update list of checked-in users.")
+
+        macs = json.loads(macs)
+
+        with session_scope() as session:
+            names = session.\
+                query(distinct(User.name)).\
+                filter(User.userid == MACToUser.userid).\
+                filter(MACToUser.mac_hash .in_ (macs)).\
+                all()
+
+        MACUpdateHandler.ROSTER = [n[0] for n in names]
+        LOG.info("Updated list of checked in users: {}".format(MACUpdateHandler.ROSTER))
+
+    def check_xsrf_cookie(self):
+        # Since this is an API call, we need to disable anti-XSRF protection
+        pass
