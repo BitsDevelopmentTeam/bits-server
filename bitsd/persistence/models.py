@@ -193,7 +193,6 @@ class LoginAttempt(Base):
     timestamp = Column(DateTime, nullable=False, default=datetime.now)
 
     UniqueConstraint('username', 'ipaddress', name='user_ip_key')
-    Index('user_IP_login_attempt_idx', username, ipaddress, unique=True)
 
     def __init__(self, username, ipaddress):
         self.username = username
