@@ -17,7 +17,6 @@ import datetime
 from sqlalchemy import distinct
 from sqlalchemy.exc import IntegrityError
 
-import tornado.web
 from tornado.web import MissingArgumentError, HTTPError, RequestHandler
 import tornado.websocket
 import tornado.auth
@@ -69,7 +68,7 @@ def broadcast(message):
     StatusHandler.CLIENTS.broadcast(message)
 
 
-class BaseHandler(tornado.web.RequestHandler):
+class BaseHandler(RequestHandler):
     """Base requests handler"""
     USER_COOKIE_NAME = "usertoken"
 
