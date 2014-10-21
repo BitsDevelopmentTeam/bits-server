@@ -378,7 +378,7 @@ class MACUpdateHandler(BaseHandler):
             password = self.get_argument("password")
             macs = self.get_argument("macs")
         except MissingArgumentError:
-            LOG.warning("MAC update received malformed parameters: {}", self.request.arguments)
+            LOG.warning("MAC update received malformed parameters: %s", self.request.arguments)
             raise HTTPError(400, "Bad parameters list")
 
         if not secure_compare(password, options.mac_update_password):
@@ -386,12 +386,12 @@ class MACUpdateHandler(BaseHandler):
             raise HTTPError(403, "Wrong password")
 
         if (now - MACUpdateHandler.LAST_ATTEMPT) < timedelta(seconds=options.mac_update_interval):
-            LOG.warning("Too frequent attempts to update, remote IP address is {}".format(self.request.remote_ip))
+            LOG.warning("Too frequent attempts to update, remote IP address is %s", self.request.remote_ip)
             raise HTTPError(403, "Too frequent")
         else:
             MACUpdateHandler.LAST_ATTEMPT = now
 
-        LOG.info("Authorized request to update list of checked-in users from IP address {}".format(self.request.remote_ip))
+        LOG.info("Authorized request to update list of checked-in users from IP address %s", self.request.remote_ip)
 
         macs = json.loads(macs)
 
@@ -403,7 +403,7 @@ class MACUpdateHandler(BaseHandler):
                 all()
 
         MACUpdateHandler.ROSTER = [n[0] for n in names]
-        LOG.debug("Updated list of checked in users: {}".format(MACUpdateHandler.ROSTER))
+        LOG.debug("Updated list of checked in users: %s", MACUpdateHandler.ROSTER)
 
     def check_xsrf_cookie(self):
         # Since this is an API call, we need to disable anti-XSRF protection
