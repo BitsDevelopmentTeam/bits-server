@@ -15,7 +15,7 @@ import re
 from datetime import datetime
 
 from sqlalchemy import Column, ForeignKey, UniqueConstraint, Index
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Float, DateTime, Enum, Text, BigInteger, String, UnicodeText
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -201,3 +201,20 @@ class LoginAttempt(Base):
 
     def __str__(self):
         return 'Failed attempt for `{self.username}` from {self.ipaddress} at {self.timestamp}'.format(self=self)
+
+
+class MACToUser(Base):
+    __tablename__ = 'MACToUser'
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
+
+    userid = Column(Integer, ForeignKey("User.userid"), primary_key=True)
+    mac_hash = Column(String(length=64), primary_key=True, unique=True)
+
+    user = relationship("User", backref=backref("macs", order_by=userid))
+
+    def __init__(self, userid, mac_hash):
+        self.userid = userid
+        self.mac_hash = mac_hash
+
+    def __str__(self):
+        return 'User with ID {self.userid} has MAC with hash {self.mac_hash}'.format(self=self)
