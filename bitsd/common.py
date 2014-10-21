@@ -32,17 +32,17 @@ def bind(server, port, usocket, address=None):
 
     # If we have a unix socket path
     if usocket:
-        LOG.info('Starting on unix socket `{}`'.format(usocket))
+        LOG.info('Starting on unix socket %r', usocket)
         try:
             socket = bind_unix_socket(usocket, mode=options.usocket_mode)
             os.chown(usocket, options.usocket_uid, options.usocket_gid)
         except OSError as error:
-            LOG.error('Cannot create unix socket: {}'.format(error))
+            LOG.error('Cannot create unix socket: %r', error)
         else:
             server.add_socket(socket)
             LOG.info('Started')
     else:
-        LOG.info('Starting on port {}'.format(port))
+        LOG.info('Starting on port %d', port)
         sockets = bind_sockets(port, address=address)
         server.add_sockets(sockets)
         LOG.info('Started')

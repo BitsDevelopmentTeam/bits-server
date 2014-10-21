@@ -20,12 +20,12 @@ class MessageNotifier(object):
 
     def register(self, client):
         """Add a new handler to the clients list."""
-        LOG.debug('Adding client {} to {}'.format(client, self.name))
+        LOG.debug('Adding client %r to %r', client, self.name)
         self.clients.append(client)
 
     def unregister(self, client):
         """Remove the handler from the clients list."""
-        LOG.debug('Removing client {} from {}'.format(client, self.name))
+        LOG.debug('Removing client %r from %r', client, self.name)
         self.clients.remove(client)
 
     def broadcast(self, message):

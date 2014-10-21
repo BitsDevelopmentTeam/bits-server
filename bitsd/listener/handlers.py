@@ -23,12 +23,12 @@ from .hooks import *
 
 def send(string):
     if RemoteListener.STREAM is None:
-        LOG.error("No Fonera connected! Not sending {!r}".format(string))
+        LOG.error("No Fonera connected! Not sending %r", string)
         return
     try:
         RemoteListener.STREAM.write(string)
     except StreamClosedError as error:
-        LOG.error('Could not push message to Fonera! {}'.format(error))
+        LOG.error('Could not push message to Fonera! %s', error)
 
 
 class RemoteListener(tornado.tcpserver.TCPServer):
@@ -89,10 +89,10 @@ class RemoteListener(tornado.tcpserver.TCPServer):
         LOG.info("New connection from Fonera.")
         if address[0] != options.control_remote_address:
             LOG.error(
-                "Connection from `{}`, expected from `{}`. Ignoring.".format(
+                "Connection from `%s`, expected from `%s`. Ignoring.",
                     address,
                     options.control_remote_address
-            ))
+            )
             return
         if RemoteListener.STREAM is not None:
             LOG.warning("Another connection was open, closing the previous one.")
@@ -115,14 +115,14 @@ class RemoteListener(tornado.tcpserver.TCPServer):
             try:
                 handler = RemoteListener.ACTIONS[action]
             except KeyError:
-                LOG.warning('Remote received unknown command {}'.format(args))
+                LOG.warning('Remote received unknown command `%s`', args)
             else:
                 # Execute handler (index 0) with args (index 1->end)
                 try:
                     handler(*args[1:])
                 except TypeError:
                     LOG.error(
-                        'Command {} called with wrong number of args'.format(action)
+                        'Command `%s` called with wrong number of args', action
                     )
         else:
             LOG.warning('Remote received empty command.')

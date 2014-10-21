@@ -38,7 +38,7 @@ __all__ = [
 
 def handle_temperature_command(sensorid, value):
     """Receives and log data received from remote sensor."""
-    LOG.info('Received temperature: sensorid={}, value={}'.format(sensorid, value))
+    LOG.info('Received temperature: sensorid=%r, value=%r', sensorid, value)
     try:
         sensorid = int(sensorid)
         value = float(value)
@@ -55,14 +55,14 @@ def handle_status_command(status):
     """Update status.
     Will reject two identical and consecutive updates
     (prevents opening when already open and vice-versa)."""
-    LOG.info('Received status: {}'.format(status))
+    LOG.info('Received status: %r', status)
     try:
         status = int(status)
     except ValueError:
         LOG.error('Wrong type for parameters in temperature command')
         return
     if status not in (0, 1):
-        LOG.error('Non existent status {}, ignoring.'.format(status))
+        LOG.error('Non existent status %r, ignoring.', status)
         return
 
     textstatus = Status.OPEN if status == 1 else Status.CLOSED
@@ -78,7 +78,7 @@ def handle_status_command(status):
 
 def handle_enter_command(userid):
     """Handles signal triggered when a new user enters."""
-    LOG.info('Received enter command: id={}'.format(userid))
+    LOG.info('Received enter command: id=%r', userid)
     try:
         userid = int(userid)
     except ValueError:
@@ -90,7 +90,7 @@ def handle_enter_command(userid):
 
 def handle_leave_command(userid):
     """Handles signal triggered when a known user leaves."""
-    LOG.info('Received leave command: id={}'.format(userid))
+    LOG.info('Received leave command: id=%r', userid)
     try:
         userid = int(userid)
     except ValueError:
@@ -102,11 +102,11 @@ def handle_leave_command(userid):
 
 def handle_message_command(message):
     """Handles message broadcast requests."""
-    LOG.info('Received message command: message={!r}'.format(message))
+    LOG.info('Received message command: message=%r', message)
     try:
         decodedmex = base64.b64decode(message)
     except TypeError:
-        LOG.error('Received message is not valid base64: {!r}'.format(message))
+        LOG.error('Received message is not valid base64: %r', message)
     else:
         text = decodedmex.decode('utf8')
         #FIXME maybe get author ID from message?
@@ -114,7 +114,7 @@ def handle_message_command(message):
         with session_scope() as session:
             user = query.get_user(session, user)
             if not user:
-                LOG.error("Non-existent user {}, not logging message.".format(user))
+                LOG.error("Non-existent user %r, not logging message.", user)
                 return
             message = query.log_message(session, user, text)
             broadcast(message.jsondict())
@@ -123,7 +123,7 @@ def handle_message_command(message):
 
 def handle_sound_command(soundid):
     """Handles requests to play a sound."""
-    LOG.info('Received sound command: id={}'.format(soundid))
+    LOG.info('Received sound command: id=%r', soundid)
     try:
         soundid = int(soundid)
     except ValueError:

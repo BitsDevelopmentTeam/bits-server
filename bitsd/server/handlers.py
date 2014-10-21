@@ -223,7 +223,7 @@ class LoginPageHandler(BaseHandler):
             try:
                 verified = verify(session, username, password, ip_address, has_recaptcha, captcha_challenge, captcha_response)
             except DoSError as error:
-                LOG.warning("DoS protection: {}".format(error))
+                LOG.warning("DoS protection: %s", error)
                 self.log_offender_details()
                 self.render(
                     'templates/login.html',
@@ -240,10 +240,10 @@ class LoginPageHandler(BaseHandler):
                 username,
                 expires_days=options.cookie_max_age_days
             )
-            LOG.info("Authenticating user `{}`".format(username))
+            LOG.info("Authenticating user %r", username)
             self.redirect(next)
         else:
-            LOG.warning("Failed authentication for user `{}`".format(username))
+            LOG.warning("Failed authentication for user %r", username)
             self.log_offender_details()
             self.render(
                 'templates/login.html',
@@ -295,8 +295,7 @@ class AdminPageHandler(BaseHandler):
             else:
                 textstatus = Status.OPEN if curstatus.value == Status.CLOSED else Status.CLOSED
 
-            LOG.info('Change of BITS to status={}'.format(textstatus) +
-                     ' from web interface.')
+            LOG.info('Change of BITS to status=%r from web interface.', textstatus)
             message = ''
             try:
                 status = query.log_status(session, textstatus, 'web')
@@ -334,7 +333,7 @@ class MessagePageHandler(BaseHandler):
         text = self.get_argument('msgtext')
         username = self.get_current_user()
 
-        LOG.info("{} sent message {!r} from web".format(username, text))
+        LOG.info("%r sent message %r from web", username, text)
 
         with session_scope() as session:
             user = query.get_user(session, username)

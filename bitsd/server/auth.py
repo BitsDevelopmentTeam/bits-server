@@ -87,15 +87,15 @@ def verify(session, username, supplied_password, ip_address, has_captcha, recapt
     last_attempt_for_ip_and_username = get_last_login_attempt(session, ip_address, username)
 
     if detect_dos(last_attempt_for_ip, timedelta(seconds=1)):
-        raise DoSError("Too frequent requests from {}".format(ip_address))
+        raise DoSError("Too frequent requests from %s", ip_address)
 
     if detect_dos(last_attempt_for_ip_and_username, timedelta(seconds=options.min_login_retry)):
-        raise DoSError("Too frequent attempts from {} for username `{}`".format(ip_address, username))
+        raise DoSError("Too frequent attempts from %s for username %r", ip_address, username)
 
     user = get_user(session, username)
 
     if user is None:
-        LOG.warn("Failed attempt for non existent user `{}`".format(username))
+        LOG.warn("Failed attempt for non existent user %r", username)
         # Calculate hash anyway (see docs for the explanation)
         Hasher.encrypt(supplied_password)
         log_last_login_attempt(session, ip_address, username)
