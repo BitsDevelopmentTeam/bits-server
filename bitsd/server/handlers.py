@@ -390,7 +390,7 @@ class MACUpdateHandler(BaseHandler):
             LOG.warning("Client provided wrong password for MAC update!")
             raise HTTPError(403, "Wrong password")
 
-        LOG.info("Authorized request to update list of checked-in users.")
+        LOG.info("Authorized request to update list of checked-in users from IP address {}".format(self.request.remote_ip))
 
         macs = json.loads(macs)
 
