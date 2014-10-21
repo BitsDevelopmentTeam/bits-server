@@ -278,8 +278,12 @@ class AdminPageHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         """Display the admin page."""
-        self.render('templates/admin.html',
-                    page_message='Very secret information here')
+        LOG.error(MACUpdateHandler.ROSTER)
+        self.render(
+            'templates/admin.html',
+            page_message='Very secret information here',
+            roster=MACUpdateHandler.ROSTER
+        )
 
     @tornado.web.authenticated
     def post(self):
@@ -311,7 +315,11 @@ class AdminPageHandler(BaseHandler):
                 message = "Errore: modifica troppo veloce!"
                 raise
             finally:
-                self.render('templates/admin.html', page_message=message)
+                self.render(
+                    'templates/admin.html',
+                    page_message=message,
+                    roster=MACUpdateHandler.ROSTER
+                )
 
 
 class PresenceForecastHandler(BaseHandler):

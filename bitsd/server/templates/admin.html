@@ -21,6 +21,18 @@
     <input type="submit" value="Cambia stato sede">
     </p>
 </form>
+<div id="roster">
+    <h2>Utenti in sede</h2>
+    {% if roster %}
+    <ul>
+        {% for name in roster %}
+        <li>{{name}}</li>
+        {% end %}
+    </ul>
+    {% else %}
+    <p>Nessuno...</p>
+    {% end %}
+</div>
 <ul class="link">
     <li><a id="logout" href="/logout">Logout</a></li>
     <li><a id="messages" href="/message">Invia messaggio</a></li>
