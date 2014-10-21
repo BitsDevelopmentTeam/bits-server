@@ -207,8 +207,8 @@ class MACToUser(Base):
     __tablename__ = 'MACToUser'
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
-    userid = Column(Integer, ForeignKey("User.userid"), primary_key=True)
-    mac_hash = Column(String(length=64), primary_key=True, unique=True)
+    userid = Column(Integer, ForeignKey("User.userid"))
+    mac_hash = Column(String(length=64), primary_key=True)
 
     user = relationship("User", backref=backref("macs", order_by=userid))
 
