@@ -394,7 +394,7 @@ class MACUpdateHandler(BaseHandler):
                 all()
 
         MACUpdateHandler.ROSTER = [n[0] for n in names]
-        LOG.info("Updated list of checked in users: {}".format(MACUpdateHandler.ROSTER))
+        LOG.debug("Updated list of checked in users: {}".format(MACUpdateHandler.ROSTER))
 
     def check_xsrf_cookie(self):
         # Since this is an API call, we need to disable anti-XSRF protection
