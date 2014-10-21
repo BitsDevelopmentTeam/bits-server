@@ -373,11 +373,6 @@ class MACUpdateHandler(BaseHandler):
 
     def post(self):
         now = datetime.now()
-        if (now - MACUpdateHandler.LAST_ATTEMPT) < timedelta(seconds=options.mac_update_interval):
-            LOG.warning("Too frequent attempts to update, remote IP address is {}".format(self.request.remote_ip))
-            raise HTTPError(403, "Too frequent")
-        else:
-            MACUpdateHandler.LAST_ATTEMPT = now
 
         try:
             password = self.get_argument("password")
@@ -389,6 +384,12 @@ class MACUpdateHandler(BaseHandler):
         if not secure_compare(password, options.mac_update_password):
             LOG.warning("Client provided wrong password for MAC update!")
             raise HTTPError(403, "Wrong password")
+
+        if (now - MACUpdateHandler.LAST_ATTEMPT) < timedelta(seconds=options.mac_update_interval):
+            LOG.warning("Too frequent attempts to update, remote IP address is {}".format(self.request.remote_ip))
+            raise HTTPError(403, "Too frequent")
+        else:
+            MACUpdateHandler.LAST_ATTEMPT = now
 
         LOG.info("Authorized request to update list of checked-in users from IP address {}".format(self.request.remote_ip))
 
