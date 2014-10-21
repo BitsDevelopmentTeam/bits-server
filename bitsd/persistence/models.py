@@ -110,7 +110,7 @@ class Message(Base):
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
-    author = relationship("User")
+    author = relationship("User", backref=backref("messages", order_by=timestamp))
 
     def __init__(self, userid, message):
         self.userid = userid
