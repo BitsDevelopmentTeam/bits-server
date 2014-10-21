@@ -277,7 +277,6 @@ class AdminPageHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         """Display the admin page."""
-        LOG.error(MACUpdateHandler.ROSTER)
         self.render(
             'templates/admin.html',
             page_message='Very secret information here',
