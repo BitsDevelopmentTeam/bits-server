@@ -7,6 +7,7 @@
 #
 
 """Common elements needed by all modules."""
+from itertools import izip_longest
 
 from tornado.netutil import bind_sockets, bind_unix_socket
 from tornado.options import options
@@ -17,6 +18,14 @@ import os
 
 #: Main logger
 LOG = logging.getLogger('tornado.general')
+
+
+def secure_compare(a, b):
+    """Reasonably safe way to securely compare two strings.
+
+    Works in constant time to prevent timing attacks.
+    """
+    return sum(1 for x, y in izip_longest(a, b) if x != y) == 0
 
 
 def bind(server, port, usocket, address=None):
