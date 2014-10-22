@@ -24,8 +24,8 @@ import tornado.auth
 from tornado.options import options
 
 import bitsd.listener.notifier as notifier
-from bitsd.persistence.engine import session_scope
-from bitsd.persistence.models import Status, User, MACToUser
+from bitsd.persistence.engine import session_scope, persist
+from bitsd.persistence.models import Status, User, MACToUser, LoginAttempt
 
 from .auth import verify, DoSError
 from .presence import PresenceForecaster
@@ -369,10 +369,23 @@ class RTCHandler(BaseHandler):
 
 class MACUpdateHandler(BaseHandler):
     ROSTER = []
-    LAST_ATTEMPT = datetime.now()
 
     def post(self):
         now = datetime.now()
+        remote_ip = self.request.remote_ip
+
+        with session_scope() as session:
+            last = query.get_last_login_attempt(session, remote_ip)
+            if last is None:
+                last = LoginAttempt(None, remote_ip)
+                persist(session, last)
+            else:
+                if (now - last.timestamp) < timedelta(seconds=options.mac_update_interval):
+                    LOG.warning("Too frequent attempts to update, remote IP address is %s", remote_ip)
+                    raise HTTPError(403, "Too frequent")
+                else:
+                    last.timestamp = now
+                    persist(session, last)
 
         try:
             password = self.get_argument("password")
@@ -385,13 +398,7 @@ class MACUpdateHandler(BaseHandler):
             LOG.warning("Client provided wrong password for MAC update!")
             raise HTTPError(403, "Wrong password")
 
-        if (now - MACUpdateHandler.LAST_ATTEMPT) < timedelta(seconds=options.mac_update_interval):
-            LOG.warning("Too frequent attempts to update, remote IP address is %s", self.request.remote_ip)
-            raise HTTPError(403, "Too frequent")
-        else:
-            MACUpdateHandler.LAST_ATTEMPT = now
-
-        LOG.info("Authorized request to update list of checked-in users from IP address %s", self.request.remote_ip)
+        LOG.info("Authorized request to update list of checked-in users from IP address %s", remote_ip)
 
         macs = json.loads(macs)
 
