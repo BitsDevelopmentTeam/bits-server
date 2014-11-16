@@ -38,7 +38,8 @@ def start():
             (r'/logout', handlers.LogoutPageHandler),
             (r'/admin', handlers.AdminPageHandler),
             (r'/message', handlers.MessagePageHandler),
-            (r'/data.php', handlers.RTCHandler)
+            (r'/data.php', handlers.RTCHandler),
+            (r'/macupdate', handlers.MACUpdateHandler),
         ],
         ui_modules=uimodules,
         gzip=True,

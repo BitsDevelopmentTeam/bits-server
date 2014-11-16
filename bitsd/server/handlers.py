@@ -10,20 +10,22 @@
 """
 HTTP requests handlers.
 """
+import json
 
 import markdown
-import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import distinct
 from sqlalchemy.exc import IntegrityError
 
-import tornado.web
+from tornado.web import MissingArgumentError, HTTPError, RequestHandler
 import tornado.websocket
 import tornado.auth
 
 from tornado.options import options
 
 import bitsd.listener.notifier as notifier
-from bitsd.persistence.engine import session_scope
-from bitsd.persistence.models import Status
+from bitsd.persistence.engine import session_scope, persist
+from bitsd.persistence.models import Status, User, MACToUser, LoginAttempt
 
 from .auth import verify, DoSError
 from .presence import PresenceForecaster
@@ -31,7 +33,7 @@ from .notifier import MessageNotifier
 
 import bitsd.persistence.query as query
 
-from bitsd.common import LOG
+from bitsd.common import LOG, secure_compare
 
 
 def cache(seconds):
@@ -51,8 +53,8 @@ def cache(seconds):
     """
     def set_cacheable(get_function):
         def wrapper(self, *args, **kwargs):
-            self.set_header("Expires", datetime.datetime.utcnow() +
-                datetime.timedelta(seconds=seconds))
+            self.set_header("Expires", datetime.utcnow() +
+                timedelta(seconds=seconds))
             self.set_header("Cache-Control", "max-age=" + str(seconds))
             return get_function(self, *args, **kwargs)
         return wrapper
@@ -66,7 +68,7 @@ def broadcast(message):
     StatusHandler.CLIENTS.broadcast(message)
 
 
-class BaseHandler(tornado.web.RequestHandler):
+class BaseHandler(RequestHandler):
     """Base requests handler"""
     USER_COOKIE_NAME = "usertoken"
 
@@ -275,8 +277,11 @@ class AdminPageHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         """Display the admin page."""
-        self.render('templates/admin.html',
-                    page_message='Very secret information here')
+        self.render(
+            'templates/admin.html',
+            page_message='Very secret information here',
+            roster=MACUpdateHandler.ROSTER
+        )
 
     @tornado.web.authenticated
     def post(self):
@@ -307,7 +312,11 @@ class AdminPageHandler(BaseHandler):
                 message = "Errore: modifica troppo veloce!"
                 raise
             finally:
-                self.render('templates/admin.html', page_message=message)
+                self.render(
+                    'templates/admin.html',
+                    page_message=message,
+                    roster=MACUpdateHandler.ROSTER
+                )
 
 
 class PresenceForecastHandler(BaseHandler):
@@ -352,7 +361,56 @@ class MessagePageHandler(BaseHandler):
 
 class RTCHandler(BaseHandler):
     def get(self):
-        now = datetime.datetime.now()
+        now = datetime.now()
         self.write(now.strftime("%Y-%m-%d %H:%M:%S"))
         self.finish()
 
+
+class MACUpdateHandler(BaseHandler):
+    ROSTER = []
+
+    def post(self):
+        now = datetime.now()
+        remote_ip = self.request.remote_ip
+
+        with session_scope() as session:
+            last = query.get_last_login_attempt(session, remote_ip)
+            if last is None:
+                last = LoginAttempt(None, remote_ip)
+                persist(session, last)
+            else:
+                if (now - last.timestamp) < timedelta(seconds=options.mac_update_interval):
+                    LOG.warning("Too frequent attempts to update, remote IP address is %s", remote_ip)
+                    raise HTTPError(403, "Too frequent")
+                else:
+                    last.timestamp = now
+                    persist(session, last)
+
+        try:
+            password = self.get_argument("password")
+            macs = self.get_argument("macs")
+        except MissingArgumentError:
+            LOG.warning("MAC update received malformed parameters: %s", self.request.arguments)
+            raise HTTPError(400, "Bad parameters list")
+
+        if not secure_compare(password, options.mac_update_password):
+            LOG.warning("Client provided wrong password for MAC update!")
+            raise HTTPError(403, "Wrong password")
+
+        LOG.info("Authorized request to update list of checked-in users from IP address %s", remote_ip)
+
+        macs = json.loads(macs)
+
+        with session_scope() as session:
+            names = session.\
+                query(distinct(User.name)).\
+                filter(User.userid == MACToUser.userid).\
+                filter(MACToUser.mac_hash .in_ (macs)).\
+                all()
+
+        MACUpdateHandler.ROSTER = [n[0] for n in names]
+        LOG.debug("Updated list of checked in users: %s", MACUpdateHandler.ROSTER)
+
+    def check_xsrf_cookie(self):
+        # Since this is an API call, we need to disable anti-XSRF protection
+        pass

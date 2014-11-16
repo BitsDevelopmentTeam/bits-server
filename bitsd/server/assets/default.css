@@ -215,3 +215,12 @@ nav#paginator ul li {
     width: 300px;
     margin: 0 auto;
 }
+
+#roster {
+    width: 200px;
+    margin: 0 auto;
+}
+
+#roster li {
+    text-align: left;
+}
