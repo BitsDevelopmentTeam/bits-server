@@ -196,6 +196,10 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         """Unregister this handler when the connection is closed."""
         StatusHandler.CLIENTS.unregister(self)
         LOG.debug('Unregistered client.')
+        
+    def check_origin(self, origin):
+        """No Same-Origin Policy"""
+        return True
 
 
 class LoginPageHandler(BaseHandler):
