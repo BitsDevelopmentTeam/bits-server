@@ -67,7 +67,7 @@ Serving five page models:
 2. A [paginated history](/log), displaying information logged in the DB.
 3. A mini wiki engine based on markdown. Actually, this README is rendered as the
    [info page](/info) and more informative pages are to come.
-4. [Recent data](/data), in a machine parseable form (JSON).
+4. [Recent data](/data), in a machine parseable form (JSON).t
 5. [Status](/status) as a single digit (0=closed, 1=open), for building a minimal
    desktop/mobile widget.
 
@@ -168,7 +168,7 @@ forward to, although we will switch to it at some point in the future.
 
 Hard dependencies are:
 
-* **Tornado 3.0** asynchronous/non blocking web server on which BITS runs.
+* **Tornado 4.0** asynchronous/non blocking web server on which BITS runs.
 * **SQLAlchemy > 0.7** ORM and DB abstraction layer.
 * **markdown** for rendering wiki pages.
 * **passlib** a great abstraction over `crypt` for strong password hashing.
