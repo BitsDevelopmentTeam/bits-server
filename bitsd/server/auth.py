@@ -87,10 +87,10 @@ def verify(session, username, supplied_password, ip_address, has_captcha, recapt
     last_attempt_for_ip_and_username = get_last_login_attempt(session, ip_address, username)
 
     if detect_dos(last_attempt_for_ip, timedelta(seconds=1)):
-        raise DoSError("Too frequent requests from %s", ip_address)
+        raise DoSError("Too frequent requests from {}".format(ip_address))
 
     if detect_dos(last_attempt_for_ip_and_username, timedelta(seconds=options.min_login_retry)):
-        raise DoSError("Too frequent attempts from %s for username %r", ip_address, username)
+        raise DoSError("Too frequent attempts from {} for username {}".format(ip_address, username))
 
     user = get_user(session, username)
 
