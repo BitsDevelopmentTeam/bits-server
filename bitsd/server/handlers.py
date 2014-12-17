@@ -188,10 +188,6 @@ class StatusHandler(tornado.websocket.WebSocketHandler):
         self.write_message(latest)
         LOG.debug('Registered client')
 
-    def on_message(self, message):
-        """Disconnect clients sending data (they should not)."""
-        LOG.warning('Client sent a message: disconnected.')
-
     def on_close(self):
         """Unregister this handler when the connection is closed."""
         StatusHandler.CLIENTS.unregister(self)
