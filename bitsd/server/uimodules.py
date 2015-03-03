@@ -26,7 +26,7 @@ class DebugMode(tornado.web.UIModule):
 class BasePage(tornado.web.UIModule):
     """Module providing base css, ico files for all pages and encoding tag."""
     def css_files(self):
-        css = ['/static/default.css?v=3',]
+        css = ['/static/default.css?v=3', '/static/crt.css?v=1',]
         # FIXME daltonism workaround, should be implemented client-side
         if 'blind' in self.request.path:
             css.append('/static/dalton.css?v=1')
