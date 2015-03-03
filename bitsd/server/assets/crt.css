@@ -31,6 +31,9 @@
   21%{
     visibility:visible;
   }
+  99% { /* Dirty Hack for Firefox, doesn't display: hidden; on 100% */
+    visibility:hidden;
+  }
   100%{
     visibility:hidden;
   }
