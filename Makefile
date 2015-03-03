@@ -20,11 +20,11 @@ pyclean:
 	find bitsd -regex ".*\.pyc" -delete
 
 source:
-	python setup.py sdist
+	python2 setup.py sdist
 
 rpm:
-	python setup.py bdist_rpm
+	python2 setup.py bdist_rpm
 
 virtualenv:
-	virtualenv env
+	virtualenv2 env
 	. env/bin/activate && pip install tornado sqlalchemy markdown futures pycares passlib recaptcha

@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/env python2
 #
 # Copyright (C) 2013 Stefano Sanfilippo
 # Copyright (C) 2013 BITS development team
