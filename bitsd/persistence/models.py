@@ -14,15 +14,15 @@ Models for persisted data.
 import re
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, UniqueConstraint, Index
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Float, DateTime, Enum, Text, BigInteger, String, UnicodeText
 from sqlalchemy.ext.declarative import declarative_base
 
 from . import engine
 
 #: Base class for declared models.
-from bitsd.common import to_unix_micro
+from tornado.escape import xhtml_escape
 
 Base = declarative_base()
 
@@ -35,7 +35,7 @@ def check():
 class TemperatureSample(Base):
     """Representation of a logged temperature sample."""
     __tablename__ = 'Temperature'
-    __table_args__ = {'mysql_engine': 'InnoDB'}
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     value = Column(Float, nullable=False)
@@ -53,7 +53,7 @@ class TemperatureSample(Base):
     def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            "timestamp": to_unix_micro(self.timestamp),
+            "timestamp": self.timestamp.isoformat(' '),
             "value": self.value,
             "modifiedby": self.modified_by,
             "sensor": self.sensor
@@ -67,7 +67,7 @@ class TemperatureSample(Base):
 class Status(Base):
     """Representation of a logged status change."""
     __tablename__ = 'Status'
-    __table_args__ = {'mysql_engine': 'InnoDB'}
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     OPEN = 'open'
     CLOSED = 'closed'
@@ -90,7 +90,7 @@ class Status(Base):
     def jsondict(self, wrap=True):
         """Return a JSON-serializable dictionary representing the object"""
         data = {
-            "timestamp": to_unix_micro(self.timestamp),
+            "timestamp": self.timestamp.isoformat(' '),
             "modifiedby": self.modified_by,
             "value": self.value
         }
@@ -104,24 +104,26 @@ class Message(Base):
     """Representation of a broadcast message.
     Access the author object with `.author`"""
     __tablename__ = 'Message'
-    __table_args__ = {'mysql_engine': 'InnoDB'}
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     userid = Column(Integer, ForeignKey("User.userid"), primary_key=True)
     timestamp = Column(DateTime, primary_key=True, default=datetime.now)
     message = Column(Text, nullable=False)
 
-    author = relationship("User")
+    author = relationship("User", backref=backref("messages", order_by=timestamp))
 
     def __init__(self, userid, message):
         self.userid = userid
         self.message = message
 
-    def jsondict(self, wrap=True):
-        """Return a JSON-serializable dictionary representing the object"""
+    def jsondict(self, wrap=True, escape=True):
+        """Return a JSON-serializable dictionary representing the object.
+
+        When escape is True, the HTML entities in the message body are escaped."""
         data = {
             'user': self.author.name,
-            'timestamp': to_unix_micro(self.timestamp),
-            'value': self.message,
+            'timestamp': self.timestamp.isoformat(' '),
+            'value': xhtml_escape(self.message) if escape else self.message,
         }
         return {'message': data} if wrap else data
 
@@ -129,7 +131,7 @@ class Message(Base):
 class Page(Base):
     """Representation of a wiki page."""
     __tablename__ = 'Pages'
-    __table_args__ = {'mysql_engine': 'InnoDB'}
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     slug = Column(String(length=100), primary_key=True)
     title = Column(String(length=100), nullable=False)
@@ -164,7 +166,7 @@ class Page(Base):
 class User(Base):
     """User name/password hash entity."""
     __tablename__ = 'User'
-    __table_args__ = {'mysql_engine': 'InnoDB'}
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     userid = Column(Integer, primary_key=True)
     name = Column(String(length=256), unique=True, nullable=False)
@@ -176,3 +178,42 @@ class User(Base):
 
     def __str__(self):
         return '{self.name}: {self.password}'.format(self=self)
+
+
+class LoginAttempt(Base):
+    """Holds IP address, user and timestamp for failed login attempts.
+
+     Failed attempts are kept in order to prevent DoS and bruteforcing attacks."""
+    __tablename__ = 'LoginAttempt'
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(length=256), nullable=True)
+    ipaddress = Column(String(length=64), nullable=False)
+    timestamp = Column(DateTime, nullable=False, default=datetime.now)
+
+    UniqueConstraint('username', 'ipaddress', name='user_ip_key')
+
+    def __init__(self, username, ipaddress):
+        self.username = username
+        self.ipaddress = ipaddress
+
+    def __str__(self):
+        return 'Failed attempt for `{self.username}` from {self.ipaddress} at {self.timestamp}'.format(self=self)
+
+
+class MACToUser(Base):
+    __tablename__ = 'MACToUser'
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
+
+    userid = Column(Integer, ForeignKey("User.userid"))
+    mac_hash = Column(String(length=64), primary_key=True)
+
+    user = relationship("User", backref=backref("macs", order_by=userid))
+
+    def __init__(self, userid, mac_hash):
+        self.userid = userid
+        self.mac_hash = mac_hash
+
+    def __str__(self):
+        return 'User with ID {self.userid} has MAC with hash {self.mac_hash}'.format(self=self)

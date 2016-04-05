@@ -12,10 +12,6 @@
 {% block attrs %}class="admin"{% end %}
 {% block subtitle %}Amministrazione{% end %}
 
-{% block preamble%}
-    {% module DynamicPage() %}
-{% end %}
-
 {% block body %}
 <div>{{ page_message }}</div>
 <form action="/admin" method="post">
@@ -25,9 +21,22 @@
     <input type="submit" value="Cambia stato sede">
     </p>
 </form>
+<div id="roster">
+    <h2>Utenti in sede</h2>
+    {% if roster %}
+    <ul>
+        {% for name in roster %}
+        <li>{{name}}</li>
+        {% end %}
+    </ul>
+    {% else %}
+    <p>Nessuno...</p>
+    {% end %}
+</div>
 <ul class="link">
     <li><a id="logout" href="/logout">Logout</a></li>
     <li><a id="messages" href="/message">Invia messaggio</a></li>
+    <li><a id="submitmac" href="/submitmac">Aggiungi MAC address</a></li>
 </ul>
 {% end %}
 

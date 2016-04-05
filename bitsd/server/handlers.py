@@ -10,31 +10,33 @@
 """
 HTTP requests handlers.
 """
+import json
+import re
+import hashlib
+import hmac
 
 import markdown
-import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import distinct
 from sqlalchemy.exc import IntegrityError
-from tornado.escape import xhtml_escape
 
-import tornado.web
+from tornado.web import MissingArgumentError, HTTPError, RequestHandler
 import tornado.websocket
 import tornado.auth
 
 from tornado.options import options
 
-from sockjs.tornado import SockJSConnection
-
 import bitsd.listener.notifier as notifier
-from bitsd.persistence.engine import session_scope
-from bitsd.persistence.models import Status
+from bitsd.persistence.engine import session_scope, persist
+from bitsd.persistence.models import Status, User, MACToUser, LoginAttempt
 
-from .auth import verify
+from .auth import verify, DoSError
 from .presence import PresenceForecaster
 from .notifier import MessageNotifier
 
 import bitsd.persistence.query as query
 
-from bitsd.common import LOG
+from bitsd.common import LOG, secure_compare
 
 
 def cache(seconds):
@@ -54,8 +56,8 @@ def cache(seconds):
     """
     def set_cacheable(get_function):
         def wrapper(self, *args, **kwargs):
-            self.set_header("Expires", datetime.datetime.utcnow() +
-                datetime.timedelta(seconds=seconds))
+            self.set_header("Expires", datetime.utcnow() +
+                timedelta(seconds=seconds))
             self.set_header("Cache-Control", "max-age=" + str(seconds))
             return get_function(self, *args, **kwargs)
         return wrapper
@@ -66,10 +68,10 @@ def broadcast(message):
     """Broadcast given message to all clients. `message`
     may be either a string, which is directly broadcasted, or a dictionay
     that is JSON-serialized automagically before sending."""
-    StatusConnection.CLIENTS.broadcast(message)
+    StatusHandler.CLIENTS.broadcast(message)
 
 
-class BaseHandler(tornado.web.RequestHandler):
+class BaseHandler(RequestHandler):
     """Base requests handler"""
     USER_COOKIE_NAME = "usertoken"
 
@@ -89,6 +91,14 @@ class HomePageHandler(BaseHandler):
     @cache(86400*10)
     def get(self):
         self.render('templates/homepage.html')
+
+
+class DataPageHandler(BaseHandler):
+    """Get BITS data in JSON, machine parseable."""
+    def get(self):
+        with session_scope() as session:
+            self.write(query.get_latest_data(session))
+        self.finish()
 
 
 class LogPageHandler(BaseHandler):
@@ -168,27 +178,27 @@ class MarkdownPageHandler(BaseHandler):
             )
 
 
-class StatusConnection(SockJSConnection):
+class StatusHandler(tornado.websocket.WebSocketHandler):
     """Handler for POuL status via websocket"""
 
     CLIENTS = MessageNotifier('Status handler queue')
 
-    def on_open(self, info):
+    def open(self):
         """Register new handler with MessageNotifier."""
-        StatusConnection.CLIENTS.register(self)
+        StatusHandler.CLIENTS.register(self)
         with session_scope() as session:
             latest = query.get_latest_data(session)
-        self.send(latest)
+        self.write_message(latest)
         LOG.debug('Registered client')
-
-    def on_message(self, message):
-        """Disconnect clients sending data (they should not)."""
-        LOG.warning('Client sent a message: disconnected.')
 
     def on_close(self):
         """Unregister this handler when the connection is closed."""
-        StatusConnection.CLIENTS.unregister(self)
+        StatusHandler.CLIENTS.unregister(self)
         LOG.debug('Unregistered client.')
+        
+    def check_origin(self, origin):
+        """No Same-Origin Policy"""
+        return True
 
 
 class LoginPageHandler(BaseHandler):
@@ -201,32 +211,58 @@ class LoginPageHandler(BaseHandler):
             self.render(
                 'templates/login.html',
                 next=next,
-                message=None
+                message=None,
+                show_recaptcha=False
             )
 
     def post(self):
-        username = self.get_argument("username", None)
-        password = self.get_argument("password", None)
+        username = self.get_argument("username")
+        password = self.get_argument("password")
+        ip_address = self.request.remote_ip
         next = self.get_argument("next", "/")
+        captcha_challenge = self.get_argument("recaptcha_challenge_field", "")
+        captcha_response = self.get_argument("recaptcha_response_field", "")
+        has_recaptcha = captcha_challenge or captcha_response
 
         with session_scope() as session:
-            authenticated = verify(session, username, password)
+            try:
+                verified = verify(session, username, password, ip_address, has_recaptcha, captcha_challenge, captcha_response)
+            except DoSError as error:
+                LOG.warning("DoS protection: %s", error)
+                self.log_offender_details()
+                self.render(
+                    'templates/login.html',
+                    next=next,
+                    message="Tentativi dal tuo IP over 9000...",
+                    show_recaptcha=True,
+                    previous_attempt_incorrect=has_recaptcha
+                )
+                return
 
-        if authenticated:
+        if verified:
             self.set_secure_cookie(
                 self.USER_COOKIE_NAME,
                 username,
                 expires_days=options.cookie_max_age_days
             )
-            LOG.info("Authenticating user `{}`".format(username))
+            LOG.info("Authenticating user %r", username)
             self.redirect(next)
         else:
-            LOG.warning("Wrong authentication for user `{}`".format(username))
+            LOG.warning("Failed authentication for user %r", username)
+            self.log_offender_details()
             self.render(
                 'templates/login.html',
                 next=next,
-                message="Password/username sbagliati!"
+                message="Password/username sbagliati!",
+                show_recaptcha=has_recaptcha,
+                # If we have a captcha at this point, it means we already failed once
+                previous_attempt_incorrect=True
             )
+
+    def log_offender_details(self):
+        userAgent = self.request.headers.get("User-Agent", '<unknown>')
+        remoteIp = self.request.remote_ip
+        LOG.warning("Request came from %s, user agent is '%s'", remoteIp, userAgent)
 
 
 class LogoutPageHandler(BaseHandler):
@@ -244,8 +280,11 @@ class AdminPageHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         """Display the admin page."""
-        self.render('templates/admin.html',
-                    page_message='Very secret information here')
+        self.render(
+            'templates/admin.html',
+            page_message='Very secret information here',
+            roster=MACUpdateHandler.ROSTER
+        )
 
     @tornado.web.authenticated
     def post(self):
@@ -264,8 +303,7 @@ class AdminPageHandler(BaseHandler):
             else:
                 textstatus = Status.OPEN if curstatus.value == Status.CLOSED else Status.CLOSED
 
-            LOG.info('Change of BITS to status={}'.format(textstatus) +
-                     ' from web interface.')
+            LOG.info('Change of BITS to status=%r from web interface.', textstatus)
             message = ''
             try:
                 status = query.log_status(session, textstatus, 'web')
@@ -277,7 +315,11 @@ class AdminPageHandler(BaseHandler):
                 message = "Errore: modifica troppo veloce!"
                 raise
             finally:
-                self.render('templates/admin.html', page_message=message)
+                self.render(
+                    'templates/admin.html',
+                    page_message=message,
+                    roster=MACUpdateHandler.ROSTER
+                )
 
 
 class PresenceForecastHandler(BaseHandler):
@@ -303,9 +345,7 @@ class MessagePageHandler(BaseHandler):
         text = self.get_argument('msgtext')
         username = self.get_current_user()
 
-        text = xhtml_escape(text)
-
-        LOG.info("{} sent message {!r} from web".format(username, text))
+        LOG.info("%r sent message %r from web", username, text)
 
         with session_scope() as session:
             user = query.get_user(session, username)
@@ -322,9 +362,95 @@ class MessagePageHandler(BaseHandler):
         )
 
 
+class MACPageHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('templates/submitmac.html', message=None, text='')
+
+    @tornado.web.authenticated
+    def post(self):
+        mac = self.get_argument('msgtext').lower()
+        if not re.match("((?:[a-f0-9]{2}:){5}[a-f0-9]{2})", mac):
+            self.render(
+                'templates/submitmac.html',
+                message='MAC address non valido.',
+                text=mac
+            )           
+            return
+
+        username = self.get_current_user()
+
+        LOG.info("%r requested to add a new MAC address", username)
+
+        with session_scope() as session:
+            user = query.get_user(session, username)
+            mac_hash = hmac.new(options.mac_hash_salt, mac,
+                                hashlib.sha256).hexdigest()
+            if query.get_userid_from_mac_hash(session, mac_hash) != None:
+                message = u'Il MAC address è già presente nel database.'
+            else:
+                query.log_user_mac(session, user, mac_hash)
+                message = 'MAC address associato al tuo utente.'
+           
+        self.render(
+            'templates/submitmac.html',
+            message=message,
+            text=''
+        )
+
+
 class RTCHandler(BaseHandler):
     def get(self):
-        now = datetime.datetime.now()
+        now = datetime.now()
         self.write(now.strftime("%Y-%m-%d %H:%M:%S"))
         self.finish()
 
+
+class MACUpdateHandler(BaseHandler):
+    ROSTER = []
+
+    def post(self):
+        now = datetime.now()
+        remote_ip = self.request.remote_ip
+
+        with session_scope() as session:
+            last = query.get_last_login_attempt(session, remote_ip)
+            if last is None:
+                last = LoginAttempt(None, remote_ip)
+                persist(session, last)
+            else:
+                if (now - last.timestamp) < timedelta(seconds=options.mac_update_interval):
+                    LOG.warning("Too frequent attempts to update, remote IP address is %s", remote_ip)
+                    raise HTTPError(403, "Too frequent")
+                else:
+                    last.timestamp = now
+                    persist(session, last)
+
+        try:
+            password = self.get_argument("password")
+            macs = self.get_argument("macs")
+        except MissingArgumentError:
+            LOG.warning("MAC update received malformed parameters: %s", self.request.arguments)
+            raise HTTPError(400, "Bad parameters list")
+
+        if not secure_compare(password, options.mac_update_password):
+            LOG.warning("Client provided wrong password for MAC update!")
+            raise HTTPError(403, "Wrong password")
+
+        LOG.info("Authorized request to update list of checked-in users from IP address %s", remote_ip)
+
+        macs = json.loads(macs)
+
+        with session_scope() as session:
+            names = session.\
+                query(distinct(User.name)).\
+                filter(User.userid == MACToUser.userid).\
+                filter(MACToUser.mac_hash .in_ (macs)).\
+                all()
+
+        MACUpdateHandler.ROSTER = [n[0] for n in names]
+        LOG.debug("Updated list of checked in users: %s", MACUpdateHandler.ROSTER)
+
+    def check_xsrf_cookie(self):
+        # Since this is an API call, we need to disable anti-XSRF protection
+        pass

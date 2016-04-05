@@ -10,12 +10,13 @@
 Common query helpers. These are shortcut to queries performed often
 by server engine.
 """
-from sqlalchemy.exc import IntegrityError
+from bitsd.persistence.models import LoginAttempt
+from sqlalchemy import desc
 
 from tornado.options import options
 
 from .engine import persist, query_by_timestamp, count, query_by_attribute
-from .models import TemperatureSample, Status, Message, Page, User
+from .models import TemperatureSample, Status, Message, Page, User, MACToUser
 
 
 ## Exceptions ##
@@ -92,6 +93,19 @@ def get_latest_data(session):
     return dict((key, value) for key, value in data.iteritems() if data[key])
 
 
+def get_last_login_attempt(session, ip_address, username=None):
+    """Get last failed login attempt for given IP address. Filter by username if provided"""
+    L = LoginAttempt  # Shortcut
+    if username is not None:
+        return session.query(L).filter(L.ipaddress == ip_address, L.username == username).order_by(desc(L.timestamp)).first()
+    else:
+        return session.query(L).filter(L.ipaddress == ip_address).order_by(desc(L.timestamp)).first()
+
+def get_userid_from_mac_hash(session, mac_hash):
+    """Get MACToUser with specified mac_hash"""
+    return query_by_attribute(session, MACToUser, 'mac_hash', mac_hash)
+
+
 ## Loggers ##
 
 def log_temperature(session, value, sensor, modified_by):
@@ -108,3 +122,14 @@ def log_message(session, user, message):
     """Persist message by user to DB."""
     return persist(session, Message(user.userid, message))
 
+
+def log_user_mac(session, user, mac_hash):
+    """Persist MAC address by user to DB."""
+    return persist(session, MACToUser(user.userid, mac_hash))
+
+
+def log_last_login_attempt(session, ip_address, username):
+    """"Persist failed login attempt (either insert or update)"""
+    attempt = LoginAttempt(username, ip_address)
+    attempt = session.merge(attempt)
+    return persist(session, attempt)

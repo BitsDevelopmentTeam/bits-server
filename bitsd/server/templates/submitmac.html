@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{#
+ # Copyright (C) 2016 Daniele Iamartino
+ # Copyright (C) 2016 BITS development team
+ #
+ # This file is part of bitsd, which is released under the terms of
+ # GNU GPLv3. See COPYING at top level for more information.
+ #}
+
+{% block title %}Aggiungi MAC address{% end %}
+{% block attrs %}class="submitmac"{% end %}
+{% block subtitle %}Annuncia automaticamente quando sei in sede{% end %}
+
+{% block body %}
+<form action="/submitmac" method="post">
+    <p>MAC Address:</p>
+    <textarea name="msgtext" rows="1" cols="20">{{ text }}</textarea>
+    <p><small>Nota: Il MAC address viene inserito in un hash con salt.
+<br>Nessun MAC address viene salvato in chiaro nel database.</small></p>
+    {% module xsrf_form_html() %}
+    <p><input type="submit" value="Aggiungi"></p>
+</form>
+{% if message %}
+<div id="message">{{ message }}</div>
+{% end %}
+<ul class="link">
+    <li><a id="logout" href="/logout">Logout</a></li>
+    <li><a id="admin" href="/admin">Cambia stato sede</a></li>
+</ul>
+{% end %}
+

@@ -46,6 +46,12 @@ define("control_remote_address",
     group="Networking"
 )
 
+define("reverse_proxied",
+    default=False,
+    help="Get remote IP address via X- headers (use when reverse proxied).",
+    group="Networking"
+)
+
 define("db_uri",
     default="sqlite:///test.db",
     help="DB URI, in the form `dialect:///username:password@host`",
@@ -77,6 +83,12 @@ define("assets_path",
     group='Internal'
 )
 
+define("min_login_retry",
+    default=5,
+    help="Min interval in seconds between two login attempts",
+    group="Internal"
+)
+
 define("cookie_secret",
     default='Very random value, not like this',
     help='Secret used to generate securely hashed cookies',
@@ -87,6 +99,19 @@ define("cookie_max_age_days",
     default=1,
     help='Maximum age of the authentication cookie',
     group='Internal'
+)
+
+
+define("recaptcha_pubkey",
+   default="pubkey",
+   help="ReCaptcha public key",
+   group="Internal"
+)
+
+define("recaptcha_privkey",
+   default="privkey",
+   help="ReCaptcha private key",
+   group="Internal"
 )
 
 define("log_queries",
@@ -121,4 +146,22 @@ define("usocket_mode",
     default=0o600,
     help="Permissions for chmod on the unix sockets",
     group="Networking"
+)
+
+define("mac_update_password",
+   default="default",
+   help="Authentication token for live presence updates",
+   group="Networking"
+)
+
+define("mac_update_interval",
+   default=0,
+   help="Minimum number of seconds between two successive MAC updates.",
+   group="Networking"
+)
+
+define("mac_hash_salt",
+   default="Your key here",
+   help="Salt string to combine for building the MAC addresses hashes.",
+   group="Networking"
 )

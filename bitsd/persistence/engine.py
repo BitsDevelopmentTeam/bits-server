@@ -46,7 +46,7 @@ def session_scope():
         yield session
         session.commit()
     except IntegrityError as e:
-        LOG.error("Integrity error in DB, rolling back: {}".format(e))
+        LOG.error("Integrity error in DB, rolling back: %s", e)
         session.rollback()
     except:
         LOG.error("Error in DB, rolling back.")
@@ -60,9 +60,9 @@ def persist(session, data, flush=True):
     """Persist data to configured DB and return persisted object
     in a consistent state.
 
-    **Note:** will log what's being persisted, so don't put clear text password
+    **Note:** might log what's being persisted, so don't put clear text password
     into `__str__()`."""
-    LOG.debug('Persisting data {}'.format(data))
+    LOG.debug('Persisting data %r', data)
     session.add(data)
     if flush:
         session.flush()
@@ -71,7 +71,7 @@ def persist(session, data, flush=True):
 
 def delete(session, data):
     """Delete data from DB."""
-    LOG.debug('Deleting {}'.format(data))
+    LOG.debug('Deleting %r', data)
     session.delete(data)
 
 
