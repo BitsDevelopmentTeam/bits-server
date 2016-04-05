@@ -159,3 +159,9 @@ define("mac_update_interval",
    help="Minimum number of seconds between two successive MAC updates.",
    group="Networking"
 )
+
+define("mac_hash_salt",
+   default="Your key here",
+   help="Salt string to combine for building the MAC addresses hashes.",
+   group="Networking"
+)

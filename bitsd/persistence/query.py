@@ -16,7 +16,7 @@ from sqlalchemy import desc
 from tornado.options import options
 
 from .engine import persist, query_by_timestamp, count, query_by_attribute
-from .models import TemperatureSample, Status, Message, Page, User
+from .models import TemperatureSample, Status, Message, Page, User, MACToUser
 
 
 ## Exceptions ##
@@ -101,6 +101,10 @@ def get_last_login_attempt(session, ip_address, username=None):
     else:
         return session.query(L).filter(L.ipaddress == ip_address).order_by(desc(L.timestamp)).first()
 
+def get_userid_from_mac_hash(session, mac_hash):
+    """Get MACToUser with specified mac_hash"""
+    return query_by_attribute(session, MACToUser, 'mac_hash', mac_hash)
+
 
 ## Loggers ##
 
@@ -117,6 +121,11 @@ def log_status(session, status, modified_by):
 def log_message(session, user, message):
     """Persist message by user to DB."""
     return persist(session, Message(user.userid, message))
+
+
+def log_user_mac(session, user, mac_hash):
+    """Persist MAC address by user to DB."""
+    return persist(session, MACToUser(user.userid, mac_hash))
 
 
 def log_last_login_attempt(session, ip_address, username):

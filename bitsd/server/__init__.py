@@ -40,6 +40,7 @@ def start():
             (r'/message', handlers.MessagePageHandler),
             (r'/data.php', handlers.RTCHandler),
             (r'/macupdate', handlers.MACUpdateHandler),
+            (r'/submitmac', handlers.MACPageHandler),
         ],
         ui_modules=uimodules,
         gzip=True,

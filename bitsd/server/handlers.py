@@ -11,6 +11,9 @@
 HTTP requests handlers.
 """
 import json
+import re
+import hashlib
+import hmac
 
 import markdown
 from datetime import datetime, timedelta
@@ -356,6 +359,43 @@ class MessagePageHandler(BaseHandler):
             'templates/message.html',
             message='Messaggio inviato correttamente!',
             text=text
+        )
+
+
+class MACPageHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('templates/submitmac.html', message=None, text='')
+
+    @tornado.web.authenticated
+    def post(self):
+        mac = self.get_argument('msgtext').lower()
+        if not re.match("((?:[a-f0-9]{2}:){5}[a-f0-9]{2})", mac):
+            self.render(
+                'templates/submitmac.html',
+                message='MAC address non valido.',
+                text=mac
+            )           
+            return
+
+        username = self.get_current_user()
+
+        LOG.info("%r requested to add a new MAC address", username)
+
+        with session_scope() as session:
+            user = query.get_user(session, username)
+            mac_hash = hmac.new(options.mac_hash_salt, mac,
+                                hashlib.sha256).hexdigest()
+            if query.get_userid_from_mac_hash(session, mac_hash) != None:
+                message = u'Il MAC address è già presente nel database.'
+            else:
+                query.log_user_mac(session, user, mac_hash)
+                message = 'MAC address associato al tuo utente.'
+           
+        self.render(
+            'templates/submitmac.html',
+            message=message,
+            text=''
         )
 
 
